@@ -9,7 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
-public class HelloApplication extends Application {
+public class App extends Application {
 
     private Stage mainStage;
     private Scene cenaMenu; // Guarda a cena do menu na memória para poder voltar para ela
