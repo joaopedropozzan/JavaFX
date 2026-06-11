@@ -1,6 +1,6 @@
 package com.poo.javafx.Instanciacao.JoaoMosson;
 
-import com.poo.javafx.ViewGenerica;
+import com.poo.javafx.View;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TextField;
@@ -8,10 +8,10 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import java.time.LocalDate;
 
-public class PassageiroView extends ViewGenerica<PassageiroModel> {
+public class PassageiroView extends View<PassageiroModel> {
 
     // Campos que o usuário vai digitar
-    private TextField txtId;
+    private TextField txtCPF;
     private TextField txtNome;
     private DatePicker dpDataNascimento;
 
@@ -19,8 +19,8 @@ public class PassageiroView extends ViewGenerica<PassageiroModel> {
         super(); // Herda a tabela e os botões
 
         // Inicializa os campos
-        txtId = new TextField();
-        txtId.setPromptText("ID");
+        txtCPF = new TextField();
+        txtCPF.setPromptText("CPF");
 
         txtNome = new TextField();
         txtNome.setPromptText("Nome do Passageiro");
@@ -29,7 +29,7 @@ public class PassageiroView extends ViewGenerica<PassageiroModel> {
         dpDataNascimento.setPromptText("Data de Nascimento");
 
         // Agrupa tudo numa linha horizontal
-        HBox formulario = new HBox(10, txtId, txtNome, dpDataNascimento);
+        HBox formulario = new HBox(10, txtCPF, txtNome, dpDataNascimento);
 
         // Adiciona o formulário no topo da tela (índice 0 do VBox)
         this.getChildren().add(0, formulario);
@@ -38,7 +38,7 @@ public class PassageiroView extends ViewGenerica<PassageiroModel> {
     @Override
     protected void configurarColunas() {
         TableColumn<PassageiroModel, Integer> colId = new TableColumn<>("ID");
-        colId.setCellValueFactory(new PropertyValueFactory<>("id"));
+        colId.setCellValueFactory(new PropertyValueFactory<>("CPF"));
 
         TableColumn<PassageiroModel, String> colNome = new TableColumn<>("Nome");
         colNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
@@ -51,8 +51,8 @@ public class PassageiroView extends ViewGenerica<PassageiroModel> {
     }
 
     // Getters para o Controller conseguir capturar o que foi digitado
-    public TextField getTxtId() {
-        return txtId;
+    public TextField getTxtCPF() {
+        return txtCPF;
     }
 
     public TextField getTxtNome() {

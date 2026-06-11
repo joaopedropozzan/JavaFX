@@ -1,12 +1,12 @@
 package com.poo.javafx.Instanciacao.JoaoMosson;
 
-import com.poo.javafx.ViewGenerica;
+import com.poo.javafx.View;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 
-public class VeiculoView extends ViewGenerica<VeiculoModel> {
+public class VeiculoView extends View<VeiculoModel> {
 
     private TextField txtPlaca;
     private TextField txtModelo;
@@ -46,7 +46,15 @@ public class VeiculoView extends ViewGenerica<VeiculoModel> {
     }
 
     // Getters para o Controller
-    public TextField getTxtPlaca() { return txtPlaca; }
-    public TextField getTxtModelo() { return txtModelo; }
-    public TextField getTxtAno() { return txtAno; }
+    public TextField getTxtPlaca() {
+        return txtPlaca;
+    }
+
+    public TextField getTxtModelo() {
+        return txtModelo;
+    }
+
+    public TextField getTxtAno() {
+        return txtAno;
+    }
 }

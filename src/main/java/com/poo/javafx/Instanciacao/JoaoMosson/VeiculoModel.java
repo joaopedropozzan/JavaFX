@@ -1,15 +1,16 @@
 package com.poo.javafx.Instanciacao.JoaoMosson;
 
 import java.io.Serial;
-import java.io.Serializable;
 
-public class VeiculoModel implements Serializable {
+import com.poo.javafx.Model;
+
+public class VeiculoModel extends Model {
     @Serial
     private static final long serialVersionUID = 1L;
 
     private String placa;
     private String modelo;
-    private int ano; // Campo numérico para cumprir a exigência do PDF
+    private int ano;
 
     public VeiculoModel(String placa, String modelo, int ano) {
         this.placa = placa;
@@ -17,13 +18,27 @@ public class VeiculoModel implements Serializable {
         this.ano = ano;
     }
 
-    // Getters e Setters
-    public String getPlaca() { return placa; }
-    public void setPlaca(String placa) { this.placa = placa; }
+    public String getPlaca() {
+        return placa;
+    }
 
-    public String getModelo() { return modelo; }
-    public void setModelo(String modelo) { this.modelo = modelo; }
+    public void setPlaca(String placa) {
+        this.placa = placa;
+    }
 
-    public int getAno() { return ano; }
-    public void setAno(int ano) { this.ano = ano; }
+    public String getModelo() {
+        return modelo;
+    }
+
+    public void setModelo(String modelo) {
+        this.modelo = modelo;
+    }
+
+    public int getAno() {
+        return ano;
+    }
+
+    public void setAno(int ano) {
+        this.ano = ano;
+    }
 }
