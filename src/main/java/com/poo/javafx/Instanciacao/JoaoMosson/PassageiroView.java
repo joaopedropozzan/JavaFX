@@ -51,7 +51,15 @@ public class PassageiroView extends ViewGenerica<PassageiroModel> {
     }
 
     // Getters para o Controller conseguir capturar o que foi digitado
-    public TextField getTxtId() { return txtId; }
-    public TextField getTxtNome() { return txtNome; }
-    public DatePicker getDpDataNascimento() { return dpDataNascimento; }
+    public TextField getTxtId() {
+        return txtId;
+    }
+
+    public TextField getTxtNome() {
+        return txtNome;
+    }
+
+    public DatePicker getDpDataNascimento() {
+        return dpDataNascimento;
+    }
 }

@@ -22,7 +22,7 @@ public abstract class ViewGenerica<T> extends VBox {
         // 2. Inicializando a Tabela
         tabela = new TableView<>();
         // Faz as colunas ocuparem todo o espaco disponível da tabela
-        tabela.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        tabela.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
 
         // 3. Inicializando os Botões Genéricos
         btnAdicionar = new Button("Adicionar");
@@ -50,8 +50,19 @@ public abstract class ViewGenerica<T> extends VBox {
     protected abstract void configurarColunas();
 
     // Getters para que o Controller possa capturar os cliques nos botões depois
-    public Button getBtnAdicionar() { return btnAdicionar; }
-    public Button getBtnAtualizar() { return btnAtualizar; }
-    public Button getBtnDeletar() { return btnDeletar; }
-    public TableView<T> getTabela() { return tabela; }
+    public Button getBtnAdicionar() {
+        return btnAdicionar;
+    }
+
+    public Button getBtnAtualizar() {
+        return btnAtualizar;
+    }
+
+    public Button getBtnDeletar() {
+        return btnDeletar;
+    }
+
+    public TableView<T> getTabela() {
+        return tabela;
+    }
 }

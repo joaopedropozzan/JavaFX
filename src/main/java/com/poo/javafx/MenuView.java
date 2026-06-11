@@ -10,6 +10,7 @@ public class MenuView extends VBox {
 
     private Button btnPassageiros;
     private Button btnVeiculos;
+    private Button btnTrajetos;
     // O Pozzan pode adicionar o btnEmpresas dele aqui depois!
 
     public MenuView() {
@@ -22,16 +23,26 @@ public class MenuView extends VBox {
 
         btnPassageiros = new Button("Gerenciar Passageiros");
         btnVeiculos = new Button("Gerenciar Veículos");
+        btnTrajetos = new Button("Gerenciar Trajetos");
 
         // Deixa os botões com o mesmo tamanho para ficar bonito
         btnPassageiros.setPrefWidth(200);
         btnVeiculos.setPrefWidth(200);
+        btnTrajetos.setPrefWidth(200);
 
         // Adiciona tudo na tela
-        this.getChildren().addAll(titulo, btnPassageiros, btnVeiculos);
+        this.getChildren().addAll(titulo, btnPassageiros, btnVeiculos, btnTrajetos);
     }
 
-    // Getters para a HelloApplication conseguir saber quando foram clicados
-    public Button getBtnPassageiros() { return btnPassageiros; }
-    public Button getBtnVeiculos() { return btnVeiculos; }
+    public Button getBtnPassageiros() {
+        return btnPassageiros;
+    }
+
+    public Button getBtnVeiculos() {
+        return btnVeiculos;
+    }
+
+    public Button getBtnTrajetos() {
+        return btnTrajetos;
+    }
 }

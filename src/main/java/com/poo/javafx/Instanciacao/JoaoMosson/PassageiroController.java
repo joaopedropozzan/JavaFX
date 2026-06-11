@@ -60,7 +60,8 @@ public class PassageiroController implements InterfaceController {
 
     @Override
     public void atualizar() {
-        // Para atualizar: o usuário seleciona na tabela e preenche os campos de cima novamente
+        // Para atualizar: o usuário seleciona na tabela e preenche os campos de cima
+        // novamente
         PassageiroModel selecionado = view.getTabela().getSelectionModel().getSelectedItem();
         if (selecionado != null) {
             try {
@@ -93,7 +94,8 @@ public class PassageiroController implements InterfaceController {
     // Método auxiliar exigido para Persistência
     private void salvarEmArquivo() {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(ARQUIVO_DAT))) {
-            // Converte a ObservableList do JavaFX para um ArrayList normal do Java para salvar
+            // Converte a ObservableList do JavaFX para um ArrayList normal do Java para
+            // salvar
             oos.writeObject(new ArrayList<>(listaPassageiros));
             System.out.println("Dados salvos com sucesso!");
         } catch (IOException e) {
