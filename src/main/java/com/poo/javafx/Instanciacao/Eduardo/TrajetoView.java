@@ -2,7 +2,7 @@ package com.poo.javafx.Instanciacao.Eduardo;
 
 import java.time.LocalDateTime;
 
-import com.poo.javafx.ViewGenerica;
+import com.poo.javafx.View;
 
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TextField;
@@ -10,7 +10,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import jfxtras.scene.control.LocalDateTimeTextField;
 
-public class TrajetoView extends ViewGenerica<TrajetoModel> {
+public class TrajetoView extends View<TrajetoModel> {
     private TextField origem;
     private TextField destino;
     private LocalDateTimeTextField horarioSaida;

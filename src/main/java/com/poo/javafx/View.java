@@ -7,13 +7,13 @@ import javafx.scene.control.TableView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-public abstract class ViewGenerica<T> extends VBox {
+public abstract class View<T> extends VBox {
     protected TableView<T> tabela;
     protected Button btnAdicionar;
     protected Button btnAtualizar;
     protected Button btnDeletar;
 
-    public ViewGenerica() {
+    public View() {
         // 1. Configuração do Layout Principal (VBox)
         this.setPadding(new Insets(20)); // Espaçamento das bordas
         this.setSpacing(15); // Espaçamento entre a tabela e os botões

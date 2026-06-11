@@ -1,83 +1,41 @@
 package com.poo.javafx.Instanciacao.Eduardo;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.Locale;
 
-import com.poo.javafx.InterfaceController;
+import com.poo.javafx.Controller;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.scene.Scene;
 
-public class TrajetoController implements InterfaceController {
-    private TrajetoView view;
+public class TrajetoController extends Controller<TrajetoModel, TrajetoView> {
 
-    private ObservableList<TrajetoModel> listaTrajetos;
-    private final String ARQUIVO_DAT = "trajetos.dat";
-
-    public TrajetoController(TrajetoView view) {
-        this.view = view;
-        this.listaTrajetos = FXCollections.observableArrayList();
-        this.view.getTabela().setItems(this.listaTrajetos);
-
-        this.view.getBtnAdicionar().setOnAction(e -> adicionar());
-        this.view.getBtnDeletar().setOnAction(e -> deletar());
-        this.view.getBtnAtualizar().setOnAction(e -> atualizar());
-
-        ler();
+    public TrajetoController(Scene scene, TrajetoView view) {
+        super(scene, view, TrajetoModel.class);
     }
 
     @Override
-    public void adicionar() {
+    public TrajetoModel camposParaObjeto() {
         String origem = view.getOrigem().getText();
         String destino = view.getDestino().getText();
-        LocalDateTime horarioSaida = LocalDateTime.parse(view.getHorarioSaida().getText());
+        String horarioSaidaTxt;
+        LocalDateTime horarioSaida;
+        try {
+            horarioSaidaTxt = view.getHorarioSaida().getText();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM d, yyyy, h:mm:ss a", Locale.US);
+            horarioSaida = LocalDateTime.parse(horarioSaidaTxt, formatter);
+        } catch (DateTimeParseException e) {
+            System.out.println("digita certo ae namoral");
+            return null;
+        }
+
         TrajetoModel trajeto = new TrajetoModel(origem, destino, horarioSaida);
-        listaTrajetos.add(trajeto);
-        salvarEmArquivo();
 
         view.getOrigem().clear();
         view.getDestino().clear();
         view.getHorarioSaida().setText(null);
-    }
-
-    @Override
-    public void ler() {
-        File arquivo = new File(ARQUIVO_DAT);
-        if (arquivo.exists()) {
-            try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(arquivo))) {
-                ArrayList<TrajetoModel> listaRecuperada = (ArrayList<TrajetoModel>) ois.readObject();
-                listaTrajetos.setAll(listaRecuperada);
-            } catch (IOException | ClassNotFoundException e) {
-                System.err.println("Erro ao ler arquivo: " + e.getMessage());
-            }
-        }
-    }
-
-    @Override
-    public void atualizar() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'atualizar'");
-    }
-
-    @Override
-    public void deletar() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'deletar'");
-    }
-
-    private void salvarEmArquivo() {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(ARQUIVO_DAT))) {
-            oos.writeObject(new ArrayList<>(listaTrajetos));
-            System.out.println("Dados salvos com sucesso!");
-        } catch (IOException e) {
-            System.err.println("Erro ao salvar arquivo: " + e.getMessage());
-        }
+        return trajeto;
     }
 
 }

@@ -22,17 +22,14 @@ public class App extends Application {
     public void start(Stage stage) {
         this.stage = stage;
 
-        // 1. Cria a Tela de Menu
         MenuView menuView = new MenuView();
         scene = new Scene(menuView, 400, 300);
 
-        // 2. Configura a ação dos botões do Menu
         menuView.getBtnPassageiros().setOnAction(e -> abrirTelaPassageiro());
         menuView.getBtnVeiculos().setOnAction(e -> abrirTelaVeiculo());
         menuView.getBtnTrajetos().setOnAction(e -> abrirTelaTrajeto());
-        menuView.getBtnEmpresa().setOnAction(actionEvent -> abrirTelaEmpresa());
+        menuView.getBtnEmpresa().setOnAction(e -> abrirTelaEmpresa());
 
-        // 3. Exibe o Menu inicial
         stage.setTitle("CoCar - Menu Principal");
         stage.setScene(scene);
         stage.show();
@@ -41,7 +38,7 @@ public class App extends Application {
     // --- MÉTODOS DE ROTEAMENTO ---
     private void abrirTelaPassageiro() {
         PassageiroView view = new PassageiroView();
-        new PassageiroController(view);
+        new PassageiroController(scene, view);
 
         Button btnVoltar = new Button("⬅ Voltar ao Menu Principal");
         btnVoltar.setOnAction(e -> stage.setScene(scene));
@@ -54,7 +51,7 @@ public class App extends Application {
 
     private void abrirTelaVeiculo() {
         VeiculoView view = new VeiculoView();
-        new VeiculoController(view);
+        new VeiculoController(scene, view);
 
         Button btnVoltar = new Button("⬅ Voltar ao Menu Principal");
         btnVoltar.setOnAction(e -> stage.setScene(scene));
@@ -67,7 +64,7 @@ public class App extends Application {
 
     private void abrirTelaTrajeto() {
         TrajetoView view = new TrajetoView();
-        new TrajetoController(view);
+        new TrajetoController(scene, view);
 
         Button btnVoltar = new Button("⬅ Voltar ao Menu Principal");
         btnVoltar.setOnAction(e -> stage.setScene(scene));
@@ -80,7 +77,7 @@ public class App extends Application {
 
     private void abrirTelaEmpresa() {
         EmpresaView view = new EmpresaView();
-        new EmpresaController(view);
+        new EmpresaController(scene, view);
 
         Button btnVoltar = new Button("⬅ Voltar ao Menu Principal");
         btnVoltar.setOnAction(e -> stage.setScene(scene));
