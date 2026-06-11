@@ -6,36 +6,33 @@ import java.io.Serializable;
 public class EmpresaModel implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
-    private int idEmpresa;
+    private int id;
     private String nomeEmpresa;
     private int qtaFuncionarios;
 
-    public EmpresaModel(int idEmpresa, String nomeEmpresa, int qtaFuncionarios) {
-        this.idEmpresa = idEmpresa;
+    public EmpresaModel(int id, String nomeEmpresa, int qtaFuncionarios) {
+        this.id = id;
         this.nomeEmpresa = nomeEmpresa;
         this.qtaFuncionarios = qtaFuncionarios;
     }
 
-    public int getIdEmpresa() {
-        return idEmpresa;
+    public int getId() {
+        return id;
     }
 
-    public void setIdEmpresa(int idEmpresa) {
-        this.idEmpresa = idEmpresa;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getNomeEmpresa() {
         return nomeEmpresa;
     }
-
     public void setNomeEmpresa(String nomeEmpresa) {
         this.nomeEmpresa = nomeEmpresa;
     }
-
     public int getQtaFuncionarios() {
         return qtaFuncionarios;
     }
-
     public void setQtaFuncionarios(int qtaFuncionarios) {
         this.qtaFuncionarios = qtaFuncionarios;
     }

@@ -6,6 +6,8 @@ import com.poo.javafx.Instanciacao.JoaoMosson.VeiculoController;
 import com.poo.javafx.Instanciacao.JoaoMosson.VeiculoView;
 import com.poo.javafx.Instanciacao.Eduardo.TrajetoView;
 import com.poo.javafx.Instanciacao.Eduardo.TrajetoController;
+import com.poo.javafx.Instanciacao.JoaoPozzan.EmpresaController;
+import com.poo.javafx.Instanciacao.JoaoPozzan.EmpresaView;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -28,6 +30,7 @@ public class App extends Application {
         menuView.getBtnPassageiros().setOnAction(e -> abrirTelaPassageiro());
         menuView.getBtnVeiculos().setOnAction(e -> abrirTelaVeiculo());
         menuView.getBtnTrajetos().setOnAction(e -> abrirTelaTrajeto());
+        menuView.getBtnEmpresa().setOnAction(actionEvent -> abrirTelaEmpresa());
 
         // 3. Exibe o Menu inicial
         stage.setTitle("CoCar - Menu Principal");
@@ -74,6 +77,19 @@ public class App extends Application {
         stage.setTitle("Gerenciamento de Trajetos");
         stage.setScene(cenaTrajeto);
     }
+
+    private void abrirTelaEmpresa() {
+        EmpresaView view = new EmpresaView();
+        new EmpresaController(view);
+
+        Button btnVoltar = new Button("⬅ Voltar ao Menu Principal");
+        btnVoltar.setOnAction(e -> stage.setScene(scene));
+        view.getChildren().add(0, btnVoltar);
+
+        Scene cenaEmpresa = new Scene(view, 800, 600);
+        stage.setTitle("Gerenciamento de Empresas");
+        stage.setScene(cenaEmpresa);
+    };
 
     public static void main(String[] args) {
         launch();
