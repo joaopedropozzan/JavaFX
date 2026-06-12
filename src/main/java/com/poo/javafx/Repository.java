@@ -22,7 +22,14 @@ public class Repository<T extends Model> {
         } catch (IOException e) {
             System.err.println("Erro ao salvar arquivo: " + e.getMessage());
         }
+    }
 
+    private void checarUnicidade(ArrayList<T> objetos, T objeto) {
+        boolean duplicado = objetos.stream()
+                .anyMatch(e -> e.getID() != objeto.getID() && objeto.colideCom(e));
+        if (duplicado) {
+            throw new IllegalArgumentException("Registro já cadastrado no sistema.");
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -39,6 +46,8 @@ public class Repository<T extends Model> {
 
     public void adicionar(T objeto) {
         ArrayList<T> objetosAtuais = objetos();
+        checarUnicidade(objetosAtuais, objeto);
+
         int ultimoID;
         try {
             T ultimoObjeto = objetosAtuais.getLast();
@@ -60,14 +69,16 @@ public class Repository<T extends Model> {
         gravarArquivo(objetosAtuais);
     }
 
-    public boolean atualizar(int id, T novoObjeto) {
+    public boolean atualizar(int id, T objetoAtualizado) {
+        objetoAtualizado.setID(id);
         ArrayList<T> objetosAtuais = objetos();
-        boolean objetoEncontrado = false;
+        checarUnicidade(objetosAtuais, objetoAtualizado);
 
+        boolean objetoEncontrado = false;
         for (int i = 0; i < objetosAtuais.size(); i++) {
             if (objetosAtuais.get(i).getID() == id) {
-                novoObjeto.setID(id);
-                objetosAtuais.set(i, novoObjeto);
+                objetoAtualizado.setID(id);
+                objetosAtuais.set(i, objetoAtualizado);
                 objetoEncontrado = true;
                 break;
             }

@@ -4,10 +4,10 @@ import java.time.LocalDateTime;
 
 import com.poo.javafx.CRUDView;
 
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TextField;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.HBox;
 import jfxtras.scene.control.LocalDateTimeTextField;
 
 public class TrajetoView extends CRUDView<TrajetoModel> {
@@ -26,21 +26,19 @@ public class TrajetoView extends CRUDView<TrajetoModel> {
         horarioSaida = new LocalDateTimeTextField();
         horarioSaida.setPromptText("Data e hora de Sáida");
 
-        HBox formulario = new HBox(10, origem, destino, horarioSaida);
-
-        this.containerFormulario.getChildren().add(0, formulario);
+        this.containerFormulario.getChildren().addAll(origem, destino, horarioSaida);
     }
 
     @Override
     protected void configurarColunas() {
         TableColumn<TrajetoModel, String> colOrigem = new TableColumn<>("Origem");
-        colOrigem.setCellValueFactory(new PropertyValueFactory<>("origem"));
+        colOrigem.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getOrigem()));
 
         TableColumn<TrajetoModel, String> colDestino = new TableColumn<>("Destino");
-        colDestino.setCellValueFactory(new PropertyValueFactory<>("destino"));
+        colDestino.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getDestino()));
 
         TableColumn<TrajetoModel, LocalDateTime> colHorarioSaida = new TableColumn<>("Horario Saída");
-        colHorarioSaida.setCellValueFactory(new PropertyValueFactory<>("horarioSaida"));
+        colHorarioSaida.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getHorarioSaida()));
 
         tabela.getColumns().addAll(colOrigem, colDestino, colHorarioSaida);
     }

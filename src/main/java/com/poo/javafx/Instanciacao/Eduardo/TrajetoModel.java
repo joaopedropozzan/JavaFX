@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 import com.poo.javafx.Model;
 
-public class TrajetoModel extends Model {
+public class TrajetoModel extends Model<TrajetoModel> {
     private String origem;
     private String destino;
     private LocalDateTime horarioSaida;
@@ -26,5 +26,4 @@ public class TrajetoModel extends Model {
     public LocalDateTime getHorarioSaida() {
         return horarioSaida;
     }
-
 }

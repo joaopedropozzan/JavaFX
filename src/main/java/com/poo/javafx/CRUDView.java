@@ -4,10 +4,13 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
-public abstract class CRUDView<T> extends VBox {
+public abstract class CRUDView<T extends Model<T>> extends BorderPane {
     protected TableView<T> tabela;
     protected Button btnAdicionar;
     protected Button btnAtualizar;
@@ -16,38 +19,42 @@ public abstract class CRUDView<T> extends VBox {
     protected HBox containerFormulario;
 
     public CRUDView() {
-        // 1. Configuração do Layout Principal (VBox)
-        this.setPadding(new Insets(20)); // Espaçamento das bordas
-        this.setSpacing(15); // Espaçamento entre a tabela e os botões
-        this.setAlignment(Pos.CENTER);
+        this.setPadding(new Insets(20));
 
         btnVoltar = new Button("⬅ Voltar ao Menu Principal");
-        HBox painelVoltar = new HBox(btnVoltar);
-        painelVoltar.setAlignment(Pos.TOP_LEFT);
+        BorderPane.setAlignment(btnVoltar, Pos.TOP_LEFT);
+        this.setTop(btnVoltar);
+
+        VBox centroLayout = new VBox(15);
+        centroLayout.setAlignment(Pos.CENTER);
+        VBox.setVgrow(centroLayout, Priority.ALWAYS);
 
         containerFormulario = new HBox(10);
-        containerFormulario.setAlignment(Pos.CENTER);
+        containerFormulario.setAlignment(Pos.CENTER_LEFT);
 
-        // 2. Inicializando a Tabela
-        tabela = new TableView<>();
-        // Faz as colunas ocuparem todo o espaco disponível da tabela
-        tabela.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
-
-        // 3. Inicializando os Botões Genéricos
         btnAdicionar = new Button("Adicionar");
         btnAtualizar = new Button("Atualizar");
         btnDeletar = new Button("Deletar");
 
-        // 4. Agrupando os botões em um HBox (linha horizontal)
-        HBox painelBotoes = new HBox(10); // 10 é o espaçamento entre os botões
-        painelBotoes.setAlignment(Pos.CENTER);
+        HBox painelBotoes = new HBox(10);
+        painelBotoes.setAlignment(Pos.CENTER_RIGHT);
         painelBotoes.getChildren().addAll(btnAdicionar, btnAtualizar, btnDeletar);
 
-        // 5. Adicionando os elementos à View (que é um VBox)
-        this.getChildren().addAll(painelVoltar, containerFormulario, tabela, painelBotoes);
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        // 6. Chamada para o metodo abstrato
-        // Assim que a View mãe for criada, ela obriga a filha a montar as colunas
+        HBox linhaFormBotoes = new HBox();
+        linhaFormBotoes.setAlignment(Pos.CENTER);
+        linhaFormBotoes.getChildren().addAll(containerFormulario, spacer, painelBotoes);
+
+        tabela = new TableView<>();
+        tabela.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
+        VBox.setVgrow(tabela, Priority.ALWAYS);
+
+        centroLayout.getChildren().addAll(linhaFormBotoes, tabela);
+        this.setCenter(centroLayout);
+        BorderPane.setMargin(centroLayout, new Insets(15, 0, 0, 0));
+
         configurarColunas();
     }
 

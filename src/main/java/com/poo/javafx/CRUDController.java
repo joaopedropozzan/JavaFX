@@ -8,7 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 
-public abstract class CRUDController<T extends Model, V extends CRUDView<T>> {
+public abstract class CRUDController<T extends Model<T>, V extends CRUDView<T>> {
     protected V view;
     protected Scene scene;
     protected ObservableList<T> listaTabela;
@@ -47,6 +47,34 @@ public abstract class CRUDController<T extends Model, V extends CRUDView<T>> {
         alert.showAndWait();
     }
 
+    private void validarCamposPreenchidos() throws Exception {
+        for (javafx.scene.Node node : view.getContainerFormulario().getChildren()) {
+            boolean vazio = false;
+            if (node instanceof javafx.scene.control.TextField tf) {
+                vazio = tf.getText().isBlank();
+            } else if (node instanceof javafx.scene.control.DatePicker dp) {
+                vazio = dp.getValue() == null;
+            } else if (node instanceof jfxtras.scene.control.LocalDateTimeTextField ldtf) {
+                vazio = ldtf.getLocalDateTime() == null;
+            }
+            if (vazio) {
+                throw new IllegalArgumentException("Todos os campos do formulário são obrigatórios.");
+            }
+        }
+    }
+
+    private void limparCampos() {
+        for (javafx.scene.Node node : view.getContainerFormulario().getChildren()) {
+            if (node instanceof javafx.scene.control.TextField tf) {
+                tf.clear();
+            } else if (node instanceof javafx.scene.control.DatePicker dp) {
+                dp.setValue(null);
+            } else if (node instanceof jfxtras.scene.control.LocalDateTimeTextField ldtf) {
+                ldtf.setLocalDateTime(null);
+            }
+        }
+    }
+
     public abstract T CamposParaModel() throws Exception;
 
     public abstract void ModelParaCampos(T selecionado);
@@ -61,10 +89,13 @@ public abstract class CRUDController<T extends Model, V extends CRUDView<T>> {
      */
     public void adicionar() {
         try {
+            validarCamposPreenchidos();
             T objeto = CamposParaModel();
-
-            this.repositorio.adicionar(objeto);
-            this.ler();
+            if (objeto != null) {
+                this.repositorio.adicionar(objeto);
+                this.ler();
+                limparCampos();
+            }
         } catch (Exception e) {
             mostrarErroValidacao(e.getMessage());
         }
@@ -94,12 +125,18 @@ public abstract class CRUDController<T extends Model, V extends CRUDView<T>> {
         }
 
         try {
+            validarCamposPreenchidos();
             T objeto = CamposParaModel();
-            repositorio.atualizar(selecionado.getID(), objeto);
-            this.ler();
+            if (objeto != null) {
+                repositorio.atualizar(selecionado.getID(), objeto);
+                this.ler();
+                limparCampos();
+
+            }
         } catch (Exception e) {
             mostrarErroValidacao(e.getMessage());
         }
+
     }
 
     /**
