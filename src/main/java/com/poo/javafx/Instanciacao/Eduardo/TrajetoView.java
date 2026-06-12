@@ -2,7 +2,7 @@ package com.poo.javafx.Instanciacao.Eduardo;
 
 import java.time.LocalDateTime;
 
-import com.poo.javafx.View;
+import com.poo.javafx.CRUDView;
 
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TextField;
@@ -10,7 +10,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import jfxtras.scene.control.LocalDateTimeTextField;
 
-public class TrajetoView extends View<TrajetoModel> {
+public class TrajetoView extends CRUDView<TrajetoModel> {
     private TextField origem;
     private TextField destino;
     private LocalDateTimeTextField horarioSaida;
@@ -28,7 +28,7 @@ public class TrajetoView extends View<TrajetoModel> {
 
         HBox formulario = new HBox(10, origem, destino, horarioSaida);
 
-        this.getChildren().add(0, formulario);
+        this.containerFormulario.getChildren().add(0, formulario);
     }
 
     @Override
@@ -43,6 +43,11 @@ public class TrajetoView extends View<TrajetoModel> {
         colHorarioSaida.setCellValueFactory(new PropertyValueFactory<>("horarioSaida"));
 
         tabela.getColumns().addAll(colOrigem, colDestino, colHorarioSaida);
+    }
+
+    @Override
+    public String getTitulo() {
+        return "Gerenciamento de Trajetos";
     }
 
     public TextField getOrigem() {

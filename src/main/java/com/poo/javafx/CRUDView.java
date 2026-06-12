@@ -7,17 +7,26 @@ import javafx.scene.control.TableView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-public abstract class View<T> extends VBox {
+public abstract class CRUDView<T> extends VBox {
     protected TableView<T> tabela;
     protected Button btnAdicionar;
     protected Button btnAtualizar;
     protected Button btnDeletar;
+    protected Button btnVoltar;
+    protected HBox containerFormulario;
 
-    public View() {
+    public CRUDView() {
         // 1. Configuração do Layout Principal (VBox)
         this.setPadding(new Insets(20)); // Espaçamento das bordas
         this.setSpacing(15); // Espaçamento entre a tabela e os botões
         this.setAlignment(Pos.CENTER);
+
+        btnVoltar = new Button("⬅ Voltar ao Menu Principal");
+        HBox painelVoltar = new HBox(btnVoltar);
+        painelVoltar.setAlignment(Pos.TOP_LEFT);
+
+        containerFormulario = new HBox(10);
+        containerFormulario.setAlignment(Pos.CENTER);
 
         // 2. Inicializando a Tabela
         tabela = new TableView<>();
@@ -35,7 +44,7 @@ public abstract class View<T> extends VBox {
         painelBotoes.getChildren().addAll(btnAdicionar, btnAtualizar, btnDeletar);
 
         // 5. Adicionando os elementos à View (que é um VBox)
-        this.getChildren().addAll(tabela, painelBotoes);
+        this.getChildren().addAll(painelVoltar, containerFormulario, tabela, painelBotoes);
 
         // 6. Chamada para o metodo abstrato
         // Assim que a View mãe for criada, ela obriga a filha a montar as colunas
@@ -45,11 +54,18 @@ public abstract class View<T> extends VBox {
     /**
      * Metodo abstrato.
      * Cada classe que herdar de ViewGenerica será OBRIGADA a implementar
-     * este método para criar suas próprias 3 colunas e vinculá-las ao Model.
+     * este método para criar suas próprias colunas e vinculá-las ao Model.
      */
     protected abstract void configurarColunas();
 
+    // Método abstrato para definr titulo do stage.
+    public abstract String getTitulo();
+
     // Getters para que o Controller possa capturar os cliques nos botões depois
+    public Button getBtnVoltar() {
+        return btnVoltar;
+    }
+
     public Button getBtnAdicionar() {
         return btnAdicionar;
     }
@@ -64,5 +80,9 @@ public abstract class View<T> extends VBox {
 
     public TableView<T> getTabela() {
         return tabela;
+    }
+
+    public HBox getContainerFormulario() {
+        return containerFormulario;
     }
 }

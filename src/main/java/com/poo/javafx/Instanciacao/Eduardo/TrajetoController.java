@@ -5,18 +5,16 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Locale;
 
-import com.poo.javafx.Controller;
+import com.poo.javafx.CRUDController;
 
-import javafx.scene.Scene;
+public class TrajetoController extends CRUDController<TrajetoModel, TrajetoView> {
 
-public class TrajetoController extends Controller<TrajetoModel, TrajetoView> {
-
-    public TrajetoController(Scene scene, TrajetoView view) {
-        super(scene, view, TrajetoModel.class);
+    public TrajetoController() {
+        super(new TrajetoView(), TrajetoModel.class);
     }
 
     @Override
-    public TrajetoModel camposParaObjeto() {
+    public TrajetoModel CamposParaModel() {
         String origem = view.getOrigem().getText();
         String destino = view.getDestino().getText();
         String horarioSaidaTxt;
@@ -36,6 +34,13 @@ public class TrajetoController extends Controller<TrajetoModel, TrajetoView> {
         view.getDestino().clear();
         view.getHorarioSaida().setText(null);
         return trajeto;
+    }
+
+    @Override
+    public void ModelParaCampos(TrajetoModel selecionado) {
+        view.getOrigem().setText(selecionado.getOrigem());
+        view.getDestino().setText(selecionado.getDestino());
+        view.getHorarioSaida().setLocalDateTime(selecionado.getHorarioSaida());
     }
 
 }

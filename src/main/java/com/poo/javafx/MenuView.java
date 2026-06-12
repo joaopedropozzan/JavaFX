@@ -36,6 +36,10 @@ public class MenuView extends VBox {
         this.getChildren().addAll(titulo, btnPassageiros, btnVeiculos, btnTrajetos, btnEmpresa);
     }
 
+    public String getTitulo() {
+        return "CoCar - Menu Principal";
+    }
+
     public Button getBtnPassageiros() {
         return btnPassageiros;
     }

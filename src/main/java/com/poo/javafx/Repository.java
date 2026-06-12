@@ -53,9 +53,9 @@ public class Repository<T extends Model> {
         gravarArquivo(objetosAtuais);
     }
 
-    public void remover(T objeto) {
+    public void remover(T objetoRemover) {
         ArrayList<T> objetosAtuais = objetos();
-        objetosAtuais.remove(objeto);
+        objetosAtuais.removeIf(e -> e.getID() == objetoRemover.getID());
 
         gravarArquivo(objetosAtuais);
     }

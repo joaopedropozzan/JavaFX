@@ -3,7 +3,7 @@ package com.poo.javafx;
 import java.io.Serializable;
 
 public abstract class Model implements Serializable {
-    protected int id;
+    private int id;
 
     public int getID() {
         return id;
