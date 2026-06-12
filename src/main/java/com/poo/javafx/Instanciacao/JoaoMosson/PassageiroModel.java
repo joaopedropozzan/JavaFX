@@ -47,4 +47,9 @@ public class PassageiroModel extends Model<PassageiroModel> {
     public void setDataNascimento(LocalDate dataNascimento) {
         this.dataNascimento = dataNascimento;
     }
+
+    @Override
+    public String toString() {
+        return this.nome;
+    }
 }

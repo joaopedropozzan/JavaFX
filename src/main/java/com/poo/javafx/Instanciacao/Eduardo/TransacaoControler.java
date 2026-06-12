@@ -1,10 +1,17 @@
 package com.poo.javafx.Instanciacao.Eduardo;
 
+import java.util.ArrayList;
+
 import com.poo.javafx.CRUDController;
+import com.poo.javafx.Repository;
+import com.poo.javafx.Instanciacao.JoaoMosson.PassageiroModel;
 
 public class TransacaoControler extends CRUDController<TransacaoModel, TransacaoView> {
     public TransacaoControler() {
         super(new TransacaoView(), TransacaoModel.class);
+        ArrayList<PassageiroModel> users = new Repository<>(PassageiroModel.class).objetos();
+        view.getUserOrigem().getItems().addAll(users);
+        view.getUserDestino().getItems().addAll(users);
     }
 
     @Override

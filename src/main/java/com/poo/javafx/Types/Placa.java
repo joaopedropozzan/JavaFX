@@ -21,4 +21,19 @@ public class Placa implements Serializable {
     public String toString() {
         return valor;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        Placa outra = (Placa) o;
+        return valor.equals(outra.valor);
+    }
+
+    @Override
+    public int hashCode() {
+        return valor.hashCode();
+    }
 }

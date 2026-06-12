@@ -8,13 +8,11 @@ import com.poo.javafx.Repository;
 import com.poo.javafx.Instanciacao.JoaoMosson.PassageiroModel;
 
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TextField;
-import javafx.util.StringConverter;
 
 public class TransacaoView extends CRUDView<TransacaoModel> {
     private ComboBox<PassageiroModel> userOrigem;
@@ -24,26 +22,10 @@ public class TransacaoView extends CRUDView<TransacaoModel> {
     public TransacaoView() {
         super();
 
-        StringConverter<PassageiroModel> passageiroParaString = new StringConverter<>() {
-            @Override
-            public PassageiroModel fromString(String arg0) {
-                throw new UnsupportedOperationException("Unimplemented method 'fromString'");
-            }
-
-            @Override
-            public String toString(PassageiroModel user) {
-                return user.getNome();
-            }
-
-        };
-
         userOrigem = new ComboBox<>();
-        userOrigem.setConverter(passageiroParaString);
         userOrigem.setPromptText("Origem do Trajeto");
-        userOrigem.getItems().addAll(new Repository<>(PassageiroModel.class).objetos());
 
         userDestino = new ComboBox<>();
-        userDestino.setConverter(passageiroParaString);
         userDestino.setPromptText("Destino do Trajeto");
         userDestino.getItems().addAll(new Repository<>(PassageiroModel.class).objetos());
 
@@ -57,11 +39,11 @@ public class TransacaoView extends CRUDView<TransacaoModel> {
     protected void configurarColunas() {
         TableColumn<TransacaoModel, String> colUserOrigem = new TableColumn<>("Usuário Origem");
         colUserOrigem
-                .setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getUserOrigem().getNome()));
+                .setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getUserOrigem().toString()));
 
         TableColumn<TransacaoModel, String> colUserDestino = new TableColumn<>("Usuario Destino");
         colUserDestino
-                .setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getUserDestino().getNome()));
+                .setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getUserDestino().toString()));
 
         TableColumn<TransacaoModel, Double> colValor = new TableColumn<>("Valor");
         colValor.setCellValueFactory(data -> new SimpleDoubleProperty(data.getValue().getValor()).asObject());
