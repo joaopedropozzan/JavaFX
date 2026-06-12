@@ -1,17 +1,16 @@
 package com.poo.javafx.Instanciacao.JoaoMosson;
 
-import com.poo.javafx.Controller;
-import javafx.scene.Scene;
+import com.poo.javafx.CRUDController;
 import javafx.scene.control.Alert;
 
-public class VeiculoController extends Controller<VeiculoModel, VeiculoView> {
+public class VeiculoController extends CRUDController<VeiculoModel, VeiculoView> {
 
-    public VeiculoController(Scene scene, VeiculoView view) {
-        super(scene, view, VeiculoModel.class);
+    public VeiculoController() {
+        super(new VeiculoView(), VeiculoModel.class);
     }
 
     @Override
-    public VeiculoModel camposParaObjeto() {
+    public VeiculoModel CamposParaModel() {
         int ano;
         try {
             ano = Integer.parseInt(view.getTxtAno().getText());
@@ -34,5 +33,12 @@ public class VeiculoController extends Controller<VeiculoModel, VeiculoView> {
         view.getTxtModelo().clear();
         view.getTxtAno().clear();
         return veiculo;
+    }
+
+    @Override
+    public void ModelParaCampos(VeiculoModel selecionado) {
+        view.getTxtPlaca().setText(selecionado.getPlaca());
+        view.getTxtModelo().setText(selecionado.getModelo());
+        view.getTxtAno().setText(String.valueOf(selecionado.getAno()));
     }
 }

@@ -1,12 +1,11 @@
 package com.poo.javafx.Instanciacao.JoaoMosson;
 
-import com.poo.javafx.View;
+import com.poo.javafx.CRUDView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.HBox;
 
-public class VeiculoView extends View<VeiculoModel> {
+public class VeiculoView extends CRUDView<VeiculoModel> {
 
     private TextField txtPlaca;
     private TextField txtModelo;
@@ -25,10 +24,7 @@ public class VeiculoView extends View<VeiculoModel> {
         txtAno = new TextField();
         txtAno.setPromptText("Ano (ex: 2026)");
 
-        HBox formulario = new HBox(10, txtPlaca, txtModelo, txtAno);
-
-        // Adiciona o formulário na tela
-        this.getChildren().add(0, formulario);
+        this.containerFormulario.getChildren().addAll(txtPlaca, txtModelo, txtAno);
     }
 
     @Override
@@ -43,6 +39,10 @@ public class VeiculoView extends View<VeiculoModel> {
         colAno.setCellValueFactory(new PropertyValueFactory<>("ano"));
 
         tabela.getColumns().addAll(colPlaca, colModelo, colAno);
+    }
+
+    public String getTitulo() {
+        return "Gerenciamento de Veiculos";
     }
 
     // Getters para o Controller

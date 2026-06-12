@@ -1,14 +1,13 @@
 package com.poo.javafx.Instanciacao.JoaoMosson;
 
-import com.poo.javafx.View;
+import com.poo.javafx.CRUDView;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.HBox;
 import java.time.LocalDate;
 
-public class PassageiroView extends View<PassageiroModel> {
+public class PassageiroView extends CRUDView<PassageiroModel> {
 
     // Campos que o usuário vai digitar
     private TextField txtCPF;
@@ -28,16 +27,12 @@ public class PassageiroView extends View<PassageiroModel> {
         dpDataNascimento = new DatePicker();
         dpDataNascimento.setPromptText("Data de Nascimento");
 
-        // Agrupa tudo numa linha horizontal
-        HBox formulario = new HBox(10, txtCPF, txtNome, dpDataNascimento);
-
-        // Adiciona o formulário no topo da tela (índice 0 do VBox)
-        this.getChildren().add(0, formulario);
+        this.containerFormulario.getChildren().addAll(txtCPF, txtNome, dpDataNascimento);
     }
 
     @Override
     protected void configurarColunas() {
-        TableColumn<PassageiroModel, Integer> colId = new TableColumn<>("ID");
+        TableColumn<PassageiroModel, String> colId = new TableColumn<>("CPF");
         colId.setCellValueFactory(new PropertyValueFactory<>("CPF"));
 
         TableColumn<PassageiroModel, String> colNome = new TableColumn<>("Nome");
@@ -48,6 +43,11 @@ public class PassageiroView extends View<PassageiroModel> {
 
         // Adiciona as colunas na tabela genérica
         tabela.getColumns().addAll(colId, colNome, colData);
+    }
+
+    @Override
+    public String getTitulo() {
+        return "Gerenciamento de Passageiros";
     }
 
     // Getters para o Controller conseguir capturar o que foi digitado
