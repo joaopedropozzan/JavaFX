@@ -1,13 +1,11 @@
 package com.poo.javafx.Instanciacao.JoaoPozzan;
 
-import com.poo.javafx.View;
-import javafx.scene.Node;
+import com.poo.javafx.CRUDView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.HBox;
 
-public class EmpresaView extends View<EmpresaModel> {
+public class EmpresaView extends CRUDView<EmpresaModel> {
     // Campos que o usuário vai digitar
     private TextField txtCNPJ;
     private TextField txtNome;
@@ -18,7 +16,7 @@ public class EmpresaView extends View<EmpresaModel> {
 
         // Inicializa os campos
         txtCNPJ = new TextField();
-        txtCNPJ.setPromptText("ID");
+        txtCNPJ.setPromptText("CNPJ");
 
         txtNome = new TextField();
         txtNome.setPromptText("Nome da Empresa");
@@ -26,11 +24,7 @@ public class EmpresaView extends View<EmpresaModel> {
         dpQtaFuncionarios = new TextField();
         dpQtaFuncionarios.setPromptText("Quantidade de Funcionários");
 
-        // Agrupa tudo numa linha horizontal
-        HBox formulario = new HBox(10, txtCNPJ, txtNome, dpQtaFuncionarios);
-
-        // Adiciona o formulário no topo da tela (índice 0 do VBox)
-        this.getChildren().add(0, formulario);
+        this.containerFormulario.getChildren().addAll(txtCNPJ, txtNome, dpQtaFuncionarios);
     }
 
     @Override
@@ -50,8 +44,8 @@ public class EmpresaView extends View<EmpresaModel> {
     }
 
     @Override
-    public Node getStyleableNode() {
-        return super.getStyleableNode();
+    public String getTitulo() {
+        return "Gerenciamento de Empresas";
     }
 
     public TextField getTxtCNPJ() {
@@ -64,17 +58,5 @@ public class EmpresaView extends View<EmpresaModel> {
 
     public TextField getDpQtaFuncionarios() {
         return dpQtaFuncionarios;
-    }
-
-    public void setTxtCNPJ(TextField txtId) {
-        this.txtCNPJ = txtId;
-    }
-
-    public void setTxtNome(TextField txtNome) {
-        this.txtNome = txtNome;
-    }
-
-    public void setDpQtaFuncionarios(TextField dpQtaFuncionarios) {
-        this.dpQtaFuncionarios = dpQtaFuncionarios;
     }
 }

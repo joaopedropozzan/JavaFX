@@ -1,21 +1,15 @@
 package com.poo.javafx.Instanciacao.JoaoPozzan;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.scene.Scene;
+import com.poo.javafx.CRUDController;
 
-import com.poo.javafx.Controller;
-import java.time.LocalDate;
-import java.util.ArrayList;
+public class EmpresaController extends CRUDController<EmpresaModel, EmpresaView> {
 
-public class EmpresaController extends Controller<EmpresaModel, EmpresaView> {
-
-    public EmpresaController(Scene scene, EmpresaView view) {
-        super(scene, view, EmpresaModel.class);
+    public EmpresaController() {
+        super(new EmpresaView(), EmpresaModel.class);
     }
 
     @Override
-    public EmpresaModel camposParaObjeto() {
+    public EmpresaModel CamposParaModel() {
         // 1. Captura o CNPJ
         String cnpj = view.getTxtCNPJ().getText();
 
@@ -55,6 +49,13 @@ public class EmpresaController extends Controller<EmpresaModel, EmpresaView> {
         view.getTxtNome().clear();
         view.getDpQtaFuncionarios().clear();
         return empresa;
+    }
+
+    @Override
+    public void ModelParaCampos(EmpresaModel selecionado) {
+        view.getTxtCNPJ().setText(selecionado.getCNPJ());
+        view.getTxtNome().setText(selecionado.getNomeEmpresa());
+        view.getDpQtaFuncionarios().setText(String.valueOf(selecionado.getQtaFuncionarios()));
     }
 
 }
