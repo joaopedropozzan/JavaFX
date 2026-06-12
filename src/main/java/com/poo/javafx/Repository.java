@@ -9,11 +9,11 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
 
-public class Repository<T extends Model> {
+public class Repository<T extends Model<T>> {
     private final String fileName;
 
     public Repository(Class<T> clazz) {
-        this.fileName = clazz.getSimpleName().toLowerCase() + "s.dat";
+        this.fileName = clazz.getSimpleName().toLowerCase() + ".dat";
     }
 
     private void gravarArquivo(ArrayList<T> objetos) {
@@ -42,6 +42,15 @@ public class Repository<T extends Model> {
         } catch (Exception e) {
             return new ArrayList<>();
         }
+    }
+
+    public T comID(int id) {
+        for (T objeto : objetos()) {
+            if (objeto.getID() == id) {
+                return objeto;
+            }
+        }
+        return null;
     }
 
     public void adicionar(T objeto) {

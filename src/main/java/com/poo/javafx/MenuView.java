@@ -11,7 +11,8 @@ public class MenuView extends VBox {
     private Button btnPassageiros;
     private Button btnVeiculos;
     private Button btnTrajetos;
-    private Button btnEmpresa;
+    private Button btnEmpresas;
+    private Button btnTransacoes;
 
     public MenuView() {
         // Centraliza tudo e dá um espaçamento
@@ -24,16 +25,18 @@ public class MenuView extends VBox {
         btnPassageiros = new Button("Gerenciar Passageiros");
         btnVeiculos = new Button("Gerenciar Veículos");
         btnTrajetos = new Button("Gerenciar Trajetos");
-        btnEmpresa = new Button("Gerenciar Empresas");
+        btnEmpresas = new Button("Gerenciar Empresas");
+        btnTransacoes = new Button("Gerenciar Transações");
 
         // Deixa os botões com o mesmo tamanho para ficar bonito
         btnPassageiros.setPrefWidth(200);
         btnVeiculos.setPrefWidth(200);
         btnTrajetos.setPrefWidth(200);
-        btnEmpresa.setPrefWidth(200);
+        btnEmpresas.setPrefWidth(200);
+        btnTransacoes.setPrefWidth(200);
 
         // Adiciona tudo na tela
-        this.getChildren().addAll(titulo, btnPassageiros, btnVeiculos, btnTrajetos, btnEmpresa);
+        this.getChildren().addAll(titulo, btnPassageiros, btnVeiculos, btnTrajetos, btnEmpresas, btnTransacoes);
     }
 
     public String getTitulo() {
@@ -52,8 +55,11 @@ public class MenuView extends VBox {
         return btnTrajetos;
     }
 
-    public Button getBtnEmpresa() {
-        return btnEmpresa;
+    public Button getBtnEmpresas() {
+        return btnEmpresas;
     }
 
+    public Button getBtnTransacoes() {
+        return btnTransacoes;
+    }
 }

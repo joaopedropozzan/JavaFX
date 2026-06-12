@@ -49,14 +49,14 @@ public abstract class CRUDController<T extends Model<T>, V extends CRUDView<T>> 
 
     private void validarCamposPreenchidos() throws Exception {
         for (javafx.scene.Node node : view.getContainerFormulario().getChildren()) {
-            boolean vazio = false;
-            if (node instanceof javafx.scene.control.TextField tf) {
-                vazio = tf.getText().isBlank();
-            } else if (node instanceof javafx.scene.control.DatePicker dp) {
-                vazio = dp.getValue() == null;
-            } else if (node instanceof jfxtras.scene.control.LocalDateTimeTextField ldtf) {
-                vazio = ldtf.getLocalDateTime() == null;
-            }
+            boolean vazio = switch (node) {
+                case javafx.scene.control.TextField tf -> tf.getText().isBlank();
+                case javafx.scene.control.DatePicker dp -> dp.getValue() == null;
+                case jfxtras.scene.control.LocalDateTimeTextField ldtf -> ldtf.getLocalDateTime() == null;
+                case javafx.scene.control.ComboBox<?> cb -> cb.getValue() == null;
+                default -> false;
+            };
+
             if (vazio) {
                 throw new IllegalArgumentException("Todos os campos do formulário são obrigatórios.");
             }
@@ -65,12 +65,15 @@ public abstract class CRUDController<T extends Model<T>, V extends CRUDView<T>> 
 
     private void limparCampos() {
         for (javafx.scene.Node node : view.getContainerFormulario().getChildren()) {
-            if (node instanceof javafx.scene.control.TextField tf) {
-                tf.clear();
-            } else if (node instanceof javafx.scene.control.DatePicker dp) {
-                dp.setValue(null);
-            } else if (node instanceof jfxtras.scene.control.LocalDateTimeTextField ldtf) {
-                ldtf.setLocalDateTime(null);
+            if (node instanceof javafx.scene.control.Control control) {
+                switch (control) {
+                    case javafx.scene.control.TextField tf -> tf.clear();
+                    case javafx.scene.control.DatePicker dp -> dp.setValue(null);
+                    case jfxtras.scene.control.LocalDateTimeTextField ldtf -> ldtf.setLocalDateTime(null);
+                    case javafx.scene.control.ComboBox<?> cb -> cb.setValue(null);
+                    default -> {
+                    }
+                }
             }
         }
     }

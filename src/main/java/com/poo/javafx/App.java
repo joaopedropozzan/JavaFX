@@ -3,6 +3,7 @@ package com.poo.javafx;
 import com.poo.javafx.Instanciacao.JoaoMosson.PassageiroController;
 import com.poo.javafx.Instanciacao.JoaoMosson.VeiculoController;
 import com.poo.javafx.Instanciacao.Eduardo.TrajetoController;
+import com.poo.javafx.Instanciacao.Eduardo.TransacaoControler;
 import com.poo.javafx.Instanciacao.JoaoPozzan.EmpresaController;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -21,7 +22,8 @@ public class App extends Application {
         menuView.getBtnPassageiros().setOnAction(e -> router.navegarPara(new PassageiroController()));
         menuView.getBtnVeiculos().setOnAction(e -> router.navegarPara(new VeiculoController()));
         menuView.getBtnTrajetos().setOnAction(e -> router.navegarPara(new TrajetoController()));
-        menuView.getBtnEmpresa().setOnAction(e -> router.navegarPara(new EmpresaController()));
+        menuView.getBtnEmpresas().setOnAction(e -> router.navegarPara(new EmpresaController()));
+        menuView.getBtnTransacoes().setOnAction(e -> router.navegarPara(new TransacaoControler()));
 
         stage.setScene(scene);
         stage.setTitle(menuView.getTitulo());
