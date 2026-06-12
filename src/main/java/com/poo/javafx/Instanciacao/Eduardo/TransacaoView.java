@@ -22,10 +22,10 @@ public class TransacaoView extends CRUDView<TransacaoModel> {
         super();
 
         userOrigem = new ComboBox<>();
-        userOrigem.setPromptText("Origem do Trajeto");
+        userOrigem.setPromptText("Usuário Origem");
 
         userDestino = new ComboBox<>();
-        userDestino.setPromptText("Destino do Trajeto");
+        userDestino.setPromptText("Usuário Destino");
 
         valor = new TextField();
         valor.setPromptText("Valor");
