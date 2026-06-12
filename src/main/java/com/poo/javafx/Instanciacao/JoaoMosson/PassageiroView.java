@@ -1,10 +1,12 @@
 package com.poo.javafx.Instanciacao.JoaoMosson;
 
 import com.poo.javafx.CRUDView;
+
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TextField;
-import javafx.scene.control.cell.PropertyValueFactory;
 import java.time.LocalDate;
 
 public class PassageiroView extends CRUDView<PassageiroModel> {
@@ -33,13 +35,13 @@ public class PassageiroView extends CRUDView<PassageiroModel> {
     @Override
     protected void configurarColunas() {
         TableColumn<PassageiroModel, String> colId = new TableColumn<>("CPF");
-        colId.setCellValueFactory(new PropertyValueFactory<>("CPF"));
+        colId.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCPF().getValor()));
 
         TableColumn<PassageiroModel, String> colNome = new TableColumn<>("Nome");
-        colNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
+        colNome.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNome()));
 
         TableColumn<PassageiroModel, LocalDate> colData = new TableColumn<>("Data Nasc.");
-        colData.setCellValueFactory(new PropertyValueFactory<>("dataNascimento"));
+        colData.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getDataNascimento()));
 
         // Adiciona as colunas na tabela genérica
         tabela.getColumns().addAll(colId, colNome, colData);

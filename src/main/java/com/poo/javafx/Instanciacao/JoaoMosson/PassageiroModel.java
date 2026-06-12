@@ -4,27 +4,32 @@ import java.io.Serial;
 import java.time.LocalDate;
 
 import com.poo.javafx.Model;
+import com.poo.javafx.Types.CPF;
 
-public class PassageiroModel extends Model {
+public class PassageiroModel extends Model<PassageiroModel> {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    private String cpf;
+    private CPF cpf;
     private String nome;
     private LocalDate dataNascimento;
 
     public PassageiroModel(String cpf, String nome, LocalDate dataNascimento) {
-        this.cpf = cpf;
+        this.cpf = new CPF(cpf);
         this.nome = nome;
         this.dataNascimento = dataNascimento;
     }
 
-    public String getCPF() {
+    protected boolean checarColisao(PassageiroModel objeto) {
+        return this.cpf.equals(objeto.getCPF());
+    }
+
+    public CPF getCPF() {
         return cpf;
     }
 
     public void setCPF(String cpf) {
-        this.cpf = cpf;
+        this.cpf = new CPF(cpf);
     }
 
     public String getNome() {

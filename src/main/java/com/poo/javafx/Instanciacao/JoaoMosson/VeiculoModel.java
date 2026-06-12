@@ -3,27 +3,32 @@ package com.poo.javafx.Instanciacao.JoaoMosson;
 import java.io.Serial;
 
 import com.poo.javafx.Model;
+import com.poo.javafx.Types.Placa;
 
-public class VeiculoModel extends Model {
+public class VeiculoModel extends Model<VeiculoModel> {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    private String placa;
+    private Placa placa;
     private String modelo;
     private int ano;
 
     public VeiculoModel(String placa, String modelo, int ano) {
-        this.placa = placa;
+        this.placa = new Placa(placa);
         this.modelo = modelo;
         this.ano = ano;
     }
 
-    public String getPlaca() {
+    protected boolean checarColisao(VeiculoModel objeto) {
+        return this.placa.equals(objeto.getPlaca());
+    }
+
+    public Placa getPlaca() {
         return placa;
     }
 
     public void setPlaca(String placa) {
-        this.placa = placa;
+        this.placa = new Placa(placa);
     }
 
     public String getModelo() {

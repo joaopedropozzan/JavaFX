@@ -1,7 +1,6 @@
 package com.poo.javafx.Instanciacao.JoaoMosson;
 
 import com.poo.javafx.CRUDController;
-import javafx.scene.control.Alert;
 
 public class VeiculoController extends CRUDController<VeiculoModel, VeiculoView> {
 
@@ -15,29 +14,18 @@ public class VeiculoController extends CRUDController<VeiculoModel, VeiculoView>
         try {
             ano = Integer.parseInt(view.getTxtAno().getText());
         } catch (NumberFormatException ex) {
-            Alert alerta = new Alert(Alert.AlertType.ERROR);
-            alerta.setTitle("Erro de Validação");
-            alerta.setHeaderText("Ano inválido");
-            alerta.setContentText("Por favor, digite apenas números no campo Ano.");
-            alerta.showAndWait();
-
-            return null;
+            throw new IllegalArgumentException("Por favor, digite apenas números no campo Ano.");
         }
 
         String placa = view.getTxtPlaca().getText();
         String modelo = view.getTxtModelo().getText();
 
-        VeiculoModel veiculo = new VeiculoModel(placa, modelo, ano);
-
-        view.getTxtPlaca().clear();
-        view.getTxtModelo().clear();
-        view.getTxtAno().clear();
-        return veiculo;
+        return new VeiculoModel(placa, modelo, ano);
     }
 
     @Override
     public void ModelParaCampos(VeiculoModel selecionado) {
-        view.getTxtPlaca().setText(selecionado.getPlaca());
+        view.getTxtPlaca().setText(selecionado.getPlaca().getValor());
         view.getTxtModelo().setText(selecionado.getModelo());
         view.getTxtAno().setText(String.valueOf(selecionado.getAno()));
     }
