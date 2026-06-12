@@ -9,7 +9,7 @@ public class VeiculoController extends CRUDController<VeiculoModel, VeiculoView>
     }
 
     @Override
-    public VeiculoModel CamposParaModel() {
+    public VeiculoModel camposParaModel() {
         int ano;
         try {
             ano = Integer.parseInt(view.getTxtAno().getText());
@@ -24,7 +24,7 @@ public class VeiculoController extends CRUDController<VeiculoModel, VeiculoView>
     }
 
     @Override
-    public void ModelParaCampos(VeiculoModel selecionado) {
+    public void modelParaCampos(VeiculoModel selecionado) {
         view.getTxtPlaca().setText(selecionado.getPlaca().getValor());
         view.getTxtModelo().setText(selecionado.getModelo());
         view.getTxtAno().setText(String.valueOf(selecionado.getAno()));

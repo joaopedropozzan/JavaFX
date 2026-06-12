@@ -27,7 +27,7 @@ public class EmpresaView extends CRUDView<EmpresaModel> {
         dpQtaFuncionarios = new TextField();
         dpQtaFuncionarios.setPromptText("Quantidade de Funcionários");
 
-        this.containerFormulario.getChildren().addAll(txtCNPJ, txtNome, dpQtaFuncionarios);
+        this.formulario.getChildren().addAll(txtCNPJ, txtNome, dpQtaFuncionarios);
     }
 
     @Override

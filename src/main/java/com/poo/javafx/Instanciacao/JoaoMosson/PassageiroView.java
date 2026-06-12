@@ -29,7 +29,7 @@ public class PassageiroView extends CRUDView<PassageiroModel> {
         dpDataNascimento = new DatePicker();
         dpDataNascimento.setPromptText("Data de Nascimento");
 
-        this.containerFormulario.getChildren().addAll(txtCPF, txtNome, dpDataNascimento);
+        this.formulario.getChildren().addAll(txtCPF, txtNome, dpDataNascimento);
     }
 
     @Override

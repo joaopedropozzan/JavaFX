@@ -33,7 +33,7 @@ public abstract class CRUDController<T extends Model<T>, V extends CRUDView<T>> 
             if (event.getClickCount() == 2) {
                 T selecionado = view.getTabela().getSelectionModel().getSelectedItem();
                 if (selecionado != null) {
-                    ModelParaCampos(selecionado);
+                    modelParaCampos(selecionado);
                 }
             }
         });
@@ -48,7 +48,7 @@ public abstract class CRUDController<T extends Model<T>, V extends CRUDView<T>> 
     }
 
     private void validarCamposPreenchidos() throws Exception {
-        for (javafx.scene.Node node : view.getContainerFormulario().getChildren()) {
+        for (javafx.scene.Node node : view.getFormulario().getChildren()) {
             boolean vazio = switch (node) {
                 case javafx.scene.control.TextField tf -> tf.getText().isBlank();
                 case javafx.scene.control.DatePicker dp -> dp.getValue() == null;
@@ -64,7 +64,7 @@ public abstract class CRUDController<T extends Model<T>, V extends CRUDView<T>> 
     }
 
     private void limparCampos() {
-        for (javafx.scene.Node node : view.getContainerFormulario().getChildren()) {
+        for (javafx.scene.Node node : view.getFormulario().getChildren()) {
             if (node instanceof javafx.scene.control.Control control) {
                 switch (control) {
                     case javafx.scene.control.TextField tf -> tf.clear();
@@ -78,9 +78,9 @@ public abstract class CRUDController<T extends Model<T>, V extends CRUDView<T>> 
         }
     }
 
-    public abstract T CamposParaModel() throws Exception;
+    public abstract T camposParaModel() throws Exception;
 
-    public abstract void ModelParaCampos(T selecionado);
+    public abstract void modelParaCampos(T selecionado);
 
     public CRUDView<T> getView() {
         return view;
@@ -93,7 +93,7 @@ public abstract class CRUDController<T extends Model<T>, V extends CRUDView<T>> 
     public void adicionar() {
         try {
             validarCamposPreenchidos();
-            T objeto = CamposParaModel();
+            T objeto = camposParaModel();
             if (objeto != null) {
                 this.repositorio.adicionar(objeto);
                 this.ler();
@@ -129,7 +129,7 @@ public abstract class CRUDController<T extends Model<T>, V extends CRUDView<T>> 
 
         try {
             validarCamposPreenchidos();
-            T objeto = CamposParaModel();
+            T objeto = camposParaModel();
             if (objeto != null) {
                 repositorio.atualizar(selecionado.getID(), objeto);
                 this.ler();

@@ -1,7 +1,5 @@
 package com.poo.javafx;
 
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.BorderPane;
@@ -9,6 +7,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.SVGPath;
 
 public abstract class CRUDView<T extends Model<T>> extends BorderPane {
     protected TableView<T> tabela;
@@ -16,44 +15,53 @@ public abstract class CRUDView<T extends Model<T>> extends BorderPane {
     protected Button btnAtualizar;
     protected Button btnDeletar;
     protected Button btnVoltar;
-    protected HBox containerFormulario;
+    protected HBox formulario;
 
     public CRUDView() {
-        this.setPadding(new Insets(20));
+        this.getStyleClass().add("crud");
 
-        btnVoltar = new Button("⬅ Voltar ao Menu Principal");
-        BorderPane.setAlignment(btnVoltar, Pos.TOP_LEFT);
+        SVGPath voltarIcon = new SVGPath();
+        voltarIcon.setContent(
+                "m7.825 13l4.9 4.9q.3.3.288.7t-.313.7q-.3.275-.7.288t-.7-.288l-6.6-6.6q-.15-.15-.213-.325T4.426 12t.063-.375t.212-.325l6.6-6.6q.275-.275.688-.275t.712.275q.3.3.3.713t-.3.712L7.825 11H19q.425 0 .713.288T20 12t-.288.713T19 13z");
+        voltarIcon.getStyleClass().add("crud-exit__icon");
+
+        btnVoltar = new Button("Voltar ao Menu Principal");
+        btnVoltar.setGraphic(voltarIcon);
+        btnVoltar.getStyleClass().add("crud__exit");
         this.setTop(btnVoltar);
 
-        VBox centroLayout = new VBox(15);
-        centroLayout.setAlignment(Pos.CENTER);
-        VBox.setVgrow(centroLayout, Priority.ALWAYS);
+        VBox main = new VBox();
+        main.getStyleClass().add("crud__main");
+        VBox.setVgrow(main, Priority.ALWAYS);
 
-        containerFormulario = new HBox(10);
-        containerFormulario.setAlignment(Pos.CENTER_LEFT);
+        formulario = new HBox();
+        formulario.getStyleClass().add("crud__form");
 
         btnAdicionar = new Button("Adicionar");
-        btnAtualizar = new Button("Atualizar");
-        btnDeletar = new Button("Deletar");
 
-        HBox painelBotoes = new HBox(10);
-        painelBotoes.setAlignment(Pos.CENTER_RIGHT);
-        painelBotoes.getChildren().addAll(btnAdicionar, btnAtualizar, btnDeletar);
+        btnAtualizar = new Button("Atualizar");
+        btnAtualizar.getStyleClass().add("button--orange");
+
+        btnDeletar = new Button("Deletar");
+        btnDeletar.getStyleClass().add("button--red");
+
+        HBox actions = new HBox();
+        actions.getStyleClass().add("crud-toolbar__actions");
+        actions.getChildren().addAll(btnAdicionar, btnAtualizar, btnDeletar);
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        HBox linhaFormBotoes = new HBox();
-        linhaFormBotoes.setAlignment(Pos.CENTER);
-        linhaFormBotoes.getChildren().addAll(containerFormulario, spacer, painelBotoes);
+        HBox toolbar = new HBox();
+        toolbar.getStyleClass().add("crud__toolbar");
+        toolbar.getChildren().addAll(formulario, spacer, actions);
 
         tabela = new TableView<>();
         tabela.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
         VBox.setVgrow(tabela, Priority.ALWAYS);
 
-        centroLayout.getChildren().addAll(linhaFormBotoes, tabela);
-        this.setCenter(centroLayout);
-        BorderPane.setMargin(centroLayout, new Insets(15, 0, 0, 0));
+        main.getChildren().addAll(toolbar, tabela);
+        this.setCenter(main);
 
         configurarColunas();
     }
@@ -89,7 +97,7 @@ public abstract class CRUDView<T extends Model<T>> extends BorderPane {
         return tabela;
     }
 
-    public HBox getContainerFormulario() {
-        return containerFormulario;
+    public HBox getFormulario() {
+        return formulario;
     }
 }

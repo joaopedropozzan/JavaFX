@@ -9,7 +9,7 @@ public class EmpresaController extends CRUDController<EmpresaModel, EmpresaView>
     }
 
     @Override
-    public EmpresaModel CamposParaModel() {
+    public EmpresaModel camposParaModel() {
         // 1. Captura o CNPJ
         String cnpj = view.getTxtCNPJ().getText();
 
@@ -37,7 +37,7 @@ public class EmpresaController extends CRUDController<EmpresaModel, EmpresaView>
     }
 
     @Override
-    public void ModelParaCampos(EmpresaModel selecionado) {
+    public void modelParaCampos(EmpresaModel selecionado) {
         view.getTxtCNPJ().setText(selecionado.getCNPJ().getValor());
         view.getTxtNome().setText(selecionado.getNomeEmpresa());
         view.getDpQtaFuncionarios().setText(String.valueOf(selecionado.getQtaFuncionarios()));

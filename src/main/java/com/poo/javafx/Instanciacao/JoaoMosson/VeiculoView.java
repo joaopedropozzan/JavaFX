@@ -24,7 +24,7 @@ public class VeiculoView extends CRUDView<VeiculoModel> {
         txtAno = new TextField();
         txtAno.setPromptText("Ano (ex: 2026)");
 
-        this.containerFormulario.getChildren().addAll(txtPlaca, txtModelo, txtAno);
+        this.formulario.getChildren().addAll(txtPlaca, txtModelo, txtAno);
     }
 
     @Override

@@ -4,7 +4,6 @@ package com.poo.javafx.Instanciacao.Eduardo;
 import java.time.LocalDateTime;
 
 import com.poo.javafx.CRUDView;
-import com.poo.javafx.Repository;
 import com.poo.javafx.Instanciacao.JoaoMosson.PassageiroModel;
 
 import javafx.beans.property.SimpleDoubleProperty;
@@ -27,12 +26,11 @@ public class TransacaoView extends CRUDView<TransacaoModel> {
 
         userDestino = new ComboBox<>();
         userDestino.setPromptText("Destino do Trajeto");
-        userDestino.getItems().addAll(new Repository<>(PassageiroModel.class).objetos());
 
         valor = new TextField();
         valor.setPromptText("Valor");
 
-        this.containerFormulario.getChildren().addAll(userOrigem, userDestino, valor);
+        this.formulario.getChildren().addAll(userOrigem, userDestino, valor);
     }
 
     @Override
@@ -56,7 +54,7 @@ public class TransacaoView extends CRUDView<TransacaoModel> {
 
     @Override
     public String getTitulo() {
-        return "Gerenciamento de Trajetos";
+        return "Gerenciamento de Transações";
     }
 
     public ComboBox<PassageiroModel> getUserOrigem() {

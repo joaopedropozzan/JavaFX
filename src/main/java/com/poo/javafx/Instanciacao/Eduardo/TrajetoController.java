@@ -11,7 +11,7 @@ public class TrajetoController extends CRUDController<TrajetoModel, TrajetoView>
     }
 
     @Override
-    public TrajetoModel CamposParaModel() {
+    public TrajetoModel camposParaModel() {
         String origem = view.getOrigem().getText();
         String destino = view.getDestino().getText();
         LocalDateTime horarioSaida = view.getHorarioSaida().getDisplayedLocalDateTime();
@@ -20,7 +20,7 @@ public class TrajetoController extends CRUDController<TrajetoModel, TrajetoView>
     }
 
     @Override
-    public void ModelParaCampos(TrajetoModel selecionado) {
+    public void modelParaCampos(TrajetoModel selecionado) {
         view.getOrigem().setText(selecionado.getOrigem());
         view.getDestino().setText(selecionado.getDestino());
         view.getHorarioSaida().setLocalDateTime(selecionado.getHorarioSaida());

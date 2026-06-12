@@ -6,8 +6,8 @@ import com.poo.javafx.CRUDController;
 import com.poo.javafx.Repository;
 import com.poo.javafx.Instanciacao.JoaoMosson.PassageiroModel;
 
-public class TransacaoControler extends CRUDController<TransacaoModel, TransacaoView> {
-    public TransacaoControler() {
+public class TransacaoController extends CRUDController<TransacaoModel, TransacaoView> {
+    public TransacaoController() {
         super(new TransacaoView(), TransacaoModel.class);
         ArrayList<PassageiroModel> users = new Repository<>(PassageiroModel.class).objetos();
         view.getUserOrigem().getItems().addAll(users);
@@ -15,7 +15,7 @@ public class TransacaoControler extends CRUDController<TransacaoModel, Transacao
     }
 
     @Override
-    public TransacaoModel CamposParaModel() throws Exception {
+    public TransacaoModel camposParaModel() throws Exception {
         int userOrigemID = view.getUserOrigem().getValue().getID();
         int userDestinoID = view.getUserDestino().getValue().getID();
         double valor;
@@ -29,7 +29,7 @@ public class TransacaoControler extends CRUDController<TransacaoModel, Transacao
     }
 
     @Override
-    public void ModelParaCampos(TransacaoModel selecionado) {
+    public void modelParaCampos(TransacaoModel selecionado) {
         view.getUserOrigem().setValue(selecionado.getUserOrigem());
         view.getUserDestino().setValue(selecionado.getUserDestino());
         view.getValor().setText((String.valueOf(selecionado.getValor())));

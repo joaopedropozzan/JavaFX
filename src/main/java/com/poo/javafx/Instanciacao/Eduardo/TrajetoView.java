@@ -26,7 +26,7 @@ public class TrajetoView extends CRUDView<TrajetoModel> {
         horarioSaida = new LocalDateTimeTextField();
         horarioSaida.setPromptText("Data e hora de Sáida");
 
-        this.containerFormulario.getChildren().addAll(origem, destino, horarioSaida);
+        this.formulario.getChildren().addAll(origem, destino, horarioSaida);
     }
 
     @Override

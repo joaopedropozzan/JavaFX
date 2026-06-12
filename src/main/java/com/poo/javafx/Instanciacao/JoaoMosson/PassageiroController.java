@@ -10,7 +10,7 @@ public class PassageiroController extends CRUDController<PassageiroModel, Passag
     }
 
     @Override
-    public PassageiroModel CamposParaModel() {
+    public PassageiroModel camposParaModel() {
         String cpf = view.getTxtCPF().getText();
         String nome = view.getTxtNome().getText();
         LocalDate data = view.getDpDataNascimento().getValue();
@@ -19,7 +19,7 @@ public class PassageiroController extends CRUDController<PassageiroModel, Passag
     }
 
     @Override
-    public void ModelParaCampos(PassageiroModel selecionado) {
+    public void modelParaCampos(PassageiroModel selecionado) {
         view.getTxtCPF().setText(selecionado.getCPF().getValor());
         view.getTxtNome().setText(selecionado.getNome());
         view.getDpDataNascimento().setValue(selecionado.getDataNascimento());
