@@ -27,23 +27,11 @@ public class EmpresaModel extends Model<EmpresaModel> {
         return cnpj;
     }
 
-    public void setCNPJ(String cnpj) {
-        this.cnpj = new CNPJ(cnpj);
-    }
-
     public String getNomeEmpresa() {
         return nomeEmpresa;
     }
 
-    public void setNomeEmpresa(String nomeEmpresa) {
-        this.nomeEmpresa = nomeEmpresa;
-    }
-
     public int getQtaFuncionarios() {
         return qtaFuncionarios;
-    }
-
-    public void setQtaFuncionarios(int qtaFuncionarios) {
-        this.qtaFuncionarios = qtaFuncionarios;
     }
 }

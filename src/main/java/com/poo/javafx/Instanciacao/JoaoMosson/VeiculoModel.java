@@ -27,23 +27,11 @@ public class VeiculoModel extends Model<VeiculoModel> {
         return placa;
     }
 
-    public void setPlaca(String placa) {
-        this.placa = new Placa(placa);
-    }
-
     public String getModelo() {
         return modelo;
     }
 
-    public void setModelo(String modelo) {
-        this.modelo = modelo;
-    }
-
     public int getAno() {
         return ano;
-    }
-
-    public void setAno(int ano) {
-        this.ano = ano;
     }
 }

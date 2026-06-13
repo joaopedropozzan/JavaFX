@@ -1,0 +1,11 @@
+{
+  "stylesheet_encoding": "utf-8",
+  "css": ".page-break { break-after: page; } .capa { text-align: center; margin-top: 60mm; line-height: 2; } .capa h1 { font-size: 3em; } .capa ul { list-style-type: none; padding: 0; }",
+  "pdf_options": {
+    "format": "A4",
+    "margin": { "top": "25mm", "bottom": "25mm", "left": "20mm", "right": "20mm" },
+    "displayHeaderFooter": true,
+    "headerTemplate": "<span style='font-size: 9px; color: #666; margin-left: 20mm;'>Cocar - Programação Orientada à Objetos</span>",
+    "footerTemplate": "<div style='font-size: 9px; color: #666; width: 100%; text-align: center;'><span class='pageNumber'></span> / <span class='totalPages'></span></div>"
+  }
+}
