@@ -10,14 +10,20 @@ import java.util.ArrayList;
 import java.util.NoSuchElementException;
 
 public class Repository<T extends Model<T>> {
-    private final String fileName;
+    private static final String DATA_DIR = "data/";
+    private final String dataFilePath;
 
     public Repository(Class<T> clazz) {
-        this.fileName = clazz.getSimpleName().toLowerCase() + ".dat";
+        File directory = new File(DATA_DIR);
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
+
+        this.dataFilePath = DATA_DIR + clazz.getSimpleName().toLowerCase() + ".dat";
     }
 
     private void gravarArquivo(ArrayList<T> objetos) {
-        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(fileName))) {
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(dataFilePath))) {
             out.writeObject(objetos);
         } catch (IOException e) {
             System.err.println("Erro ao salvar arquivo: " + e.getMessage());
@@ -34,7 +40,7 @@ public class Repository<T extends Model<T>> {
 
     @SuppressWarnings("unchecked")
     public ArrayList<T> objetos() {
-        File arquivo = new File(fileName);
+        File arquivo = new File(dataFilePath);
         if (!arquivo.exists())
             return new ArrayList<>();
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(arquivo))) {

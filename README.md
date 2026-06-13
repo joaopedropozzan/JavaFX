@@ -1,60 +1,62 @@
-<div class="capa">
-    <h1>Cocar</h1>
-    <h3>Documento de Engenharia de Software</h3>
-    <p><strong>Integrantes`:</strong></p>`
-    <ul>
+<header class="capa">
+    <p class="capa__instituicao">Pontifícia Universidade Católica do Paraná</p>
+    <p class="capa__curso">Escola Politécnica &#149; Engenharia de Software</p>
+    <div class="capa__destaque">
+        <h1 class="capa__titulo">COCAR</h1>
+        <p class="capa__subtitulo">Relatório do Projeto RA3 - Programação Orientada à Objetos</p>
+    </div>
+    <ul class="capa__lista-autores">
         <li>André Murilo Pinz Gomes</li>
-        <li>Eduardo Skororobotei Gomes</li>
+        <li>Eduardo Skoroboatei Gomes</li>
         <li>João Pedro Gadens Mosson</li>
         <li>João Pedro Magri Pozzan</li>
     </ul>
-</div>
+    <footer class="capa__footer">Curitiba<br/>13 de Junho de 2026</footer>
+</header>
 
 <div class="page-break"></div>
 
-## Contextualização e Problema
-A ideia do projeto surgiu das dificuldades diárias de deslocamento da equipe e da alta incidência de veículos com ocupante único (apenas motorista) no entorno da PUCPR.
+# Introdução
 
-**Limitações nos transportes observados:**
-* **Transporte Público:** Sofre com superlotação, tempos de viagem elevados, rotas inflexíveis e problemas de disponibilidade e conexões.
+## Contextualização e Problema
+A ideia do projeto surgiu das dificuldades de deslocamento que os próprios integrantes da equipe enfrentam diariamente e da observação da alta incidência de veículos com um único ocupante (apenas motorista) no entorno da PUCPR.
+
+Ao analisar as alternativas atuais de transporte, identificamos falhas estruturais ou de execução em todas as frentes:
+* **Transporte Público:** Sofre com superlotação, viagems demoradas, rotas inflexíveis e problemas de disponibilidade e conexões.
 * **Transporte Privado:** Gera congestionamentos, agrava a emissão de poluentes e exige alto custo com manutenção, combustível e estacionamento.
 * **Transporte por Aplicativo:** Apresenta disponibilidade imprevisível e tarifas dinâmicas, encarecendo o serviço justamente nos picos de maior demanda.
 
-**Dificuldades da carona tradicional:**
-* **Logística:** Encontrar passageiros com origem e destino compatíveis com rota e horários do motorista.
-* **Atrito Financeiro:** Desconforto de exigir pagamento ou calcular a divisão de custos diretamente com conhecidos ou colegas.
-* **Segurança:** Ter certeza de quem são as pessoas que está compartilhado carona e que são confiáveis e respeitosas.
-* **Confiança:** Deixar de usar outro meio de transporte e ter certeza que conseguirá fazer os trajetos que precisa com caronas.
+Embora a carona tradicional seja a alternativa mais lógica, ela esbarra em alguns atritos práticos severos:
+* **Logística:** É muito difícil cruzar passageiros com origens, destinos e horários perfeitamente compatíveis com a rota do motorista..
+* **Atrito Financeiro:** Há um desconforto social intrínseco em cobrar pagamentos ou dividir custos diretamente com colegas.
+* **Segurança e Confiança:** O usuário precisa ter certeza da idoneidade de quem está no veículo e confiar que não ficará sem transporte na última hora se abrir mão de outros meios..
 
 ## Contexto de Experiência Criativa
-
-Para solucionar essas dores, idealizamos uma plataforma de mobilidade corporativa e acadêmica que elimina o atrito de organizar viagens compartilhadas. O projeto integra o escopo da disciplina de Experiência Criativa.
+Para solucionar essas dores, idealizamos uma plataforma inteligente de mobilidade corporativa e acadêmica que elimina o atrito de organizar viagens compartilhadas.
 
 **Nossa Solução:**
 * **Matchmaking Inteligente:** Algoritmo cruza automaticamente as rotas diárias dos motoristas com as necessidades de deslocamento dos passageiros, otimizando o desvio mínimo.
 * **Rateio Automatizado:** O sistema calcula e gerencia a divisão de custos de forma transparente, eliminando a necessidade de cobrança interpessoal.
 * **Gestão e Comunicação:** Centraliza e facilita a comunicação, simplificando a organização e a manutenção de longo prazo dos grupos de caronas.
 
-**Modelo de Negócios e Parcerias:**
-Expandimos o foco além das universidades para atender o setor corporativo (B2B). Nossa monetização baseia-se em assinaturas pagas pelas organizações parceiras, mantendo o uso subsidiado para o usuário final.
-
-**Benefícios para Instituições Registradas:**
+O foco seria para além das universidades, atendendo também o setor corporativo (B2B). Instituições pagam uma assinatura para subsidiar a plataforma, colhendo benefícios diretos nas seguintes áreas:
 * **Infraestrutura:** Redução drástica na demanda e custos associados a vagas de estacionamento.
 * **Sustentabilidade (ESG):** Diminuição mensurável da pegada de carbono da frota pendular da empresa.
 * **Bem-estar:** Oferecimento de uma alternativa de transporte mais rápida e segura como benefício aos colaboradores/alunos.
 * **Comunidade:** Promove a solidariedade, o networking e a interação social constante entre os membros da instituição.
 
 ## Escopo da Entrega
+Para a disciplina de **Programação Orientada a Objetos (POO)**, isolamos o núcleo de dados e as regras de negócio essenciais do projeto para o desenvolvimento de uma aplicação Desktop utilizando **JavaFX**.
 
-Para a disciplina de Programação Orientada a Objetos (POO), extraímos as entidades e fluxos críticos do projeto central e os implementamos em um aplicativo desktop utilizando JavaFX. O foco desta entrega é a gestão de dados (CRUDs) que sustenta a regra de negócios.
+O foco desta entrega consiste na implementação da camada de persistência e das interfaces de gestão de dados (**CRUDs**) das seguintes entidades:
+* **Trajetos:** Registo de rotas, origens, destinos e horários.
+* **Passageiros:** Perfis dos utilizadores que utilizam o serviço.
+* **Empresas:** Instituições parceiras que subsidiam os acessos.
+* **Benefícios:** Regras de incentivos e recompensas institucionais.
+* **Transações:** Registo de rateio financeiro entre os utilizadores.
+* **Veículos:** Automóveis cadastrados e vinculados aos motoristas.
 
-**Entidades Implementadas:**
-* Trajetos
-* Passageiros
-* Empresas
-* Benefícios
-* Transações
-* Veículos
+A arquitetura do sistema segue o padrão **MVC (Model-View-Controller)**, utilizando conceitos propostos de POO como herança, polimorfismo, classes abstratas e encapsulamento de tipos primitivos para garantir a integridade das regras de negócio.
 
 <div class="page-break"></div>
 
@@ -209,7 +211,7 @@ A tela apresenta o logo da aplicação e logo abaixo, uma lista de botões que o
 * **Retorno:** `boolean`
 
 ## Classe: CRUDController
-* **Implementação:** Eduardo Skororobotei Gomes
+* **Implementação:** Eduardo Skoroboatei Gomes
 * **Descrição:** Classe abstrata que atua como o controlador base para as operações de CRUD (Create, Read, Update, Delete). Ela faz a ponte entre a interface gráfica genérica (`CRUDView`) e a camada de persistência (`Repository`), gerenciando a inicialização da lista de dados, validações base de formulário, injeção de eventos nos botões de ação e a exibição de alertas (mensagens de erro ou advertência). Delega tradução entre os campos do formulário e model para suas subclasses por meio de métodos abstratos.
 
 ### Métodos
@@ -381,7 +383,7 @@ Na parte superior, encontra-se o botão "Voltar ao Menu Principal", que permite 
 * **Retorno:** `boolean`
 
 ## Classe: TrajetoController
-* **Implementação:** Eduardo Skororobotei Gomes
+* **Implementação:** Eduardo Skoroboatei Gomes
 * **Descrição:** Classe controller responsável por gerenciar o fluxo de dados para a entidade `TrajetoModel`. Herdando de `CRUDController`, ela faz a ponte entre a interface gráfica `TrajetoView` e o repositório, implementando as regras de extração e injeção de dados dos campos do formulário para o modelo.
 
 ### Métodos
@@ -399,7 +401,7 @@ Na parte superior, encontra-se o botão "Voltar ao Menu Principal", que permite 
 * **Retorno:** `void`
 
 ## Classe: TrajetoModel
-* **Implementação:** Eduardo Skororobotei Gomes
+* **Implementação:** Eduardo Skoroboatei Gomes
 * **Descrição:** Classe de domínio que representa um trajeto na aplicação. Encapsula as informações fundamentais de uma rota, como o local de origem, o local de destino e o horário de saída previsto.
 
 ### Métodos
@@ -459,7 +461,7 @@ Na parte superior, encontra-se o botão "Voltar ao Menu Principal", que permite 
 * **Retorno:** `LocalDateTimeTextField`
 
 ## Classe: TransacaoController
-* **Implementação:** Eduardo Skororobotei Gomes
+* **Implementação:** Eduardo Skoroboatei Gomes
 * **Descrição:** Controlador responsável por orquestrar o gerenciamento de transações. Além de implementar o fluxo básico do CRUD, a classe cuida do carregamento das listas de passageiros (usuários) nos seletores da interface e garante o tratamento de exceções na conversão do campo numérico de valor.
 
 ### Métodos
@@ -477,7 +479,7 @@ Na parte superior, encontra-se o botão "Voltar ao Menu Principal", que permite 
 * **Retorno:** `void`
 
 ## Classe: TransacaoModel
-* **Implementação:** Eduardo Skororobotei Gomes
+* **Implementação:** Eduardo Skoroboatei Gomes
 * **Descrição:** Modelo de dados que representa uma transação realizada entre dois usuários do sistema. O modelo armazena os identificadores do usuário que envia (origem) e do que recebe (destino), a quantia transferida e registra o momento exato em que a transação foi instanciada.
 
 ### Métodos
@@ -513,7 +515,7 @@ Na parte superior, encontra-se o botão "Voltar ao Menu Principal", que permite 
 * **Retorno:** `PassageiroModel`
 
 ## Classe: TransacaoView
-* **Implementação:** Eduardo Skororobotei Gomes
+* **Implementação:** Eduardo Skoroboatei Gomes
 * **Descrição:** Componente de interface gráfica voltado para a exibição e captação de dados sobre transações. Herda a estrutura de tela do `CRUDView` e introduz menus para a definição das partes envolvidas na transação, além de um campo para entrada do valor financeiro.
 
 ### Interface Gráfica
@@ -798,6 +800,6 @@ O formulário conta com três campos de texto simples (`TextField`) com dicas na
 * **Descrição:** Retorna o campo de texto utilizado para digitar o nome da empresa.
 * **Retorno:** `TextField`
 
-#### `getDpQtaFuncionarios()`
+#### `getTxtQtaFuncionarios()`
 * **Descrição:** Retorna o campo de texto utilizado para digitar a quantidade de funcionários.
 * **Retorno:** `TextField`

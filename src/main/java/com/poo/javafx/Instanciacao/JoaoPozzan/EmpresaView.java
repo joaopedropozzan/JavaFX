@@ -6,13 +6,12 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TextField;
-import javafx.scene.control.cell.PropertyValueFactory;
 
 public class EmpresaView extends CRUDView<EmpresaModel> {
     // Campos que o usuário vai digitar
     private TextField txtCNPJ;
     private TextField txtNome;
-    private TextField dpQtaFuncionarios;
+    private TextField txtQtaFuncionarios;
 
     public EmpresaView() {
         super(); // Herda a tabela e os botões
@@ -24,10 +23,10 @@ public class EmpresaView extends CRUDView<EmpresaModel> {
         txtNome = new TextField();
         txtNome.setPromptText("Nome da Empresa");
 
-        dpQtaFuncionarios = new TextField();
-        dpQtaFuncionarios.setPromptText("Quantidade de Funcionários");
+        txtQtaFuncionarios = new TextField();
+        txtQtaFuncionarios.setPromptText("Quantidade de Funcionários");
 
-        this.formulario.getChildren().addAll(txtCNPJ, txtNome, dpQtaFuncionarios);
+        this.formulario.getChildren().addAll(txtCNPJ, txtNome, txtQtaFuncionarios);
     }
 
     @Override
@@ -57,7 +56,7 @@ public class EmpresaView extends CRUDView<EmpresaModel> {
         return txtNome;
     }
 
-    public TextField getDpQtaFuncionarios() {
-        return dpQtaFuncionarios;
+    public TextField getTxtQtaFuncionarios() {
+        return txtQtaFuncionarios;
     }
 }

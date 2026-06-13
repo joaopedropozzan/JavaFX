@@ -1,0 +1,151 @@
+:root {
+  --color-text-primary: #000000;
+}
+
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: var(--color-text-primary);
+  font-size: 9pt;
+  line-height: 1.5;
+  text-align: justify;
+}
+
+.page-break {
+  page-break-after: always;
+  break-after: page;
+}
+
+@page :first {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.capa {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  box-sizing: border-box;
+  height: 99vh;
+  padding: 3cm 2cm 2cm 2cm;
+}
+
+.capa__instituicao,
+.capa__curso {
+  margin: 0;
+  text-transform: uppercase;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.capa__curso {
+  margin-bottom: auto;
+}
+
+.capa__destaque {
+  margin: auto 0;
+}
+
+.capa__titulo {
+  margin: 0 0 1rem 0;
+  font-size: 2.5rem;
+  text-transform: uppercase;
+}
+
+.capa__subtitulo {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: normal;
+}
+
+.capa__lista-autores {
+  margin: auto 0;
+  padding: 0;
+  list-style: none;
+  font-size: 1.125rem;
+}
+
+.capa__lista-autores li {
+  margin-bottom: 0.5rem;
+}
+
+.capa__footer {
+  margin-top: auto;
+  line-height: 1.5;
+  font-size: 1rem;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  page-break-after: avoid;
+  break-after: avoid;
+  line-height: 1.2;
+  text-align: left;
+}
+
+h1 {
+  font-size: 16pt;
+  text-transform: uppercase;
+  text-align: center;
+  margin-top: 1.5rem;
+}
+
+h2 {
+  font-size: 13pt;
+  margin-top: 4rem;
+}
+
+h3 {
+  font-size: 11pt;
+  font-weight: bold;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+h4 {
+  font-size: 10pt;
+  font-style: italic;
+  margin-top: 0.2rem;
+  margin-bottom: 0.2rem;
+}
+
+p {
+  margin: 0 0 1rem 0;
+  orphans: 3;
+  widows: 3;
+}
+
+ul,
+ol {
+  margin: 0 0 1.5rem 0;
+  padding-left: 2rem;
+  text-align: left;
+}
+
+li {
+  margin-bottom: 0.5rem;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+strong {
+  font-weight: bold;
+}
+
+code {
+  background-color: #f5f5f5;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 2rem auto;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}

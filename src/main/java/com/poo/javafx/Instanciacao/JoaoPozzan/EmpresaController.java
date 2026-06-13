@@ -20,7 +20,7 @@ public class EmpresaController extends CRUDController<EmpresaModel, EmpresaView>
         int qtaFuncionarios;
         try {
             // 4. Captura a quantidade de funcionários
-            qtaFuncionarios = Integer.parseInt(view.getDpQtaFuncionarios().getText());
+            qtaFuncionarios = Integer.parseInt(view.getTxtQtaFuncionarios().getText());
 
             // Quem colocou isso????
             if (qtaFuncionarios == 69) {
@@ -40,7 +40,7 @@ public class EmpresaController extends CRUDController<EmpresaModel, EmpresaView>
     public void modelParaCampos(EmpresaModel selecionado) {
         view.getTxtCNPJ().setText(selecionado.getCNPJ().getValor());
         view.getTxtNome().setText(selecionado.getNomeEmpresa());
-        view.getDpQtaFuncionarios().setText(String.valueOf(selecionado.getQtaFuncionarios()));
+        view.getTxtQtaFuncionarios().setText(String.valueOf(selecionado.getQtaFuncionarios()));
     }
 
 }
