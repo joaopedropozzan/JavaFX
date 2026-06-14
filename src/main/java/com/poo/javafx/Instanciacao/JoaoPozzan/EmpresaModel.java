@@ -34,4 +34,5 @@ public class EmpresaModel extends Model<EmpresaModel> {
     public int getQtaFuncionarios() {
         return qtaFuncionarios;
     }
+
 }

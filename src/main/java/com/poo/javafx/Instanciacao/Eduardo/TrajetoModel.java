@@ -26,4 +26,5 @@ public class TrajetoModel extends Model<TrajetoModel> {
     public LocalDateTime getHorarioSaida() {
         return horarioSaida;
     }
+
 }

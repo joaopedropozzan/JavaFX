@@ -1,5 +1,7 @@
 package com.poo.javafx;
 
+import com.poo.javafx.Instanciacao.Andre.BeneficioController;
+import com.poo.javafx.Instanciacao.Andre.CaronaController;
 import com.poo.javafx.Instanciacao.JoaoMosson.PassageiroController;
 import com.poo.javafx.Instanciacao.JoaoMosson.VeiculoController;
 import com.poo.javafx.Instanciacao.Eduardo.TrajetoController;
@@ -22,6 +24,8 @@ public class App extends Application {
         menuView.getBtnTrajetos().setOnAction(e -> router.navegarPara(new TrajetoController()));
         menuView.getBtnEmpresas().setOnAction(e -> router.navegarPara(new EmpresaController()));
         menuView.getBtnTransacoes().setOnAction(e -> router.navegarPara(new TransacaoController()));
+        menuView.getBtnBeneficios().setOnAction(e -> router.navegarPara(new BeneficioController()));
+        menuView.getBtnCaronas().setOnAction(e -> router.navegarPara(new CaronaController()));
         menuView.getBtnSair().setOnAction(e -> {
             javafx.application.Platform.exit();
             System.exit(0);

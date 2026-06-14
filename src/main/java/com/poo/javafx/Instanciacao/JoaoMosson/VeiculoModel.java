@@ -34,4 +34,5 @@ public class VeiculoModel extends Model<VeiculoModel> {
     public int getAno() {
         return ano;
     }
+
 }
