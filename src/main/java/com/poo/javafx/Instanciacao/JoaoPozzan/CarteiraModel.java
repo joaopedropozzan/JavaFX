@@ -7,11 +7,11 @@ public class CarteiraModel extends Model<CarteiraModel> {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    private int saldo;
+    private double saldo;
     private String numeroCartao;
     private String titularConta;
 
-    public CarteiraModel(int saldo, String numeroCartao, String titularConta) {
+    public CarteiraModel(double saldo, String numeroCartao, String titularConta) {
         this.saldo = saldo;
         this.numeroCartao = numeroCartao;
         this.titularConta = titularConta;
@@ -23,7 +23,7 @@ public class CarteiraModel extends Model<CarteiraModel> {
         return this.numeroCartao.equals(objeto.getNumeroCartao());
     }
 
-    public int getSaldo() {
+    public double getSaldo() {
         return saldo;
     }
 

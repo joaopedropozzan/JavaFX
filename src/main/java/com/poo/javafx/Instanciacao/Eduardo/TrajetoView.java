@@ -1,6 +1,7 @@
 package com.poo.javafx.Instanciacao.Eduardo;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import com.poo.javafx.CRUDView;
 
@@ -24,6 +25,11 @@ public class TrajetoView extends CRUDView<TrajetoModel> {
         destino.setPromptText("Destino do Trajeto");
 
         horarioSaida = new LocalDateTimeTextField();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+
+        horarioSaida.setDateTimeFormatter(formatter);
+
+        horarioSaida.setLocalDateTime(LocalDateTime.now());
         horarioSaida.setPromptText("Data e hora de Sáida");
 
         this.formulario.getChildren().addAll(origem, destino, horarioSaida);

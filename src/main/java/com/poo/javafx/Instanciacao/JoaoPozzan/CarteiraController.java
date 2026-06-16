@@ -10,11 +10,11 @@ public class CarteiraController extends CRUDController<CarteiraModel, CarteiraVi
 
     @Override
     public CarteiraModel camposParaModel() {
-        int saldo;
+        double saldo;
 
         // 1. Validação do Saldo (INT)
         try {
-            saldo = Integer.parseInt(view.getTxtSaldo().getText());
+            saldo = Double.parseDouble(view.getTxtSaldo().getText());
         } catch (NumberFormatException ex) {
             throw new IllegalArgumentException("Erro: O Saldo deve ser um número inteiro válido.");
         }

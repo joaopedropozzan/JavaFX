@@ -7,7 +7,10 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TextField;
+import javafx.util.StringConverter;
+
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class PassageiroView extends CRUDView<PassageiroModel> {
 
@@ -26,7 +29,31 @@ public class PassageiroView extends CRUDView<PassageiroModel> {
         txtNome = new TextField();
         txtNome.setPromptText("Nome do Passageiro");
 
+        String pattern = "dd/MM/yyyy";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+
         dpDataNascimento = new DatePicker();
+        dpDataNascimento.setConverter(new StringConverter<LocalDate>() {
+            @Override
+            public String toString(LocalDate date) {
+                if (date != null) {
+                    return formatter.format(date);
+                }
+                return "";
+            }
+
+            @Override
+            public LocalDate fromString(String string) {
+                if (string != null && !string.trim().isEmpty()) {
+                    try {
+                        return LocalDate.parse(string, formatter);
+                    } catch (Exception e) {
+                        return null;
+                    }
+                }
+                return null;
+            }
+        });
         dpDataNascimento.setPromptText("Data de Nascimento");
 
         this.formulario.getChildren().addAll(txtCPF, txtNome, dpDataNascimento);

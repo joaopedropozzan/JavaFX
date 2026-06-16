@@ -31,7 +31,7 @@ public class CarteiraView extends CRUDView<CarteiraModel> {
 
     @Override
     protected void configurarColunas() {
-        TableColumn<CarteiraModel, Integer> colSaldo = new TableColumn<>("Saldo");
+        TableColumn<CarteiraModel, Double> colSaldo = new TableColumn<>("Saldo");
         colSaldo.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getSaldo()));
 
         // Mudou de Integer / SimpleObjectProperty para String / SimpleStringProperty

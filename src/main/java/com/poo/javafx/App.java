@@ -11,6 +11,7 @@ import com.poo.javafx.Instanciacao.JoaoPozzan.CarteiraController;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.scene.image.Image;
 
 public class App extends Application {
     private Router router;
@@ -35,6 +36,7 @@ public class App extends Application {
 
         Scene scene = new Scene(menuView);
         scene.getStylesheets().add(getClass().getResource("app.css").toExternalForm());
+        stage.getIcons().add(new Image(getClass().getResourceAsStream("logo.png"), 32, 32, true, true));
         stage.setScene(scene);
         stage.setTitle(menuView.getTitulo());
         stage.setMaximized(true);

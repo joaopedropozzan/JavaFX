@@ -55,6 +55,8 @@ O foco desta entrega consiste na implementação da camada de persistência e da
 * **Benefícios:** Regras de incentivos e recompensas institucionais.
 * **Transações:** Registo de rateio financeiro entre os utilizadores.
 * **Veículos:** Automóveis cadastrados e vinculados aos motoristas.
+* **Carteiras:** Saldo e forma de pagamento de um usuário da plataforma.
+* **Caronas:** Ligação entre motorista e oferta para passageiros.
 
 A arquitetura do sistema segue o padrão **MVC (Model-View-Controller)**, utilizando conceitos propostos de POO como herança, polimorfismo, classes abstratas e encapsulamento de tipos primitivos para garantir a integridade das regras de negócio.
 
@@ -83,6 +85,7 @@ A arquitetura do sistema segue o padrão **MVC (Model-View-Controller)**, utiliz
 * **Descrição:** Classe responsável por construir a interface do menu principal da aplicação. Herdando de `StackPane`, ela atua como um contêiner base que agrupa e organiza os botões de navegação para os diferentes módulos de gerenciamento do sistema, além de carregar recursos visuais como a logo.
 
 ### Interface Gráfica
+![](./docs/menu.png)
 
 ### Elementos da Interface e Uso
 A tela apresenta o logo da aplicação e logo abaixo, uma lista de botões que o usuário pode clicar para navegar entre os módulos do sistema. Além disso, há um botão de saída, que permite ao usuário sair do aplicativo.
@@ -117,6 +120,21 @@ A tela apresenta o logo da aplicação e logo abaixo, uma lista de botões que o
 #### `getBtnTransacoes()`
 
 * **Descrição:** Retorna a referência do botão associado ao gerenciamento de transações.
+* **Retorno:** Button
+
+#### `getBtnBeneficios()`
+
+* **Descrição:** Retorna a referência do botão associado ao gerenciamento de benefícios.
+* **Retorno:** Button
+
+#### `getBtnCaronas()`
+
+* **Descrição:** Retorna a referência do botão associado ao gerenciamento de caronas.
+* **Retorno:** Button
+
+#### `getBtnCarteiras()`
+
+* **Descrição:** Retorna a referência do botão associado ao gerenciamento de carteiras.
 * **Retorno:** Button
 
 #### `getBtnSair()`
@@ -272,6 +290,7 @@ A tela apresenta o logo da aplicação e logo abaixo, uma lista de botões que o
 * **Descrição:** Classe abstrata que define a estrutura de interface padrão para as telas de gerenciamento (CRUD) do sistema, herdando de `BorderPane` do JavaFX. Ela encapsula a construção do layout base, fornecendo componentes visuais comuns como botões de ação ("Adicionar", "Atualizar", "Deletar"), um botão de retorno ao menu, um contêiner de formulário e uma tabela de exibição de dados, delegando as especificidades (como título e mapeamento de colunas da tabela) para as subclasses.
 
 ### Interface Gráfica
+![](./docs/crud-view.png)
 
 ### Elementos da Interface e Uso
 Na parte superior, encontra-se o botão "Voltar ao Menu Principal", que permite ao usuário retornar à tela inicial. A região central é composta por uma barra de ferramentas, e, logo abaixo, uma tabela com a listagem de objetos. A barra de ferramentas abriga no lado esquerdo um espaço reservado para os campos de formulário e, alinhados à direita, os botões de ação do CRUD, utilizados para manipular os dados na tabela e no repositório.
@@ -802,4 +821,284 @@ O formulário conta com três campos de texto simples (`TextField`) com dicas na
 
 #### `getTxtQtaFuncionarios()`
 * **Descrição:** Retorna o campo de texto utilizado para digitar a quantidade de funcionários.
+* **Retorno:** `TextField`
+
+## Classe: BeneficioController
+* **Implementação:** André Murilo Pinz Gomes
+* **Descrição:** Classe controladora responsável por intermediar a comunicação entre `BeneficioView` e `BeneficioModel`, extraindo os dados da interface gráfica para instanciar modelos e preenchendo o formulário visual a partir de um modelo selecionado.
+
+### Métodos
+
+#### `BeneficioController()`
+* **Descrição:** Construtor que inicializa a controladora passando instâncias de `BeneficioView` e o tipo `BeneficioModel` para a classe pai.
+
+#### `camposParaModel()`
+* **Descrição:** Coleta os valores inseridos nos campos da interface gráfica e os converte para criar uma nova instância de `BeneficioModel`.
+* **Retorno:** `BeneficioModel`
+
+#### `modelParaCampos(selecionado)`
+* **Descrição:** Recebe um modelo de benefício selecionado e preenche os campos da interface gráfica com seus respectivos valores.
+* **Parâmetro:** `selecionado` (`BeneficioModel`) — O objeto modelo cujos dados serão exibidos na view.
+* **Retorno:** `void`
+
+## Classe: BeneficioModel
+
+* **Implementação:** André Murilo Pinz Gomes
+* **Descrição:** Entidade de modelo que representa um benefício. Armazena os dados principais como nome, tipo, valor financeiro e descrição, além de implementar a lógica para evitar duplicidade de registros (colisão).
+
+### Métodos
+
+#### `BeneficioModel(nome, tipo, valor, descricao)`
+* **Descrição:** Construtor que inicializa um novo benefício com todos os seus atributos básicos.
+* **Parâmetro:** `nome` (`String`) — O nome do benefício.
+* **Parâmetro:** `tipo` (`String`) — A categoria ou tipo do benefício.
+* **Parâmetro:** `valor` (`double`) — O valor monetário associado ao benefício.
+* **Parâmetro:** `descricao` (`String`) — Uma explicação detalhada do benefício.
+
+#### `checarColisao(objeto)`
+* **Descrição:** Verifica se já existe um benefício com o mesmo nome na base de dados para evitar cadastros duplicados.
+* **Parâmetro:** `objeto` (`BeneficioModel`) — Outra instância de modelo a ser comparada.
+* **Retorno:** `boolean`
+
+#### `getNome()`
+* **Descrição:** Recupera o nome do benefício.
+* **Retorno:** `String`
+
+#### `getTipo()`
+* **Descrição:** Recupera o tipo do benefício.
+* **Retorno:** `String`
+
+#### `getValor()`
+* **Descrição:** Recupera o valor do benefício.
+* **Retorno:** `double`
+
+#### `getDescricao()`
+* **Descrição:** Recupera a descrição detalhada do benefício.
+* **Retorno:** `String`
+
+## Classe: BeneficioView
+* **Implementação:** André Murilo Pinz Gomes
+* **Descrição:** Classe responsável pela interface gráfica do gerenciamento de benefícios. Define os campos de formulário para inserção de dados e a tabela para listagem dos registros.
+
+### Interface Gráfica
+![](./docs/crud-beneficios.png)
+
+### Elementos da Interface e Uso
+A tela herda comportamentos de `CRUDView` e é composta por um formulário no topo e uma tabela de exibição na parte inferior. O formulário contém quatro campos de texto (`TextField`) para entrada de dados: "Nome do Beneficio", "Tipo", "Valor" e "Descricao". A tabela de listagem exibe esses dados em quatro colunas correspondentes (Nome, Tipo, Valor e Descricao), mapeadas diretamente das propriedades do `BeneficioModel`.
+
+### Métodos
+
+#### `BeneficioView()`
+* **Descrição:** Construtor que inicializa os campos de texto do formulário, configura os placeholders (textos de dica) e adiciona os componentes ao painel principal.
+
+#### `configurarColunas()`
+* **Descrição:** Configura e vincula as colunas da tabela de exibição aos atributos correspondentes da classe `BeneficioModel`.
+* **Retorno:** `void`
+
+#### `getTitulo()`
+* **Descrição:** Retorna o título que deve ser exibido na janela da interface gráfica.
+* **Retorno:** `String`
+
+#### `getNome()`
+* **Descrição:** Retorna a referência do campo de texto referente ao nome.
+* **Retorno:** `TextField`
+
+#### `getTipo()`
+
+* **Descrição:** Retorna a referência do campo de texto referente ao tipo.
+* **Retorno:** `TextField`
+
+#### `getValor()`
+
+* **Descrição:** Retorna a referência do campo de texto referente ao valor.
+* **Retorno:** `TextField`
+
+#### `getDescricao()`
+
+* **Descrição:** Retorna a referência do campo de texto referente à descrição.
+* **Retorno:** `TextField`
+
+## Classe: CaronaController
+* **Implementação:** André Murilo Pinz Gomes
+* **Descrição:** Controladora responsável por gerenciar o ciclo de vida do cadastro de caronas, fazendo a ponte entre a interface `CaronaView` e a entidade `CaronaModel`. Trata validações simples e formatação de dados numéricos.
+
+### Métodos
+
+#### `CaronaController()`
+* **Descrição:** Construtor que inicializa a estrutura da controladora invocando a superclasse com a respectiva view e o tipo de classe do modelo de carona.
+
+#### `camposParaModel()`
+* **Descrição:** Extrai os dados do formulário da `CaronaView`, realiza as conversões necessárias para números inteiros (vagas), e instancia um novo `CaronaModel`.
+* **Retorno:** `CaronaModel`
+
+#### `modelParaCampos(selecionado)`
+* **Descrição:** Popula os campos da interface `CaronaView` utilizando as informações do objeto `CaronaModel` passado.
+* **Parâmetro:** `selecionado` (`CaronaModel`) — Objeto contendo os dados da carona a serem exibidos.
+* **Retorno:** `void`
+
+## Classe: CaronaModel
+* **Implementação:** André Murilo Pinz Gomes
+* **Descrição:** Classe de modelo que encapsula as informações pertinentes a uma oferta de carona, contendo dados como condutor, trajeto, número de vagas disponíveis e status atual.
+
+### Métodos
+
+#### `CaronaModel(motorista, origem, destino, vagas, status)`
+* **Descrição:** Construtor para inicialização completa do modelo de carona.
+* **Parâmetro:** `motorista` (`String`) — O nome do motorista oferecendo a carona.
+* **Parâmetro:** `origem` (`String`) — O local de partida.
+* **Parâmetro:** `destino` (`String`) — O local de chegada.
+* **Parâmetro:** `vagas` (`int`) — A quantidade de assentos disponíveis.
+* **Parâmetro:** `status` (`String`) — O estado atual da viagem (ex: Aberta, Confirmada).
+
+#### `checarColisao(objeto)`
+* **Descrição:** Verifica redundância de registros conferindo se o motorista, origem e destino coincidem simultaneamente com os dados de outro objeto.
+* **Parâmetro:** `objeto` (`CaronaModel`) — Instância a ser comparada com a atual.
+* **Retorno:** `boolean`
+
+#### `getMotorista()`
+* **Descrição:** Retorna o nome do motorista.
+* **Retorno:** `String`
+
+#### `getOrigem()`
+* **Descrição:** Retorna o local de origem.
+* **Retorno:** `String`
+
+#### `getDestino()`
+* **Descrição:** Retorna o local de destino da carona.
+* **Retorno:** `String`
+
+#### `getVagas()`
+* **Descrição:** Retorna o número atual de vagas.
+* **Retorno:** `int`
+
+#### `getStatus()`
+* **Descrição:** Retorna o status da carona.
+* **Retorno:** `String`
+
+## Classe: CaronaView
+
+* **Implementação:** André Murilo Pinz Gomes
+* **Descrição:** Representação visual do sistema para operações CRUD focadas em objetos `CaronaModel`. Oferece a interface para cadastro de trajetos e visualização tabular.
+
+### Interface Gráfica
+![](./docs/crud-caronas.png)
+
+### Elementos da Interface e Uso
+A interface, estendida de `CRUDView`, divide-se em um formulário superior e uma tabela inferior. O formulário é composto por campos `TextField` para "Motorista", "Origem", "Destino" e "Vagas", além de um `ComboBox` predefinido para o "Status" contendo as opções (Aberta, Confirmada, Concluida, Cancelada). O usuário insere as informações através destes controles, que são posteriormente espelhados nas colunas da tabela de registros na tela inferior.
+
+### Métodos
+
+#### `CaronaView()`
+* **Descrição:** Construtor que cria os elementos gráficos de entrada (Textos e ComboBox), define as dicas em tela (prompt text), e os injeta no painel de formulário herdado.
+
+#### `configurarColunas()`
+* **Descrição:** Configura e vincula as colunas de dados da tabela (Motorista, Origem, Destino, Vagas e Status) às respectivas funções e tipos provenientes do modelo de dados.
+* **Retorno:** `void`
+
+#### `getTitulo()`
+* **Descrição:** Retorna o título a ser fixado no cabeçalho ou janela da aplicação.
+* **Retorno:** `String`
+
+#### `getMotorista()`
+* **Descrição:** Retorna o campo de texto utilizado para obter o nome do motorista.
+* **Retorno:** `TextField`
+
+#### `getOrigem()`
+* **Descrição:** Retorna o campo de texto utilizado para obter a origem.
+* **Retorno:** `TextField`
+
+#### `getDestino()`
+* **Descrição:** Retorna o campo de texto utilizado para obter o destino.
+* **Retorno:** `TextField`
+
+#### `getVagas()`
+* **Descrição:** Retorna o campo de texto utilizado para obter as vagas disponíveis.
+* **Retorno:** `TextField`
+
+#### `getStatus()`
+* **Descrição:** Retorna a lista suspensa (combobox) contendo os status da viagem.
+* **Retorno:** `ComboBox<String>`
+
+## Classe: CarteiraController
+* **Implementação:** João Pedro Magri Pozzan
+* **Descrição:** Controlador responsável por intermediar a validação e o fluxo de dados entre a interface gráfica de carteiras e o modelo de negócio correspondente, tratando conversões de tipo e regras de preenchimento obrigatório.
+
+### Métodos
+
+#### `CarteiraController()`
+* **Descrição:** Construtor que inicializa as instâncias da view e do modelo vinculadas a este controlador.
+
+#### `camposParaModel()`
+* **Descrição:** Obtém os valores inseridos pelo usuário na interface, realiza as devidas validações (saldo numérico, cartão com 16 dígitos e titular não nulo) e retorna uma nova instância do modelo.
+* **Retorno:** `CarteiraModel`
+
+#### `modelParaCampos(selecionado)`
+* **Descrição:** Transfere as informações de um modelo preexistente para os respectivos campos de texto na interface gráfica.
+* **Parâmetro:** `selecionado` (`CarteiraModel`) — O objeto de carteira que contém os dados a serem exibidos.
+* **Retorno:** `void`
+
+## Classe: CarteiraModel
+
+* **Implementação:** João Pedro Magri Pozzan
+* **Descrição:** Entidade que representa os dados de uma carteira, englobando as informações financeiras e de identificação, bem como a definição da regra de unicidade do registro.
+
+### Métodos
+
+#### `CarteiraModel(saldo, numeroCartao, titularConta)`
+* **Descrição:** Construtor utilizado para criar uma nova carteira com todos os atributos preenchidos.
+* **Parâmetro:** `saldo` (`double`) — O valor disponível na carteira.
+* **Parâmetro:** `numeroCartao` (`String`) — A numeração de 16 dígitos do cartão.
+* **Parâmetro:** `titularConta` (`String`) — O nome do responsável pela conta.
+
+#### `checarColisao(objeto)`
+* **Descrição:** Verifica se já existe um cadastro de carteira no sistema contendo o mesmo número de cartão, para evitar duplicidade.
+* **Parâmetro:** `objeto` (`CarteiraModel`) — O objeto a ser comparado com a instância atual.
+* **Retorno:** `boolean`
+
+#### `getSaldo()`
+* **Descrição:** Recupera o saldo atual da carteira.
+* **Retorno:** `double`
+
+#### `getNumeroCartao()`
+* **Descrição:** Recupera o número do cartão vinculado.
+* **Retorno:** `String`
+
+#### `getTitularConta()`
+* **Descrição:** Recupera o nome do titular da conta.
+* **Retorno:** `String`
+
+## Classe: CarteiraView
+
+* **Implementação:** João Pedro Magri Pozzan
+* **Descrição:** Classe encarregada de desenhar a interface com o usuário para a manipulação de carteiras, fornecendo os componentes de formulário e a estrutura tabular para listagem.
+
+### Interface Gráfica
+![](./docs/crud-carteiras.png)
+
+### Elementos da Interface e Uso
+A interface visual estende funcionalidades padronizadas e apresenta um formulário interativo no topo junto com uma tabela de registros logo abaixo. O formulário disponibiliza três campos de entrada de texto (`TextField`) para digitação de dados: "Saldo da Conta", "Número do Cartão" e "Titular da Conta". Conforme os dados são submetidos e validados pelo controlador, eles passam a compor a tabela inferior, estruturada nas colunas de Saldo, Nº do Cartão e Titular.
+
+### Métodos
+
+#### `CarteiraView()`
+* **Descrição:** Construtor que cria os componentes do formulário, configura seus textos de ajuda (prompt text) e os anexa à tela principal.
+
+#### `configurarColunas()`
+* **Descrição:** Define as colunas da tabela de exibição e realiza a vinculação delas com as respectivas propriedades do objeto `CarteiraModel`.
+* **Retorno:** `void`
+
+#### `getTitulo()`
+* **Descrição:** Retorna o título que identifica a tela de carteiras.
+* **Retorno:** `String`
+
+#### `getTxtSaldo()`
+* **Descrição:** Fornece a referência para o campo de texto do saldo.
+* **Retorno:** `TextField`
+
+#### `getTxtNumeroCartao()`
+* **Descrição:** Fornece a referência para o campo de texto do número do cartão.
+* **Retorno:** `TextField`
+
+#### `getTxtTitularConta()`
+* **Descrição:** Fornece a referência para o campo de texto correspondente ao titular da conta.
 * **Retorno:** `TextField`

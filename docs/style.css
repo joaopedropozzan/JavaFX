@@ -15,11 +15,6 @@ body {
   break-after: page;
 }
 
-@page :first {
-  margin-top: 0;
-  margin-bottom: 0;
-}
-
 .capa {
   box-sizing: border-box;
   display: flex;
@@ -28,7 +23,6 @@ body {
   text-align: center;
   box-sizing: border-box;
   height: 99vh;
-  padding: 3cm 2cm 2cm 2cm;
 }
 
 .capa__instituicao,
