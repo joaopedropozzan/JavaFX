@@ -8,10 +8,10 @@ public class CarteiraModel extends Model<CarteiraModel> {
     private static final long serialVersionUID = 1L;
 
     private int saldo;
-    private int numeroCartao;
+    private String numeroCartao;
     private String titularConta;
 
-    public CarteiraModel(int saldo, int numeroCartao, String titularConta) {
+    public CarteiraModel(int saldo, String numeroCartao, String titularConta) {
         this.saldo = saldo;
         this.numeroCartao = numeroCartao;
         this.titularConta = titularConta;
@@ -20,14 +20,14 @@ public class CarteiraModel extends Model<CarteiraModel> {
     @Override
     protected boolean checarColisao(CarteiraModel objeto) {
         // A regra de colisão valida se o número do cartão já existe no sistema
-        return this.numeroCartao == objeto.getNumeroCartao();
+        return this.numeroCartao.equals(objeto.getNumeroCartao());
     }
 
     public int getSaldo() {
         return saldo;
     }
 
-    public int getNumeroCartao() {
+    public String getNumeroCartao() {
         return numeroCartao;
     }
 

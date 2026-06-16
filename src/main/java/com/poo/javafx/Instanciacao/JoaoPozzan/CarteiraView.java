@@ -34,8 +34,9 @@ public class CarteiraView extends CRUDView<CarteiraModel> {
         TableColumn<CarteiraModel, Integer> colSaldo = new TableColumn<>("Saldo");
         colSaldo.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getSaldo()));
 
-        TableColumn<CarteiraModel, Integer> colNumero = new TableColumn<>("Nº do Cartão");
-        colNumero.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getNumeroCartao()));
+        // Mudou de Integer / SimpleObjectProperty para String / SimpleStringProperty
+        TableColumn<CarteiraModel, String> colNumero = new TableColumn<>("Nº do Cartão");
+        colNumero.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNumeroCartao()));
 
         TableColumn<CarteiraModel, String> colTitular = new TableColumn<>("Titular");
         colTitular.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getTitularConta()));

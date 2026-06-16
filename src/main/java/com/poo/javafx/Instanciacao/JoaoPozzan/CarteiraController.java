@@ -11,35 +11,34 @@ public class CarteiraController extends CRUDController<CarteiraModel, CarteiraVi
     @Override
     public CarteiraModel camposParaModel() {
         int saldo;
-        int numeroCartao;
 
+        // 1. Validação do Saldo (INT)
         try {
-            // 1. Captura e converte o Saldo
             saldo = Integer.parseInt(view.getTxtSaldo().getText());
         } catch (NumberFormatException ex) {
-            throw new IllegalArgumentException(
-                    "Erro: O Saldo deve ser um número inteiro válido.");
+            throw new IllegalArgumentException("Erro: O Saldo deve ser um número inteiro válido.");
         }
 
-        try {
-            // 2. Captura e converte o Número do Cartão
-            numeroCartao = Integer.parseInt(view.getTxtNumeroCartao().getText());
-        } catch (NumberFormatException ex) {
-            throw new IllegalArgumentException(
-                    "Erro: O Número do Cartão deve ser um número inteiro válido.");
+        // 2. Validação do Número do Cartão (16 dígitos numéricos)
+        // Removemos espaços vazios antes de validar
+        String numeroCartao = view.getTxtNumeroCartao().getText().replaceAll("\\s+", "");
+        if (!numeroCartao.matches("\\d{16}")) {
+            throw new IllegalArgumentException("Erro: O número do cartão deve conter exatamente 16 dígitos numéricos.");
         }
 
-        // 3. Captura o Titular da Conta
-        String titularConta = view.getTxtTitularConta().getText();
+        // 3. Validação do Titular (Não pode ser vazio)
+        String titularConta = view.getTxtTitularConta().getText().trim();
+        if (titularConta.isEmpty()) {
+            throw new IllegalArgumentException("Erro: O nome do titular da conta não pode estar vazio.");
+        }
 
-        // 4. Cria e adiciona a nova carteira
         return new CarteiraModel(saldo, numeroCartao, titularConta);
     }
 
     @Override
     public void modelParaCampos(CarteiraModel selecionado) {
         view.getTxtSaldo().setText(String.valueOf(selecionado.getSaldo()));
-        view.getTxtNumeroCartao().setText(String.valueOf(selecionado.getNumeroCartao()));
+        view.getTxtNumeroCartao().setText(selecionado.getNumeroCartao());
         view.getTxtTitularConta().setText(selecionado.getTitularConta());
     }
 }
