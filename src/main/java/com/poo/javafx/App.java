@@ -7,6 +7,7 @@ import com.poo.javafx.Instanciacao.JoaoMosson.VeiculoController;
 import com.poo.javafx.Instanciacao.Eduardo.TrajetoController;
 import com.poo.javafx.Instanciacao.Eduardo.TransacaoController;
 import com.poo.javafx.Instanciacao.JoaoPozzan.EmpresaController;
+import com.poo.javafx.Instanciacao.JoaoPozzan.CarteiraController;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -26,6 +27,7 @@ public class App extends Application {
         menuView.getBtnTransacoes().setOnAction(e -> router.navegarPara(new TransacaoController()));
         menuView.getBtnBeneficios().setOnAction(e -> router.navegarPara(new BeneficioController()));
         menuView.getBtnCaronas().setOnAction(e -> router.navegarPara(new CaronaController()));
+        menuView.getBtnCarteiras().setOnAction(e -> router.navegarPara(new CarteiraController()));
         menuView.getBtnSair().setOnAction(e -> {
             javafx.application.Platform.exit();
             System.exit(0);

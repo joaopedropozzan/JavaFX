@@ -23,7 +23,7 @@ public class EmpresaController extends CRUDController<EmpresaModel, EmpresaView>
             qtaFuncionarios = Integer.parseInt(view.getTxtQtaFuncionarios().getText());
 
             // Quem colocou isso????
-            if (qtaFuncionarios == 69) {
+            if (qtaFuncionarios == 67) {
                 throw new IllegalArgumentException(
                         "Por favor pessoal, esse é um trabalho acadêmico sério. Vamos respeitar a matéria, por favor!!");
             }

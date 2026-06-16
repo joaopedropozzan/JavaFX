@@ -16,6 +16,7 @@ public class MenuView extends StackPane {
     private Button btnTransacoes;
     private Button btnBeneficios;
     private Button btnCaronas;
+    private Button btnCarteiras;
     private Button btnSair;
 
     public MenuView() {
@@ -44,9 +45,10 @@ public class MenuView extends StackPane {
         btnBeneficios = new Button("Gerenciar Beneficios");
         btnCaronas = new Button("Gerenciar Caronas");
         btnTransacoes = new Button("Gerenciar Transações");
+        btnCarteiras = new Button("Gerenciar Carteiras");
 
         VBox main = new VBox(logo, btnPassageiros, btnVeiculos, btnTrajetos, btnEmpresas, btnTransacoes, btnBeneficios,
-                btnCaronas);
+                btnCaronas, btnCarteiras);
         main.getStyleClass().add("menu__main");
 
         this.getChildren().addAll(main, btnSairWrapper);
@@ -82,6 +84,10 @@ public class MenuView extends StackPane {
 
     public Button getBtnCaronas() {
         return btnCaronas;
+    }
+
+    public Button getBtnCarteiras() {
+        return btnCarteiras;
     }
 
     public Button getBtnSair() {
