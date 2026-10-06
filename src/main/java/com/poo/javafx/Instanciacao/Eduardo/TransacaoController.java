@@ -8,7 +8,7 @@ import com.poo.javafx.Instanciacao.JoaoMosson.PassageiroModel;
 
 public class TransacaoController extends CRUDController<TransacaoModel, TransacaoView> {
     public TransacaoController() {
-        super(new TransacaoView(), TransacaoModel.class);
+        super(TransacaoModel.class);
         ArrayList<PassageiroModel> users = new Repository<>(PassageiroModel.class).objetos();
         view.getUserOrigem().getItems().addAll(users);
         view.getUserDestino().getItems().addAll(users);
@@ -33,5 +33,10 @@ public class TransacaoController extends CRUDController<TransacaoModel, Transaca
         view.getUserOrigem().setValue(selecionado.getUserOrigem());
         view.getUserDestino().setValue(selecionado.getUserDestino());
         view.getValor().setText((String.valueOf(selecionado.getValor())));
+    }
+
+    @Override
+    protected TransacaoView criarView() {
+        return new TransacaoView();
     }
 }

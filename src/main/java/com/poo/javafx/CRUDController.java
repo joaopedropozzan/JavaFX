@@ -1,9 +1,18 @@
 package com.poo.javafx;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import com.poo.javafx.validacao.RegraComboBox;
+import com.poo.javafx.validacao.RegraDatePicker;
+import com.poo.javafx.validacao.RegraLocalDateTime;
+import com.poo.javafx.validacao.RegraTextField;
+import com.poo.javafx.validacao.RegraValidacao;
+import com.poo.javafx.validacao.ResultadoValidacao;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -14,14 +23,28 @@ public abstract class CRUDController<T extends Model<T>, V extends CRUDView<T>> 
     protected ObservableList<T> listaTabela;
     protected Repository<T> repositorio;
 
-    public CRUDController(V view, Class<T> clazz) {
-        this.view = view;
+    protected final List<RegraValidacao> regrasValidacao = new ArrayList<>();
+
+    public CRUDController(Class<T> clazz) {
+        this.view = criarView();
         this.repositorio = new Repository<>(clazz);
 
         this.listaTabela = FXCollections.observableArrayList(repositorio.objetos());
         this.view.getTabela().setItems(this.listaTabela);
 
+        registrarRegrasPadrao();
         setupActions();
+    }
+
+    private void registrarRegrasPadrao() {
+        regrasValidacao.add(new RegraTextField());
+        regrasValidacao.add(new RegraComboBox());
+        regrasValidacao.add(new RegraLocalDateTime());
+        regrasValidacao.add(new RegraDatePicker());
+    }
+
+    public void adicionarRegra(RegraValidacao regra) {
+        this.regrasValidacao.add(0, regra);
     }
 
     private void setupActions() {
@@ -47,36 +70,46 @@ public abstract class CRUDController<T extends Model<T>, V extends CRUDView<T>> 
         alert.showAndWait();
     }
 
-    private void validarCamposPreenchidos() throws Exception {
-        for (javafx.scene.Node node : view.getFormulario().getChildren()) {
-            boolean vazio = switch (node) {
-                case javafx.scene.control.TextField tf -> tf.getText().isBlank();
-                case javafx.scene.control.DatePicker dp -> dp.getValue() == null;
-                case jfxtras.scene.control.LocalDateTimeTextField ldtf -> ldtf.getLocalDateTime() == null;
-                case javafx.scene.control.ComboBox<?> cb -> cb.getValue() == null;
-                default -> false;
-            };
+    private void limparDestaquesErro() {
+        for (Node node : view.getFormulario().getChildren()) {
+            node.getStyleClass().remove("field--error");
+        }
+    }
 
-            if (vazio) {
-                throw new IllegalArgumentException("Todos os campos do formulário são obrigatórios.");
+    private void validarCamposPreenchidos() throws Exception {
+        limparDestaquesErro();
+
+        for (Node componente : view.getFormulario().getChildren()) {
+            for (RegraValidacao regra : regrasValidacao) {
+                if (regra.suporta(componente)) {
+                    ResultadoValidacao resultado = regra.executar(componente);
+
+                    if (!resultado.valido()) {
+                        componente.getStyleClass().add("field--error");
+                        componente.requestFocus();
+
+                        throw new IllegalArgumentException(resultado.mensagemErro());
+                    }
+                    break;
+                }
             }
         }
     }
 
     private void limparCampos() {
-        for (javafx.scene.Node node : view.getFormulario().getChildren()) {
-            if (node instanceof javafx.scene.control.Control control) {
-                switch (control) {
-                    case javafx.scene.control.TextField tf -> tf.clear();
-                    case javafx.scene.control.DatePicker dp -> dp.setValue(null);
-                    case jfxtras.scene.control.LocalDateTimeTextField ldtf -> ldtf.setLocalDateTime(null);
-                    case javafx.scene.control.ComboBox<?> cb -> cb.setValue(null);
-                    default -> {
-                    }
+        limparDestaquesErro();
+
+        for (Node componente : view.getFormulario().getChildren()) {
+            for (RegraValidacao regra : regrasValidacao) {
+                if (regra.suporta(componente)) {
+                    regra.limpar(componente);
+                    break;
                 }
             }
         }
     }
+
+    protected abstract V criarView();
 
     public abstract T camposParaModel() throws Exception;
 

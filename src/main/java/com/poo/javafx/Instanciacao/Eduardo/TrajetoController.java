@@ -7,7 +7,7 @@ import com.poo.javafx.CRUDController;
 public class TrajetoController extends CRUDController<TrajetoModel, TrajetoView> {
 
     public TrajetoController() {
-        super(new TrajetoView(), TrajetoModel.class);
+        super(TrajetoModel.class);
     }
 
     @Override
@@ -24,6 +24,11 @@ public class TrajetoController extends CRUDController<TrajetoModel, TrajetoView>
         view.getOrigem().setText(selecionado.getOrigem());
         view.getDestino().setText(selecionado.getDestino());
         view.getHorarioSaida().setLocalDateTime(selecionado.getHorarioSaida());
+    }
+
+    @Override
+    protected TrajetoView criarView() {
+        return new TrajetoView();
     }
 
 }

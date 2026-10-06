@@ -99,6 +99,12 @@
   -fx-border-color: -color-brand-blue;
 }
 
+.field--error {
+  -fx-border-color: #d32f2f;
+  -fx-border-width: 2px;
+  -fx-border-radius: 4px;
+}
+
 .table-view {
   -fx-selection-bar: -color-brand-green;
   -fx-selection-bar-non-focused: derive(-color-brand-blue, 40%);

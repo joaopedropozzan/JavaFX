@@ -1,21 +1,21 @@
 package com.poo.javafx.Instanciacao.JoaoMosson;
 
 import com.poo.javafx.CRUDController;
-
-import java.time.LocalDate;
+import com.poo.javafx.Types.CPF;
+import com.poo.javafx.validacao.RegraTipoDominio;
 
 public class PassageiroController extends CRUDController<PassageiroModel, PassageiroView> {
     public PassageiroController() {
-        super(new PassageiroView(), PassageiroModel.class);
+        super(PassageiroModel.class);
+        adicionarRegra(new RegraTipoDominio(view.getTxtCPF(), CPF::new));
     }
 
     @Override
     public PassageiroModel camposParaModel() {
-        String cpf = view.getTxtCPF().getText();
-        String nome = view.getTxtNome().getText();
-        LocalDate data = view.getDpDataNascimento().getValue();
-
-        return new PassageiroModel(cpf, nome, data);
+        return new PassageiroModel(
+                view.getTxtCPF().getText(),
+                view.getTxtNome().getText(),
+                view.getDpDataNascimento().getValue());
     }
 
     @Override
@@ -23,5 +23,10 @@ public class PassageiroController extends CRUDController<PassageiroModel, Passag
         view.getTxtCPF().setText(selecionado.getCPF().getValor());
         view.getTxtNome().setText(selecionado.getNome());
         view.getDpDataNascimento().setValue(selecionado.getDataNascimento());
+    }
+
+    @Override
+    protected PassageiroView criarView() {
+        return new PassageiroView();
     }
 }

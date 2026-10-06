@@ -2,33 +2,32 @@ package com.poo.javafx;
 
 import com.poo.javafx.Instanciacao.Andre.BeneficioController;
 import com.poo.javafx.Instanciacao.Andre.CaronaController;
-import com.poo.javafx.Instanciacao.JoaoMosson.PassageiroController;
-import com.poo.javafx.Instanciacao.JoaoMosson.VeiculoController;
 import com.poo.javafx.Instanciacao.Eduardo.TrajetoController;
 import com.poo.javafx.Instanciacao.Eduardo.TransacaoController;
-import com.poo.javafx.Instanciacao.JoaoPozzan.EmpresaController;
+import com.poo.javafx.Instanciacao.JoaoMosson.PassageiroController;
+import com.poo.javafx.Instanciacao.JoaoMosson.VeiculoController;
 import com.poo.javafx.Instanciacao.JoaoPozzan.CarteiraController;
+import com.poo.javafx.Instanciacao.JoaoPozzan.EmpresaController;
+
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.stage.Stage;
 import javafx.scene.image.Image;
+import javafx.stage.Stage;
 
 public class App extends Application {
-    private Router router;
-
     @Override
     public void start(Stage stage) {
         MenuView menuView = new MenuView();
-        router = new Router(stage, menuView);
+        Router.getInstance().inicializar(stage, menuView);
 
-        menuView.getBtnPassageiros().setOnAction(e -> router.navegarPara(new PassageiroController()));
-        menuView.getBtnVeiculos().setOnAction(e -> router.navegarPara(new VeiculoController()));
-        menuView.getBtnTrajetos().setOnAction(e -> router.navegarPara(new TrajetoController()));
-        menuView.getBtnEmpresas().setOnAction(e -> router.navegarPara(new EmpresaController()));
-        menuView.getBtnTransacoes().setOnAction(e -> router.navegarPara(new TransacaoController()));
-        menuView.getBtnBeneficios().setOnAction(e -> router.navegarPara(new BeneficioController()));
-        menuView.getBtnCaronas().setOnAction(e -> router.navegarPara(new CaronaController()));
-        menuView.getBtnCarteiras().setOnAction(e -> router.navegarPara(new CarteiraController()));
+        menuView.getBtnPassageiros().setOnAction(e -> Router.getInstance().navegarPara(new PassageiroController()));
+        menuView.getBtnVeiculos().setOnAction(e -> Router.getInstance().navegarPara(new VeiculoController()));
+        menuView.getBtnTrajetos().setOnAction(e -> Router.getInstance().navegarPara(new TrajetoController()));
+        menuView.getBtnEmpresas().setOnAction(e -> Router.getInstance().navegarPara(new EmpresaController()));
+        menuView.getBtnTransacoes().setOnAction(e -> Router.getInstance().navegarPara(new TransacaoController()));
+        menuView.getBtnBeneficios().setOnAction(e -> Router.getInstance().navegarPara(new BeneficioController()));
+        menuView.getBtnCaronas().setOnAction(e -> Router.getInstance().navegarPara(new CaronaController()));
+        menuView.getBtnCarteiras().setOnAction(e -> Router.getInstance().navegarPara(new CarteiraController()));
         menuView.getBtnSair().setOnAction(e -> {
             javafx.application.Platform.exit();
             System.exit(0);

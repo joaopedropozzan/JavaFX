@@ -4,7 +4,7 @@ import com.poo.javafx.CRUDController;
 
 public class BeneficioController extends CRUDController<BeneficioModel, BeneficioView> {
     public BeneficioController() {
-        super(new BeneficioView(), BeneficioModel.class);
+        super(BeneficioModel.class);
     }
 
     @Override
@@ -29,5 +29,10 @@ public class BeneficioController extends CRUDController<BeneficioModel, Benefici
         view.getTipo().setText(selecionado.getTipo());
         view.getValor().setText(String.valueOf(selecionado.getValor()));
         view.getDescricao().setText(selecionado.getDescricao());
+    }
+
+    @Override
+    protected BeneficioView criarView() {
+        return new BeneficioView();
     }
 }

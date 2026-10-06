@@ -9,6 +9,8 @@
     <name>JavaFx</name>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
     </properties>
     <dependencies>
         <dependency>
@@ -46,7 +48,9 @@
                 <version>0.0.8</version>
                 <configuration>
                     <mainClass>com.poo.javafx.App</mainClass>
-                    <launcher>cocar</launcher>
+                    <options>
+                        <option>--enable-native-access=javafx.graphics</option>
+                    </options>
                  </configuration>
             </plugin>
         </plugins>

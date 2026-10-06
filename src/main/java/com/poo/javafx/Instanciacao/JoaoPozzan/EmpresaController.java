@@ -5,7 +5,7 @@ import com.poo.javafx.CRUDController;
 public class EmpresaController extends CRUDController<EmpresaModel, EmpresaView> {
 
     public EmpresaController() {
-        super(new EmpresaView(), EmpresaModel.class);
+        super(EmpresaModel.class);
     }
 
     @Override
@@ -41,6 +41,11 @@ public class EmpresaController extends CRUDController<EmpresaModel, EmpresaView>
         view.getTxtCNPJ().setText(selecionado.getCNPJ().getValor());
         view.getTxtNome().setText(selecionado.getNomeEmpresa());
         view.getTxtQtaFuncionarios().setText(String.valueOf(selecionado.getQtaFuncionarios()));
+    }
+
+    @Override
+    protected EmpresaView criarView() {
+        return new EmpresaView();
     }
 
 }

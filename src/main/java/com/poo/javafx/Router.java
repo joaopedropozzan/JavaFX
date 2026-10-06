@@ -4,10 +4,22 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class Router {
-    private MenuView menuPrincipal;
-    private Stage stage;
+    private static Router instance;
 
-    public Router(Stage stage, MenuView menuPrincipal) {
+    private Stage stage;
+    private MenuView menuPrincipal;
+
+    private Router() {
+    }
+
+    public static Router getInstance() {
+        if (instance == null) {
+            instance = new Router();
+        }
+        return instance;
+    }
+
+    public void inicializar(Stage stage, MenuView menuPrincipal) {
         this.stage = stage;
         this.menuPrincipal = menuPrincipal;
     }
