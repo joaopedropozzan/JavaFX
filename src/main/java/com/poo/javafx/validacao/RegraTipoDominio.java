@@ -22,14 +22,12 @@ public class RegraTipoDominio extends RegraTextField {
     }
 
     @Override
-    protected boolean valido(Node componente) {
-        String texto = ((TextField) componente).getText();
+    public ResultadoValidacao executar(Node componente) {
         try {
-            construtorTipo.accept(texto);
-            return true;
+            construtorTipo.accept(((TextField) componente).getText());
+            return ResultadoValidacao.sucesso();
         } catch (IllegalArgumentException e) {
-            this.mensagemErro = e.getMessage();
-            return false;
+            return ResultadoValidacao.falha(e.getMessage());
         }
     }
 
