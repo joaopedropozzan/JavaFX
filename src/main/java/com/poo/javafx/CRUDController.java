@@ -17,6 +17,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 
+/**
+ * Padrão Template Method: o CRUD (adicionar, atualizar, deletar) é fixo; os passos
+ * abstratos criarView, camposParaModel e modelParaCampos são fornecidos pelas subclasses.
+ */
 public abstract class CRUDController<T extends Model<T>, V extends CRUDView<T>> {
     protected V view;
     protected Scene scene;
@@ -109,6 +113,10 @@ public abstract class CRUDController<T extends Model<T>, V extends CRUDView<T>> 
         }
     }
 
+    /**
+     * Passo do Template Method. Atenção: é chamado dentro do construtor da
+     * superclasse, então a implementação não pode depender de campos do próprio controller.
+     */
     protected abstract V criarView();
 
     public abstract T camposParaModel() throws Exception;

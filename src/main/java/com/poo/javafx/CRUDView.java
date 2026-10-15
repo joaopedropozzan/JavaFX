@@ -9,6 +9,10 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
 
+/**
+ * Padrão Template Method: o construtor monta o layout fixo da tela e delega às
+ * subclasses os passos configurarColunas e getTitulo.
+ */
 public abstract class CRUDView<T extends Model<T>> extends BorderPane {
     protected TableView<T> tabela;
     protected Button btnAdicionar;
