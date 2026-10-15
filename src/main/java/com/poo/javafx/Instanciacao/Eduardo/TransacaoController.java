@@ -5,10 +5,12 @@ import java.util.ArrayList;
 import com.poo.javafx.CRUDController;
 import com.poo.javafx.Repository;
 import com.poo.javafx.Instanciacao.JoaoMosson.PassageiroModel;
+import com.poo.javafx.validacao.RegraNumeroDecimal;
 
 public class TransacaoController extends CRUDController<TransacaoModel, TransacaoView> {
     public TransacaoController() {
         super(TransacaoModel.class);
+        adicionarRegra(new RegraNumeroDecimal(view.getValor(), "Valor", 0.01));
         ArrayList<PassageiroModel> users = new Repository<>(PassageiroModel.class).objetos();
         view.getUserOrigem().getItems().addAll(users);
         view.getUserDestino().getItems().addAll(users);
@@ -18,12 +20,7 @@ public class TransacaoController extends CRUDController<TransacaoModel, Transaca
     public TransacaoModel camposParaModel() throws Exception {
         int userOrigemID = view.getUserOrigem().getValue().getID();
         int userDestinoID = view.getUserDestino().getValue().getID();
-        double valor;
-        try {
-            valor = Double.parseDouble(view.getValor().getText());
-        } catch (Exception e) {
-            throw new IllegalArgumentException("Valor deve ser um número decimal válido");
-        }
+        double valor = Double.parseDouble(view.getValor().getText().trim().replace(",", "."));
 
         return new TransacaoModel(userOrigemID, userDestinoID, valor);
     }
