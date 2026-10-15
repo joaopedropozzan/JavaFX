@@ -1,5 +1,7 @@
 package com.poo.javafx.Instanciacao.JoaoMosson;
 
+import java.time.Year;
+
 import com.poo.javafx.CRUDController;
 import com.poo.javafx.Types.Placa;
 import com.poo.javafx.validacao.RegraNumeroInteiro;
@@ -10,7 +12,7 @@ public class VeiculoController extends CRUDController<VeiculoModel, VeiculoView>
     public VeiculoController() {
         super(VeiculoModel.class);
         adicionarRegra(new RegraTipoDominio(view.getTxtPlaca(), Placa::new));
-        adicionarRegra(new RegraNumeroInteiro(view.getTxtAno(), "Ano", 1900));
+        adicionarRegra(new RegraNumeroInteiro(view.getTxtAno(), "Ano", 1900, Year.now().getValue() + 1));
     }
 
     @Override
