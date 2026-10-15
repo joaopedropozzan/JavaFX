@@ -3,6 +3,10 @@ package com.poo.javafx;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+/**
+ * Padrão Singleton: existe um único Stage e um único menu principal,
+ * então toda a navegação passa por uma única instância do Router.
+ */
 public class Router {
     private static Router instance;
 
@@ -12,7 +16,7 @@ public class Router {
     private Router() {
     }
 
-    public static Router getInstance() {
+    public static synchronized Router getInstance() {
         if (instance == null) {
             instance = new Router();
         }
