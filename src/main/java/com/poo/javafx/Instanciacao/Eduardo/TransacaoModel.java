@@ -20,6 +20,11 @@ public class TransacaoModel extends Model<TransacaoModel> {
         this.timestamp = LocalDateTime.now();
     }
 
+    @Override
+    protected void herdarDe(TransacaoModel original) {
+        this.timestamp = original.timestamp;
+    }
+
     public int getUserOrigemID() {
         return userOrigemID;
     }

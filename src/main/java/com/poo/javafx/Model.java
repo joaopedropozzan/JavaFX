@@ -28,4 +28,7 @@ public abstract class Model<T extends Model<T>> implements Serializable {
     protected boolean checarColisao(T objeto) {
         return false;
     };
+
+    protected void herdarDe(T original) {
+    }
 }

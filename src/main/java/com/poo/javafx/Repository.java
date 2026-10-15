@@ -87,6 +87,7 @@ public class Repository<T extends Model<T>> {
         for (int i = 0; i < objetosAtuais.size(); i++) {
             if (objetosAtuais.get(i).getID() == id) {
                 objetoAtualizado.setID(id);
+                objetoAtualizado.herdarDe(objetosAtuais.get(i));
                 objetosAtuais.set(i, objetoAtualizado);
                 objetoEncontrado = true;
                 break;
