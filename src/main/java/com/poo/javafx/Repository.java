@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.NoSuchElementException;
 
 public class Repository<T extends Model<T>> {
     private static final String DATA_DIR = "data/";
@@ -46,6 +45,7 @@ public class Repository<T extends Model<T>> {
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(arquivo))) {
             return (ArrayList<T>) in.readObject();
         } catch (Exception e) {
+            System.err.println("Erro ao ler arquivo " + dataFilePath + ": " + e);
             return new ArrayList<>();
         }
     }
@@ -63,15 +63,9 @@ public class Repository<T extends Model<T>> {
         ArrayList<T> objetosAtuais = objetos();
         checarUnicidade(objetosAtuais, objeto);
 
-        int ultimoID;
-        try {
-            T ultimoObjeto = objetosAtuais.getLast();
-            ultimoID = ultimoObjeto.getID();
-        } catch (NoSuchElementException e) {
-            ultimoID = 0;
-        }
+        int maiorID = objetosAtuais.stream().mapToInt(T::getID).max().orElse(0);
 
-        objeto.setID(ultimoID + 1);
+        objeto.setID(maiorID + 1);
         objetosAtuais.add(objeto);
 
         gravarArquivo(objetosAtuais);
