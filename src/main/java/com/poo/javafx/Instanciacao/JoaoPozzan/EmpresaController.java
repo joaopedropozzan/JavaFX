@@ -1,39 +1,21 @@
 package com.poo.javafx.Instanciacao.JoaoPozzan;
 
 import com.poo.javafx.CRUDController;
+import com.poo.javafx.validacao.RegraNumeroInteiro;
 
 public class EmpresaController extends CRUDController<EmpresaModel, EmpresaView> {
 
     public EmpresaController() {
         super(EmpresaModel.class);
+        adicionarRegra(new RegraNumeroInteiro(view.getTxtQtaFuncionarios(), "Quantidade de funcionários", 1));
     }
 
     @Override
     public EmpresaModel camposParaModel() {
-        // 1. Captura o CNPJ
-        String cnpj = view.getTxtCNPJ().getText();
-
-        // 3. Captura o Nome (Ajustado o nome da variável para bater com o construtor
-        // abaixo)
-        String nomeEmpresa = view.getTxtNome().getText();
-
-        int qtaFuncionarios;
-        try {
-            // 4. Captura a quantidade de funcionários
-            qtaFuncionarios = Integer.parseInt(view.getTxtQtaFuncionarios().getText());
-
-            // Quem colocou isso????
-            if (qtaFuncionarios == 67) {
-                throw new IllegalArgumentException(
-                        "Por favor pessoal, esse é um trabalho acadêmico sério. Vamos respeitar a matéria, por favor!!");
-            }
-        } catch (NumberFormatException ex) {
-            throw new IllegalArgumentException(
-                    "Erro: A Quantidade de Funcionários devem ser números inteiros válidos.");
-        }
-
-        // 5. Cria e adiciona a nova empresa (Variáveis corrigidas)
-        return new EmpresaModel(cnpj, nomeEmpresa, qtaFuncionarios);
+        return new EmpresaModel(
+                view.getTxtCNPJ().getText(),
+                view.getTxtNome().getText(),
+                Integer.parseInt(view.getTxtQtaFuncionarios().getText().trim()));
     }
 
     @Override
