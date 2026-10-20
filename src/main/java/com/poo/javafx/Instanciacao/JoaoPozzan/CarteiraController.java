@@ -8,7 +8,7 @@ public class CarteiraController extends CRUDController<CarteiraModel, CarteiraVi
 
     public CarteiraController() {
         super(CarteiraModel.class);
-        adicionarRegra(new RegraNumeroDecimal(view.getTxtSaldo(), "Saldo"));
+        adicionarRegra(new RegraNumeroDecimal(view.getTxtSaldo(), "Saldo", 0.0));
         adicionarRegra(new RegraCartaoCredito(view.getTxtNumeroCartao()));
     }
 

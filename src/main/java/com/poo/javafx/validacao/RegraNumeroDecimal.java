@@ -1,5 +1,7 @@
 package com.poo.javafx.validacao;
 
+import java.math.BigDecimal;
+
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
 
@@ -27,8 +29,8 @@ public class RegraNumeroDecimal extends RegraTextField {
     @Override
     protected boolean valido(Node componente) {
         try {
-            double valor = Double.parseDouble(((TextField) componente).getText().trim().replace(",", "."));
-            return valorMinimo == null || valor >= valorMinimo;
+            double valor = new BigDecimal(((TextField) componente).getText().trim().replace(",", ".")).doubleValue();
+            return !Double.isInfinite(valor) && (valorMinimo == null || valor >= valorMinimo);
         } catch (NumberFormatException e) {
             return false;
         }
