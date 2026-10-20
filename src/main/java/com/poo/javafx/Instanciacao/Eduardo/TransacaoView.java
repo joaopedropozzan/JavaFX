@@ -37,11 +37,11 @@ public class TransacaoView extends CRUDView<TransacaoModel> {
     protected void configurarColunas() {
         TableColumn<TransacaoModel, String> colUserOrigem = new TableColumn<>("Usuário Origem");
         colUserOrigem
-                .setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getUserOrigem().toString()));
+                .setCellValueFactory(data -> new SimpleStringProperty(nomeOuRemovido(data.getValue().getUserOrigem())));
 
         TableColumn<TransacaoModel, String> colUserDestino = new TableColumn<>("Usuario Destino");
         colUserDestino
-                .setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getUserDestino().toString()));
+                .setCellValueFactory(data -> new SimpleStringProperty(nomeOuRemovido(data.getValue().getUserDestino())));
 
         TableColumn<TransacaoModel, Double> colValor = new TableColumn<>("Valor");
         colValor.setCellValueFactory(data -> new SimpleDoubleProperty(data.getValue().getValor()).asObject());
@@ -50,6 +50,10 @@ public class TransacaoView extends CRUDView<TransacaoModel> {
         colTimestamp.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getTimestamp()));
 
         tabela.getColumns().addAll(colUserOrigem, colUserDestino, colValor, colTimestamp);
+    }
+
+    private static String nomeOuRemovido(PassageiroModel passageiro) {
+        return passageiro != null ? passageiro.toString() : "(passageiro removido)";
     }
 
     @Override
