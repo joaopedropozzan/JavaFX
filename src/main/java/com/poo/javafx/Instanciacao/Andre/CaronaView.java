@@ -4,7 +4,7 @@ import com.poo.javafx.CRUDView;
 
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.scene.control.ComboBox;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TextField;
 
@@ -13,7 +13,9 @@ public class CaronaView extends CRUDView<CaronaModel> {
     private TextField origem;
     private TextField destino;
     private TextField vagas;
-    private ComboBox<String> status;
+    private Button btnConfirmar;
+    private Button btnConcluir;
+    private Button btnCancelar;
 
     public CaronaView() {
         super();
@@ -30,11 +32,13 @@ public class CaronaView extends CRUDView<CaronaModel> {
         vagas = new TextField();
         vagas.setPromptText("Vagas");
 
-        status = new ComboBox<>();
-        status.setPromptText("Status");
-        status.getItems().addAll("Aberta", "Confirmada", "Concluida", "Cancelada");
 
-        this.formulario.getChildren().addAll(motorista, origem, destino, vagas, status);
+        this.formulario.getChildren().addAll(motorista, origem, destino, vagas);
+
+        btnConfirmar = new Button("Confirmar");
+        btnConcluir = new Button("Concluir");
+        btnCancelar = new Button("Cancelar");
+        getAcoes().getChildren().addAll(btnConfirmar, btnConcluir, btnCancelar);
     }
 
     @Override
@@ -78,7 +82,15 @@ public class CaronaView extends CRUDView<CaronaModel> {
         return vagas;
     }
 
-    public ComboBox<String> getStatus() {
-        return status;
+    public Button getBtnConfirmar() {
+        return btnConfirmar;
+    }
+
+    public Button getBtnConcluir() {
+        return btnConcluir;
+    }
+
+    public Button getBtnCancelar() {
+        return btnCancelar;
     }
 }

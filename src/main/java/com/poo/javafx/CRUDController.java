@@ -70,11 +70,19 @@ public abstract class CRUDController<T extends Model<T>, V extends CRUDView<T>> 
         });
     }
 
-    private void mostrarErroValidacao(String mensagem) {
+    protected void mostrarErroValidacao(String mensagem) {
         Alert alert = new Alert(AlertType.ERROR);
         alert.setTitle("Erro de Validação");
         alert.setHeaderText(null);
         alert.setContentText(mensagem != null ? mensagem : "Dados inválidos nos campos.");
+        alert.showAndWait();
+    }
+
+    protected void mostrarAvisoSemSelecao(String acao) {
+        Alert alert = new Alert(AlertType.WARNING);
+        alert.setTitle("Nenhum item selecionado");
+        alert.setHeaderText(null);
+        alert.setContentText("Por favor, selecione um item na lista para " + acao + ".");
         alert.showAndWait();
     }
 
@@ -167,11 +175,7 @@ public abstract class CRUDController<T extends Model<T>, V extends CRUDView<T>> 
         T selecionado = itemCarregado != null ? itemCarregado
                 : view.getTabela().getSelectionModel().getSelectedItem();
         if (selecionado == null) {
-            Alert alert = new Alert(AlertType.WARNING);
-            alert.setTitle("Nenhum item selecionado");
-            alert.setHeaderText(null);
-            alert.setContentText("Por favor, selecione um item na lista para atualizar.");
-            alert.showAndWait();
+            mostrarAvisoSemSelecao("atualizar");
             return;
         }
 
@@ -196,11 +200,7 @@ public abstract class CRUDController<T extends Model<T>, V extends CRUDView<T>> 
     public final void deletar() {
         T selecionado = this.view.getTabela().getSelectionModel().getSelectedItem();
         if (selecionado == null) {
-            Alert alert = new Alert(AlertType.WARNING);
-            alert.setTitle("Nenhum item selecionado");
-            alert.setHeaderText(null);
-            alert.setContentText("Por favor, selecione um item na lista para excluir.");
-            alert.showAndWait();
+            mostrarAvisoSemSelecao("excluir");
             return;
         }
 

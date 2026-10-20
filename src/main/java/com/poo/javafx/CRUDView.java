@@ -21,6 +21,7 @@ public abstract class CRUDView<T extends Model<T>> extends BorderPane {
     protected Button btnDeletar;
     protected Button btnVoltar;
     protected HBox formulario;
+    private HBox acoes;
 
     public CRUDView() {
         this.getStyleClass().add("crud");
@@ -51,6 +52,7 @@ public abstract class CRUDView<T extends Model<T>> extends BorderPane {
         btnDeletar.getStyleClass().add("button--red");
 
         HBox actions = new HBox();
+        this.acoes = actions;
         actions.getStyleClass().add("crud-toolbar__actions");
         actions.getChildren().addAll(btnAdicionar, btnAtualizar, btnDeletar);
 
@@ -100,6 +102,11 @@ public abstract class CRUDView<T extends Model<T>> extends BorderPane {
 
     public TableView<T> getTabela() {
         return tabela;
+    }
+
+    /** Contêiner dos botões de ação, para telas que precisam de botões extras. */
+    protected HBox getAcoes() {
+        return acoes;
     }
 
     public HBox getFormulario() {
