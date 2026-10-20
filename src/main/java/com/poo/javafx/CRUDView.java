@@ -11,7 +11,8 @@ import javafx.scene.shape.SVGPath;
 
 /**
  * Padrão Template Method: o construtor monta o layout fixo da tela e delega às
- * subclasses os passos configurarColunas e getTitulo.
+ * subclasses o passo configurarColunas. getTitulo não é chamado pelo construtor:
+ * quem o consulta é o Router, ao navegar para a tela.
  */
 public abstract class CRUDView<T extends Model<T>> extends BorderPane {
     protected TableView<T> tabela;

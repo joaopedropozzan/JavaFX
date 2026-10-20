@@ -4,8 +4,9 @@ import java.io.Serial;
 import java.io.Serializable;
 
 /**
- * Padrão Template Method: colideCom é o método-template (final) e
- * checarColisao e herdarDe são ganchos que as subclasses podem sobrescrever.
+ * Padrão Template Method: colideCom é o método-template (final), que checa o tipo
+ * dos objetos e delega a decisão ao gancho checarColisao. herdarDe é outro gancho,
+ * chamado por Repository.atualizar (não por colideCom) ao substituir um registro.
  */
 public abstract class Model<T extends Model<T>> implements Serializable {
     @Serial
@@ -38,7 +39,10 @@ public abstract class Model<T extends Model<T>> implements Serializable {
         return false;
     };
 
-    /** Gancho: copia de {@code original} o que deve sobreviver a uma atualização. */
+    /**
+     * Gancho chamado por Repository.atualizar: copia de {@code original} o que deve
+     * sobreviver a uma atualização.
+     */
     protected void herdarDe(T original) {
     }
 }

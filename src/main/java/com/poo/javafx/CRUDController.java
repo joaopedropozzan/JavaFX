@@ -18,8 +18,9 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 
 /**
- * Padrão Template Method: o CRUD (adicionar, atualizar, deletar) é fixo; os passos
- * abstratos criarView, camposParaModel e modelParaCampos são fornecidos pelas subclasses.
+ * Padrão Template Method: o CRUD (adicionar, atualizar, deletar) é fixo (final); os passos
+ * abstratos camposParaModel e modelParaCampos são fornecidos pelas subclasses.
+ * criarView é o Factory Method que cria a view de cada tela.
  */
 public abstract class CRUDController<T extends Model<T>, V extends CRUDView<T>> {
     protected V view;
@@ -114,7 +115,8 @@ public abstract class CRUDController<T extends Model<T>, V extends CRUDView<T>> 
     }
 
     /**
-     * Passo do Template Method. Atenção: é chamado dentro do construtor da
+     * Padrão Factory Method: o CRUDController é o Creator e cada controller concreto
+     * cria a CRUDView concreta da sua tela. Atenção: é chamado dentro do construtor da
      * superclasse, então a implementação não pode depender de campos do próprio controller.
      */
     protected abstract V criarView();
@@ -131,7 +133,7 @@ public abstract class CRUDController<T extends Model<T>, V extends CRUDView<T>> 
      * C (Create): Captura os dados da View, cria um objeto e salva na
      * lista/arquivo.
      */
-    public void adicionar() {
+    public final void adicionar() {
         try {
             validarCamposPreenchidos();
             T objeto = camposParaModel();
@@ -157,7 +159,7 @@ public abstract class CRUDController<T extends Model<T>, V extends CRUDView<T>> 
      * U (Update): Captura o objeto selecionado na tabela, atualiza seus dados e
      * salva.
      */
-    public void atualizar() {
+    public final void atualizar() {
         T selecionado = view.getTabela().getSelectionModel().getSelectedItem();
         if (selecionado == null) {
             Alert alert = new Alert(AlertType.WARNING);
@@ -186,7 +188,7 @@ public abstract class CRUDController<T extends Model<T>, V extends CRUDView<T>> 
     /**
      * D (Delete): Remove o objeto selecionado da lista e atualiza o arquivo .dat.
      */
-    public void deletar() {
+    public final void deletar() {
         T selecionado = this.view.getTabela().getSelectionModel().getSelectedItem();
         if (selecionado == null) {
             Alert alert = new Alert(AlertType.WARNING);
