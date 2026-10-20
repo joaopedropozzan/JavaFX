@@ -27,6 +27,8 @@ public abstract class CRUDController<T extends Model<T>, V extends CRUDView<T>> 
     protected Scene scene;
     protected ObservableList<T> listaTabela;
     protected Repository<T> repositorio;
+    /** Item carregado no formulário pelo duplo clique; é o alvo de atualizar(). */
+    private T itemCarregado;
 
     protected final List<RegraValidacao> regrasValidacao = new ArrayList<>();
 
@@ -61,6 +63,7 @@ public abstract class CRUDController<T extends Model<T>, V extends CRUDView<T>> 
             if (event.getClickCount() == 2) {
                 T selecionado = view.getTabela().getSelectionModel().getSelectedItem();
                 if (selecionado != null) {
+                    itemCarregado = selecionado;
                     modelParaCampos(selecionado);
                 }
             }
@@ -102,6 +105,7 @@ public abstract class CRUDController<T extends Model<T>, V extends CRUDView<T>> 
     }
 
     private void limparCampos() {
+        itemCarregado = null;
         limparDestaquesErro();
 
         for (Node componente : view.getFormulario().getChildren()) {
@@ -156,11 +160,12 @@ public abstract class CRUDController<T extends Model<T>, V extends CRUDView<T>> 
     };
 
     /**
-     * U (Update): Captura o objeto selecionado na tabela, atualiza seus dados e
+     * U (Update): Captura o objeto carregado pelo duplo clique (ou, na falta dele, o selecionado na tabela), atualiza seus dados e
      * salva.
      */
     public final void atualizar() {
-        T selecionado = view.getTabela().getSelectionModel().getSelectedItem();
+        T selecionado = itemCarregado != null ? itemCarregado
+                : view.getTabela().getSelectionModel().getSelectedItem();
         if (selecionado == null) {
             Alert alert = new Alert(AlertType.WARNING);
             alert.setTitle("Nenhum item selecionado");
@@ -201,6 +206,9 @@ public abstract class CRUDController<T extends Model<T>, V extends CRUDView<T>> 
 
         try {
             this.repositorio.remover(selecionado);
+            if (itemCarregado != null && itemCarregado.getID() == selecionado.getID()) {
+                itemCarregado = null;
+            }
             this.ler();
         } catch (Exception e) {
             mostrarErroValidacao(e.getMessage());
