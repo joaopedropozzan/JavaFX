@@ -6,6 +6,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.nio.file.AtomicMoveNotSupportedException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class Repository<T extends Model<T>> {
@@ -22,10 +28,20 @@ public class Repository<T extends Model<T>> {
     }
 
     private void gravarArquivo(ArrayList<T> objetos) {
-        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(dataFilePath))) {
-            out.writeObject(objetos);
+        Path destino = Path.of(dataFilePath);
+        Path temporario = Path.of(dataFilePath + ".tmp");
+        try {
+            try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(temporario.toFile()))) {
+                out.writeObject(objetos);
+            }
+            try {
+                Files.move(temporario, destino, StandardCopyOption.REPLACE_EXISTING,
+                        StandardCopyOption.ATOMIC_MOVE);
+            } catch (AtomicMoveNotSupportedException e) {
+                Files.move(temporario, destino, StandardCopyOption.REPLACE_EXISTING);
+            }
         } catch (IOException e) {
-            System.err.println("Erro ao salvar arquivo: " + e.getMessage());
+            throw new IllegalStateException("Erro ao salvar os dados: " + e.getMessage(), e);
         }
     }
 
@@ -46,7 +62,20 @@ public class Repository<T extends Model<T>> {
             return (ArrayList<T>) in.readObject();
         } catch (Exception e) {
             System.err.println("Erro ao ler arquivo " + dataFilePath + ": " + e);
+            guardarBackupCorrompido(arquivo);
             return new ArrayList<>();
+        }
+    }
+
+    /** Move o arquivo ilegível para um backup, para que a próxima gravação não o apague. */
+    private void guardarBackupCorrompido(File arquivo) {
+        String carimbo = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss"));
+        Path backup = Path.of(dataFilePath + ".corrompido-" + carimbo + ".dat");
+        try {
+            Files.move(arquivo.toPath(), backup);
+            System.err.println("Backup do arquivo ilegível salvo em " + backup);
+        } catch (IOException ex) {
+            System.err.println("Não foi possível criar o backup de " + dataFilePath + ": " + ex);
         }
     }
 

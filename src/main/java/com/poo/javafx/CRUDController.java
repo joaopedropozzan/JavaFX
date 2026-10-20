@@ -197,7 +197,11 @@ public abstract class CRUDController<T extends Model<T>, V extends CRUDView<T>> 
             return;
         }
 
-        this.repositorio.remover(selecionado);
-        this.ler();
+        try {
+            this.repositorio.remover(selecionado);
+            this.ler();
+        } catch (Exception e) {
+            mostrarErroValidacao(e.getMessage());
+        }
     };
 }
