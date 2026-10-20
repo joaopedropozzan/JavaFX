@@ -1,5 +1,6 @@
 package com.poo.javafx;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -7,6 +8,9 @@ import java.io.Serializable;
  * checarColisao e herdarDe são ganchos que as subclasses podem sobrescrever.
  */
 public abstract class Model<T extends Model<T>> implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private int id;
 
     public int getID() {

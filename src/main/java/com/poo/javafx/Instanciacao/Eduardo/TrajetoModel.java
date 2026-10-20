@@ -1,10 +1,14 @@
 package com.poo.javafx.Instanciacao.Eduardo;
 
+import java.io.Serial;
 import java.time.LocalDateTime;
 
 import com.poo.javafx.Model;
 
 public class TrajetoModel extends Model<TrajetoModel> {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private String origem;
     private String destino;
     private LocalDateTime horarioSaida;

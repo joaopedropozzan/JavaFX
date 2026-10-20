@@ -1,8 +1,12 @@
 package com.poo.javafx.Types;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 public class CNPJ implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private final String valor;
 
     public CNPJ(String valor) {

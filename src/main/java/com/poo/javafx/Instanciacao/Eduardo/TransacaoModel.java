@@ -1,5 +1,6 @@
 package com.poo.javafx.Instanciacao.Eduardo;
 
+import java.io.Serial;
 import java.time.LocalDateTime;
 
 import com.poo.javafx.Model;
@@ -7,6 +8,9 @@ import com.poo.javafx.Repository;
 import com.poo.javafx.Instanciacao.JoaoMosson.PassageiroModel;
 
 public class TransacaoModel extends Model<TransacaoModel> {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private int userOrigemID;
 
     private int userDestinoID;
