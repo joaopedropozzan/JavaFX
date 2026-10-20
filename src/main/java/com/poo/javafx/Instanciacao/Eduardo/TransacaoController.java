@@ -22,6 +22,10 @@ public class TransacaoController extends CRUDController<TransacaoModel, Transaca
         int userDestinoID = view.getUserDestino().getValue().getID();
         double valor = Double.parseDouble(view.getValor().getText().trim().replace(",", "."));
 
+        if (userOrigemID == userDestinoID) {
+            throw new IllegalArgumentException("Origem e destino devem ser diferentes.");
+        }
+
         return new TransacaoModel(userOrigemID, userDestinoID, valor);
     }
 
