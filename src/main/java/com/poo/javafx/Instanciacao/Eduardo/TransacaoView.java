@@ -1,19 +1,20 @@
 
 package com.poo.javafx.Instanciacao.Eduardo;
 
-import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import com.poo.javafx.CRUDView;
 import com.poo.javafx.Instanciacao.JoaoMosson.PassageiroModel;
 
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TextField;
 
 public class TransacaoView extends CRUDView<TransacaoModel> {
+    private static final DateTimeFormatter FORMATO_TIMESTAMP = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+
     private ComboBox<PassageiroModel> userOrigem;
     private ComboBox<PassageiroModel> userDestino;
     private TextField valor;
@@ -46,8 +47,8 @@ public class TransacaoView extends CRUDView<TransacaoModel> {
         TableColumn<TransacaoModel, Double> colValor = new TableColumn<>("Valor");
         colValor.setCellValueFactory(data -> new SimpleDoubleProperty(data.getValue().getValor()).asObject());
 
-        TableColumn<TransacaoModel, LocalDateTime> colTimestamp = new TableColumn<>("Timestamp");
-        colTimestamp.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getTimestamp()));
+        TableColumn<TransacaoModel, String> colTimestamp = new TableColumn<>("Timestamp");
+        colTimestamp.setCellValueFactory(data -> new SimpleStringProperty(FORMATO_TIMESTAMP.format(data.getValue().getTimestamp())));
 
         tabela.getColumns().addAll(colUserOrigem, colUserDestino, colValor, colTimestamp);
     }
