@@ -1,1104 +1,143 @@
-<header class="capa">
-    <p class="capa__instituicao">Pontifícia Universidade Católica do Paraná</p>
-    <p class="capa__curso">Escola Politécnica &#149; Engenharia de Software</p>
-    <div class="capa__destaque">
-        <h1 class="capa__titulo">COCAR</h1>
-        <p class="capa__subtitulo">Relatório do Projeto RA3 - Programação Orientada à Objetos</p>
-    </div>
-    <ul class="capa__lista-autores">
-        <li>André Murilo Pinz Gomes</li>
-        <li>Eduardo Skoroboatei Gomes</li>
-        <li>João Pedro Gadens Mosson</li>
-        <li>João Pedro Magri Pozzan</li>
-    </ul>
-    <footer class="capa__footer">Curitiba<br/>13 de Junho de 2026</footer>
-</header>
-
-<div class="page-break"></div>
-
-# Introdução
+# CoCar
 
-## Contextualização e Problema
-A ideia do projeto surgiu das dificuldades de deslocamento que os próprios integrantes da equipe enfrentam diariamente e da observação da alta incidência de veículos com um único ocupante (apenas motorista) no entorno da PUCPR.
+Aplicação desktop em JavaFX para gerenciar uma plataforma de caronas universitárias: passageiros, veículos, trajetos, caronas, empresas parceiras, benefícios, carteiras e transações.
 
-Ao analisar as alternativas atuais de transporte, identificamos falhas estruturais ou de execução em todas as frentes:
-* **Transporte Público:** Sofre com superlotação, viagems demoradas, rotas inflexíveis e problemas de disponibilidade e conexões.
-* **Transporte Privado:** Gera congestionamentos, agrava a emissão de poluentes e exige alto custo com manutenção, combustível e estacionamento.
-* **Transporte por Aplicativo:** Apresenta disponibilidade imprevisível e tarifas dinâmicas, encarecendo o serviço justamente nos picos de maior demanda.
+Projeto da disciplina de Design de Software (RA2), PUCPR, Engenharia de Software.
 
-Embora a carona tradicional seja a alternativa mais lógica, ela esbarra em alguns atritos práticos severos:
-* **Logística:** É muito difícil cruzar passageiros com origens, destinos e horários perfeitamente compatíveis com a rota do motorista..
-* **Atrito Financeiro:** Há um desconforto social intrínseco em cobrar pagamentos ou dividir custos diretamente com colegas.
-* **Segurança e Confiança:** O usuário precisa ter certeza da idoneidade de quem está no veículo e confiar que não ficará sem transporte na última hora se abrir mão de outros meios..
+**Autores:** André Murilo Pinz Gomes, Eduardo Skoroboatei Gomes, João Pedro Gadens Mosson e João Pedro Magri Pozzan.
 
-## Contexto de Experiência Criativa
-Para solucionar essas dores, idealizamos uma plataforma inteligente de mobilidade corporativa e acadêmica que elimina o atrito de organizar viagens compartilhadas.
+> O relatório anterior (RA3 de Programação Orientada a Objetos) foi guardado em [`docs/README-RA3-POO.md`](docs/README-RA3-POO.md). Ele descreve uma versão anterior do código e não reflete os padrões de projeto desta entrega.
 
-**Nossa Solução:**
-* **Matchmaking Inteligente:** Algoritmo cruza automaticamente as rotas diárias dos motoristas com as necessidades de deslocamento dos passageiros, otimizando o desvio mínimo.
-* **Rateio Automatizado:** O sistema calcula e gerencia a divisão de custos de forma transparente, eliminando a necessidade de cobrança interpessoal.
-* **Gestão e Comunicação:** Centraliza e facilita a comunicação, simplificando a organização e a manutenção de longo prazo dos grupos de caronas.
+## Como executar
 
-O foco seria para além das universidades, atendendo também o setor corporativo (B2B). Instituições pagam uma assinatura para subsidiar a plataforma, colhendo benefícios diretos nas seguintes áreas:
-* **Infraestrutura:** Redução drástica na demanda e custos associados a vagas de estacionamento.
-* **Sustentabilidade (ESG):** Diminuição mensurável da pegada de carbono da frota pendular da empresa.
-* **Bem-estar:** Oferecimento de uma alternativa de transporte mais rápida e segura como benefício aos colaboradores/alunos.
-* **Comunidade:** Promove a solidariedade, o networking e a interação social constante entre os membros da instituição.
+Requisitos: JDK 21 ou superior. O Maven vem junto, pelo wrapper `mvnw`.
 
-## Escopo da Entrega
-Para a disciplina de **Programação Orientada a Objetos (POO)**, isolamos o núcleo de dados e as regras de negócio essenciais do projeto para o desenvolvimento de uma aplicação Desktop utilizando **JavaFX**.
+```
+./mvnw javafx:run
+```
 
-O foco desta entrega consiste na implementação da camada de persistência e das interfaces de gestão de dados (**CRUDs**) das seguintes entidades:
-* **Trajetos:** Registo de rotas, origens, destinos e horários.
-* **Passageiros:** Perfis dos utilizadores que utilizam o serviço.
-* **Empresas:** Instituições parceiras que subsidiam os acessos.
-* **Benefícios:** Regras de incentivos e recompensas institucionais.
-* **Transações:** Registo de rateio financeiro entre os utilizadores.
-* **Veículos:** Automóveis cadastrados e vinculados aos motoristas.
-* **Carteiras:** Saldo e forma de pagamento de um usuário da plataforma.
-* **Caronas:** Ligação entre motorista e oferta para passageiros.
+No PowerShell, se `./mvnw` não funcionar, use `.\mvnw.cmd javafx:run`.
 
-A arquitetura do sistema segue o padrão **MVC (Model-View-Controller)**, utilizando conceitos propostos de POO como herança, polimorfismo, classes abstratas e encapsulamento de tipos primitivos para garantir a integridade das regras de negócio.
+Os dados são salvos na pasta `data/` (um arquivo `.dat` por entidade), criada na primeira execução e ignorada pelo Git. Para começar do zero, apague a pasta `data/`.
 
-<div class="page-break"></div>
+## Visão geral da arquitetura
 
-# Arquitetura e Classes
+Cada entidade segue o mesmo trio **Model / View / Controller**, e as telas de cadastro (CRUD) compartilham uma estrutura única:
 
-## Classe: App
-* **Implementação:** João Pedro Magri Pozzan
-* **Descrição:** Classe principal (bootstrap) da aplicação JavaFX. Responsável por inicializar a janela, instanciar a view do menu principal (`MenuView`), configurar o roteador (`Router`) e mapear os eventos de clique dos botões para a navegação de seus respectivos controladores de CRUD.
+- `Model<T>`: classe base das entidades, com `ID` e as regras de colisão (duplicidade).
+- `CRUDView<T>`: tela padrão com formulário, tabela e botões Adicionar, Atualizar, Deletar e Voltar.
+- `CRUDController<T, V>`: lógica comum de adicionar, ler, atualizar e deletar, mais a validação dos campos.
+- `Repository<T>`: persistência por serialização Java em `data/<entidade>.dat`. A gravação é atômica (escreve em arquivo temporário e move) e, se o arquivo estiver ilegível, ele é preservado como `.corrompido-<data>.dat` em vez de ser sobrescrito.
+- `Router`: navegação entre o menu e as telas.
 
-### Métodos
+| Entidade | Pacote | Regra de duplicidade |
+|---|---|---|
+| Passageiro | `Instanciacao.JoaoMosson` | mesmo CPF |
+| Veículo | `Instanciacao.JoaoMosson` | mesma placa |
+| Empresa | `Instanciacao.JoaoPozzan` | mesmo CNPJ |
+| Carteira | `Instanciacao.JoaoPozzan` | mesmo número de cartão |
+| Benefício | `Instanciacao.Andre` | mesmo nome |
+| Carona | `Instanciacao.Andre` | mesmo motorista, origem e destino |
+| Trajeto | `Instanciacao.Eduardo` | sem regra de duplicidade |
+| Transação | `Instanciacao.Eduardo` | sem regra de duplicidade |
 
-#### `start(stage)`
-* **Descrição:** Sobrescrita do ciclo de vida da classe `Application` do JavaFX. Realiza a montagem inicial: cria a `MenuView`, inicializa a classe utilitária `Router`, vincula os *listeners* (`setOnAction`) dos botões de navegação, carrega o arquivo de estilos (`app.css`) e exibe a janela em modo maximizado.
-* **Parâmetros:** `stage` (`Stage`) — Palco principal do JavaFX onde a `Scene` inicial será renderizada.
-* **Retorno:** `void`.
+## Padrões de projeto (GoF)
 
-#### `main(args)`
-* **Descrição:** Método ponto de entrada (*entry point*) do sistema Java. Aciona o método `launch()` interno para iniciar a thread e o ciclo de vida do JavaFX.
-* **Parâmetros:** `args` (`String[]`) — Argumentos padrão de linha de comando.
-* **Retorno:** `void`.
+### 1. Template Method
 
-## Classe: MenuView
-* **Implementação:** João Pedro Gadens Mosson
-* **Descrição:** Classe responsável por construir a interface do menu principal da aplicação. Herdando de `StackPane`, ela atua como um contêiner base que agrupa e organiza os botões de navegação para os diferentes módulos de gerenciamento do sistema, além de carregar recursos visuais como a logo.
+O esqueleto de um algoritmo fica numa classe base e os passos variáveis são delegados às subclasses.
 
-### Interface Gráfica
-![](./docs/menu.png)
+- **`Model.colideCom`** é `final`: confere o tipo do objeto e delega a decisão ao gancho `checarColisao`, que cada entidade sobrescreve. `herdarDe` é outro gancho, chamado por `Repository.atualizar` ao substituir um registro.
+- **`CRUDController.adicionar`, `atualizar` e `deletar`** são `final`: validam, montam o modelo, chamam o repositório e atualizam a tabela. Os passos `camposParaModel` e `modelParaCampos` são abstratos.
+- **`CRUDView`** monta a tela no construtor e deixa `configurarColunas` e `getTitulo` para a subclasse.
+- **`RegraValidacao.executar`** define a ordem da validação e delega a verificação a `valido()`.
 
-### Elementos da Interface e Uso
-A tela apresenta o logo da aplicação e logo abaixo, uma lista de botões que o usuário pode clicar para navegar entre os módulos do sistema. Além disso, há um botão de saída, que permite ao usuário sair do aplicativo.
+**Por quê:** as oito telas de cadastro têm o mesmo fluxo e mudam apenas campos e colunas. O template evita repetir o fluxo oito vezes.
 
-### Métodos
+### 2. Strategy (pacote `validacao`)
 
-#### `MenuView()`
-* **Descrição:** Construtor da classe. É responsável por instanciar todos os componentes visuais, aplicar as respectivas classes do CSS e estruturar o layout da tela.
+Cada forma de validar um campo é uma estratégia intercambiável.
 
-#### `getTitulo()`
-* **Descrição:** Retorna o texto que define o título da tela do menu principal.
-* **Retorno:** String
+- **Interface:** `RegraValidacao`, com o resultado em `ResultadoValidacao`.
+- **Estratégias:** `RegraTextField`, `RegraNumeroInteiro`, `RegraNumeroDecimal`, `RegraComboBox`, `RegraDatePicker`, `RegraLocalDateTime`, `RegraCartaoCredito` e `RegraTipoDominio` (CPF, CNPJ e Placa).
+- **Contexto:** `CRUDController` mantém a lista `regrasValidacao`. Cada controller concreto registra as suas com `adicionarRegra`; para cada campo vale a primeira regra que o suporta.
 
-#### `getBtnPassageiros()`
-* **Descrição:** Retorna a referência do botão associado ao gerenciamento de passageiros.
-* **Retorno:** Button
+Exemplos: `CarteiraController` usa `RegraNumeroDecimal` (saldo mínimo 0) e `RegraCartaoCredito`; `VeiculoController` usa `RegraTipoDominio` para a placa e `RegraNumeroInteiro` para o ano (1900 até o ano seguinte).
 
-#### `getBtnVeiculos()`
-* **Descrição:** Retorna a referência do botão associado ao gerenciamento de veículos.
-* **Retorno:** Button
+**Por quê:** cada tela precisa de regras diferentes para tipos de campo diferentes, e novas regras entram sem alterar o `CRUDController`.
 
-#### `getBtnTrajetos()`
+### 3. Singleton (`Router`)
 
-* **Descrição:** Retorna a referência do botão associado ao gerenciamento de trajetos.
-* **Retorno:** Button
+Há um único `Stage` e um único menu principal, então toda a navegação passa por uma instância única: construtor privado e `Router.getInstance()`. O `App` chama `inicializar(stage, menu)` uma vez e as telas navegam com `Router.getInstance().navegarPara(controller)`.
 
-#### `getBtnEmpresas()`
+### 4. Factory Method (`CRUDController.criarView`)
 
-* **Descrição:** Retorna a referência do botão associado ao gerenciamento de empresas.
-* **Retorno:** Button
+O `CRUDController` precisa de uma view, mas não sabe qual. Ele declara `protected abstract V criarView()`, chamado no construtor, e cada controller concreto devolve a sua (`CaronaController` cria `CaronaView`, `VeiculoController` cria `VeiculoView`, e assim por diante). São 8 criadores concretos e 8 produtos concretos.
 
-#### `getBtnTransacoes()`
+### 5. State (status da Carona)
 
-* **Descrição:** Retorna a referência do botão associado ao gerenciamento de transações.
-* **Retorno:** Button
+A carona muda de comportamento conforme o estado. Em vez de um campo de texto com `if`s, cada estado é uma classe.
 
-#### `getBtnBeneficios()`
+- **Contexto:** `CaronaModel`, que guarda um `EstadoCarona` e expõe `confirmar()`, `concluir()` e `cancelar()`.
+- **Interface:** `EstadoCarona` (`nome`, `confirmar`, `concluir`, `cancelar`).
+- **Estados concretos** (pacote `estado`): `EstadoAberta`, `EstadoConfirmada`, `EstadoConcluida`, `EstadoCancelada`.
 
-* **Descrição:** Retorna a referência do botão associado ao gerenciamento de benefícios.
-* **Retorno:** Button
+Transições válidas:
 
-#### `getBtnCaronas()`
+```
+Aberta ──confirmar──▶ Confirmada ──concluir──▶ Concluída
+  │                        │
+  └────────cancelar────────┴──────────────────▶ Cancelada
+```
 
-* **Descrição:** Retorna a referência do botão associado ao gerenciamento de caronas.
-* **Retorno:** Button
+Qualquer outra transição lança `IllegalStateException` ("Uma carona Concluída não pode ser Cancelada."), e a tela mostra a mensagem sem alterar o status. Na `CaronaView`, os botões **Confirmar**, **Concluir** e **Cancelar** substituíram o antigo ComboBox de status.
 
-#### `getBtnCarteiras()`
+**Por quê:** o status da carona tem regras de transição reais. Com State, cada regra fica no estado correspondente e novos estados entram sem mexer nos existentes.
 
-* **Descrição:** Retorna a referência do botão associado ao gerenciamento de carteiras.
-* **Retorno:** Button
+## Validação e regras de negócio
 
-#### `getBtnSair()`
-* **Descrição:** Retorna a referência do botão de saída.
-* **Retorno:** Button
-
-## Classe: Router
-* **Implementação:** André Murilo Pinz Gomes
-* **Descrição:** Classe responsável por gerenciar a navegação (roteamento) entre as diferentes telas da aplicação. Ela atua centralizando a lógica de troca de views, substituindo o root da scene, alterando o título da janela e injetando automaticamente a funcionalidade de retorno para o menu principal.
-
-### Métodos
-
-#### `Router(stage, menuPrincipal)`
-* **Descrição:** Construtor da classe. Inicializa o roteador armazenando a referência da janela e da view do menu.
-* **Parâmetros:** stage (`Stage`) — A janela (Stage) principal do JavaFX onde as cenas da aplicação são exibidas.
-* **Parâmetros:** menuPrincipal (`MenuView`) — A instância da tela de menu principal, que servirá como ponto de retorno padronizado ao sair de outras telas.
-
-#### `navegarPara(controller)`
-* **Descrição:** Realiza a transição da interface atual para a tela associada ao controlador fornecido. O método extrai a view do controlador, configura o evento de clique do botão "voltar" dessa view para restaurar o menu principal e, em seguida, atualiza o título da janela e o nó raiz da cena para exibir a nova tela.
-* **Parâmetros:** controller (`CRUDController<?, ?>`) — O controlador da tela de destino, que deve fornecer acesso à sua respectiva `CRUDView`.
-* **Retorno:** `void`
-
-## Classe: Repository
-* **Implementação:** Eduardo Skoroboatei Gomes
-* **Descrição:** Classe abstrata de persistência de dados responsável por realizar as operações CRUD (Criar, Ler, Atualizar, Excluir) para modelos de domínio da aplicação. Utiliza a serialização de objetos para ler e gravar listas de instâncias de classes que herdam de `Model` em arquivos binários (`.dat`). A classe lida automaticamente com a atribuição de IDs incrementais e verifica a unicidade dos registros para garantir a integridade dos dados e evitar duplicações.
-
-### Métodos
-
-#### `Repository(clazz)`
-* **Descrição:** Construtor da classe. Define dinamicamente o nome do arquivo de persistência, concatenando o nome simplificado da classe do modelo (convertido para letras minúsculas) com a extensão `.dat`.
-* **Parâmetros:** `clazz` (`Class<T>`) — A referência da classe do tipo genérico da entidade que será gerenciada pelo repositório.
-
-#### `gravarArquivo(objetos)`
-* **Descrição:** Método privado que serializa a lista de objetos carregada na memória e a escreve no arquivo de dados, utilizando a classe `ObjectOutputStream`. Trata e exibe erros de entrada e saída.
-* **Parâmetros:** `objetos` (`ArrayList<T>`) — A lista de registros que será persistida.
-* **Retorno:** `void`
-
-#### `checarUnicidade(objetos, objeto)`
-* **Descrição:** Método privado que verifica se já existe na base de dados algum registro em conflito com o objeto atual, utilizando o método `colideCom` definido pelo model. Ignora a comparação do objeto com ele mesmo (mesmo ID). Lança uma `IllegalArgumentException` caso detecte uma duplicidade.
-* **Parâmetros:** `objetos` (`ArrayList<T>`) — A lista de registros atualmente carregados na memória.
-* **Parâmetros:** `objeto` (`T`) — O objeto que está sendo validado.
-* **Retorno:** `void`
-
-#### `objetos()`
-* **Descrição:** Abre o arquivo binário, realiza a desserialização dos dados utilizando `ObjectInputStream` e retorna a lista de objetos salvos. Retorna uma lista vazia caso o arquivo ainda não exista ou ocorra um erro durante a leitura.
-* **Retorno:** `ArrayList<T>`
-
-#### `comID(id)`
-* **Descrição:** Percorre todos os objetos carregados em busca de um registro com id de valor fornecido. Retorna `null` se não encontrar.
-* **Parâmetros:** `id` (`int`) — O identificador numérico único do objeto a ser pesquisado.
-* **Retorno:** `T`
-
-#### `adicionar(objeto)`
-* **Descrição:** Cadastra um novo registro na base de dados. Executa a validação de unicidade, calcula o próximo ID disponível, vincula o novo ID ao objeto fornecido, insere na lista e grava o estado no disco.
-* **Parâmetros:** `objeto` (`T`) — A nova entidade a ser inserida.
-* **Retorno:** `void`
-
-#### `remover(objetoRemover)`
-* **Descrição:** Remove um registro da base de dados filtrando a lista atual e descartando a entidade cujo ID coincida com o do objeto passado como parâmetro. Grava a lista resultante no arquivo em seguida.
-* **Parâmetros:** `objetoRemover` (`T`) — A referência do objeto que deverá ser excluído.
-* **Retorno:** `void`
-
-#### `atualizar(id, objetoAtualizado)`
-* **Descrição:** Substitui os dados de um registro existente por uma versão mais recente. O método garante que o objeto atualizado retenha o ID original, checa restrições de unicidade, localiza o item pelo índice na lista, realiza a substituição e salva os dados. Retorna indicativo de sucesso ou falha na operação.
-* **Parâmetros:** `id` (`int`) — O id do registro a ser atualizado.
-* **Parâmetros:** `objetoAtualizado` (`T`) — A entidade contendo as modificações prontas para substituição.
-* **Retorno:** `boolean`
-
-## Classe: Model
-* **Implementação:** João Pedro Magri Pozzan
-* **Descrição:** Classe base abstrata para as entidades de domínio do sistema. Implementa a interface `Serializable` para habilitar a persistência dos dados em arquivos binários (gerenciada pela classe `Repository`). Estrutura propriedades e comportamentos comuns, como a manutenção do id e a lógica base de verificação de registros duplicados, delegando parte das regras de colisão às subclasses.
-
-### Métodos
-
-#### `getID()`
-* **Descrição:** Recupera o id atribuído à entidade.
-* **Retorno:** `int`
-
-#### `setID(id)`
-* **Descrição:** Define o id da entidade. É utilizado primariamente pela camada de persistência durante as operações de criação (auto-increment) e atualização de registros.
-* **Parâmetros:** `id` (`int`) — O valor a ser atribuído como id do objeto.
-* **Retorno:** `void`
-
-#### `colideCom(objeto)`
-* **Descrição:** Verifica se a instância atual entra em conflito de dados com o objeto fornecido. Executa validações de igualdade de referência, nulidade e tipo de classe para evitar erros de tipagem. Se as verificações iniciais passarem, converte o objeto para o tipo genérico `T` e delega a lógica de negócio específica para o método `checarColisao`.
-* **Parâmetros:** `objeto` (`Object`) — A instância genérica a ser comparada com a entidade atual.
-* **Retorno:** `boolean`
-
-#### `checarColisao(objeto)`
-* **Descrição:** Método projetado para ser sobrescrito pelas subclasses caso a entidade possua regras de negócio específicas para evitar duplicidade (como validar se um CPF ou Placa já existem, por exemplo). Sua implementação padrão sempre retorna `false`, permitindo inserções livres caso não seja substituído.
-* **Parâmetros:** `objeto` (`T`) — A entidade de mesmo tipo para comparação dos atributos de negócio.
-* **Retorno:** `boolean`
-
-## Classe: CRUDController
-* **Implementação:** Eduardo Skoroboatei Gomes
-* **Descrição:** Classe abstrata que atua como o controlador base para as operações de CRUD (Create, Read, Update, Delete). Ela faz a ponte entre a interface gráfica genérica (`CRUDView`) e a camada de persistência (`Repository`), gerenciando a inicialização da lista de dados, validações base de formulário, injeção de eventos nos botões de ação e a exibição de alertas (mensagens de erro ou advertência). Delega tradução entre os campos do formulário e model para suas subclasses por meio de métodos abstratos.
-
-### Métodos
-
-#### `CRUDController(view, clazz)`
-* **Descrição:** Construtor da classe. Inicializa a class view, instancia o repositório para a respectivo model, vincula a tabela da interface aos dados persistidos (via `ObservableList`) e faz a configuração das ações dos botões.
-* **Parâmetros:** `view` (`V`) — A instância da interface gráfica de CRUD associada ao controlador.
-* **Parâmetros:** `clazz` (`Class<T>`) — A referência da classe de domínio.
-
-#### `setupActions()`
-* **Descrição:** Método privado que associa os métodos CRUD (adicionar, deletar, atualizar) aos eventos de clique dos botões na interface. Adicionalmente, configura um listener na tabela para detectar duplo clique em uma linha, carregando os dados do item selecionado de volta para os campos do formulário.
-* **Retorno:** `void`
-
-#### `mostrarErroValidacao(mensagem)`
-* **Descrição:** Método utilitário responsável por instanciar e exibir um alerta modal de erro (do tipo `Alert.AlertType.ERROR` do JavaFX) sempre que uma exceção de validação for capturada durante as operações de CRUD.
-* **Parâmetros:** `mensagem` (`String`) — O texto contendo o detalhamento do erro.
-* **Retorno:** `void`
-
-#### `validarCamposPreenchidos()`
-* **Descrição:** Método utilitário que percorre os componentes contidos no formulário da interface. Verifica se os campos estão preenchidos e lança uma `IllegalArgumentException` caso detecte que algum deles encontra-se vazio ou não selecionado.
-* **Retorno:** `void`
-
-#### `limparCampos()`
-* **Descrição:** Método utilitário que itera sobre os componentes do formulário e redefine seus valores para o estado vazio/nulo, limpando a tela após inserções ou atualizações bem-sucedidas.
-* **Retorno:** `void`
-
-#### `camposParaModel()`
-* **Descrição:** Método abstrato. Exige que as subclasses concretas implementem a lógica para extrair os valores inseridos pelo usuário nos campos específicos do formulário e os utilizem para construir e retornar uma nova instância do modelo de negócio.
-* **Retorno:** `T`
-
-#### `modelParaCampos(selecionado)`
-* **Descrição:** Método abstrato. Exige que as subclasses concretas implementem a lógica inversa: extrair as informações de um objeto do modelo e preencher os respectivos campos na tela para que o usuário possa visualizar ou editar os dados.
-* **Parâmetros:** `selecionado` (`T`) — A entidade de domínio contendo os dados a serem exibidos no formulário.
-* **Retorno:** `void`
-
-#### `getView()`
-* **Descrição:** Retorna a instância da interface gráfica manipulada pelo controlador.
-* **Retorno:** `CRUDView<T>`
-
-#### `adicionar()`
-* **Descrição:** Executa a rotina de criação (Create). Valida se todos os campos estão preenchidos, aciona a conversão dos dados visuais para o modelo, envia a entidade ao repositório para persistência, atualiza a exibição da tabela com os novos dados e, por fim, limpa o formulário. Erros disparam alertas em tela.
-* **Retorno:** `void`
-
-#### `ler()`
-* **Descrição:** Executa a rotina de leitura (Read). Consulta o repositório em busca de todos os registros salvos, atualizando a `ObservableList` que reflete os dados automaticamente na tabela da interface de usuário.
-* **Retorno:** `void`
-
-#### `atualizar()`
-* **Descrição:** Executa a rotina de modificação (Update). Primeiramente, certifica-se de que um item está selecionado na tabela, exibindo um alerta em caso negativo. Estando selecionado, efetua as validações de campos vazios, converte os novos valores visuais em uma entidade e chama o método atualizar do repositório com o ID do item original. Em seguida, sincroniza a tabela e esvazia o formulário.
-* **Retorno:** `void`
-
-#### `deletar()`
-* **Descrição:** Executa a rotina de exclusão (Delete). Confere a seleção de um item na tabela, alertando o usuário se não existir, chama o método de remoção do repositório e recarrega os dados da tabela.
-* **Retorno:** `void`
-
-## Classe: CRUDView
-* **Implementação:** João Pedro Gadens Mosson
-* **Descrição:** Classe abstrata que define a estrutura de interface padrão para as telas de gerenciamento (CRUD) do sistema, herdando de `BorderPane` do JavaFX. Ela encapsula a construção do layout base, fornecendo componentes visuais comuns como botões de ação ("Adicionar", "Atualizar", "Deletar"), um botão de retorno ao menu, um contêiner de formulário e uma tabela de exibição de dados, delegando as especificidades (como título e mapeamento de colunas da tabela) para as subclasses.
-
-### Interface Gráfica
-![](./docs/crud-view.png)
-
-### Elementos da Interface e Uso
-Na parte superior, encontra-se o botão "Voltar ao Menu Principal", que permite ao usuário retornar à tela inicial. A região central é composta por uma barra de ferramentas, e, logo abaixo, uma tabela com a listagem de objetos. A barra de ferramentas abriga no lado esquerdo um espaço reservado para os campos de formulário e, alinhados à direita, os botões de ação do CRUD, utilizados para manipular os dados na tabela e no repositório.
-
-### Métodos
-
-#### `CRUDView()`
-* **Descrição:** Construtor da classe. Responsável por instanciar os elementos da interface, aplicar os identificadores de estilo CSS pertinentes e organizar o layout da tela. Ao final da preparação base, chama o o método abstrato `configurarColunas()`.
-
-#### `configurarColunas()`
-* **Descrição:** Método abstrato. Exige que as classes derivadas implementem a criação das colunas específicas da `TableView` e façam o vínculo com os atributos do model que será exibido.
-* **Retorno:** `void`
-
-#### `getTitulo()`
-* **Descrição:** Método abstrato. Exige que as subclasses definam e retornem o texto do título da janela (`Stage`).
-* **Retorno:** `String`
-
-#### `getBtnVoltar()`
-* **Descrição:** Retorna a referência do botão de retorno ao menu principal.
-* **Retorno:** `Button`
-
-#### `getBtnAdicionar()`
-* **Descrição:** Retorna a referência do botão de cadastro, permitindo ao controlador registrar o evento da operação de criação (Create).
-* **Retorno:** `Button`
-
-#### `getBtnAtualizar()`
-* **Descrição:** Retorna a referência do botão de edição, permitindo ao controlador registrar o evento da operação de atualização (Update).
-* **Retorno:** `Button`
-
-#### `getBtnDeletar()`
-* **Descrição:** Retorna a referência do botão de exclusão, permitindo ao controlador registrar o evento da operação de deleção (Delete).
-* **Retorno:** `Button`
-
-#### `getTabela()`
-* **Descrição:** Retorna a referência da tabela (`TableView`) onde os registros são listados e selecionados pelo usuário.
-* **Retorno:** `TableView<T>`
-
-#### `getFormulario()`
-* **Descrição:** Retorna a referência do contêiner (`HBox`) que atua como formulário.
-* **Retorno:** `HBox`
-
-## Classe: CNPJ
-* **Implementação:** João Pedro Magri Pozzan
-* **Descrição:** Classe de validação que encapsula e representa um CNPJ. Implementa a interface `Serializable` para permitir sua persistência em arquivos. Sua principal responsabilidade é tratar o dado bruto de entrada, limpando caracteres não numéricos, validando se a quantidade de dígitos confere com o padrão de 14 caracteres numéricos e, em caso positivo, armazenando o valor com a máscara oficial (XX.XXX.XXX/XXXX-XX).
-
-### Métodos
-
-#### `CNPJ(valor)`
-* **Descrição:** Construtor da classe. Recebe o dado de entrada, utiliza regex para remover qualquer caractere que não seja numérico e verifica se a string resultante possui exatamente 14 caracteres. Caso não possua, lança uma `IllegalArgumentException`. Caso seja válido, aplica a máscara padrão de formatação e armazena no atributo `valor`.
-* **Parâmetros:** valor (`String`) — A cadeia de caracteres representando o CNPJ (podendo conter formatação prévia ou ser apenas números).
-
-#### `getValor()`
-* **Descrição:** Recupera a string do CNPJ armazenada internamente, que já contém a máscara formatada.
-* **Retorno:** `String`
-
-#### `toString()`
-* **Descrição:** Sobrescreve o método `toString` padrão da linguagem para retornar diretamente o valor formatado do CNPJ, facilitando sua exibição.
-* **Retorno:** `String`
-
-#### `equals(o)`
-* **Descrição:** Sobrescreve o método de igualdade padrão para comparar duas instâncias de `CNPJ` com base no conteúdo (valor textual do CNPJ). Garante segurança de tipo ao checar nulidade e a classe do objeto comparado.
-* **Parâmetros:** o (`Object`) — A referência do objeto genérico a ser comparado com a instância atual.
-* **Retorno:** `boolean`
-
-## Classe: CPF
-* **Implementação:** João Pedro Magri Pozzan
-* **Descrição:** Classe de validação que encapsula e representa um CPF. Implementa a interface `Serializable` para permitir sua persistência em arquivo. Sua principal responsabilidade é tratar o dado bruto de entrada, limpando caracteres não numéricos, validando se a quantidade de dígitos confere com o padrão de 11 caracteres numéricos e, em caso positivo, formatando e armazenando o valor com a máscara oficial (XXX.XXX.XXX-XX).
-
-### Métodos
-
-#### `CPF(valor)`
-* **Descrição:** Construtor da classe. Recebe o dado de entrada, utiliza regex para remover qualquer caractere que não seja numérico e verifica se a string limpa possui exatamente 11 caracteres. Caso não possua, lança uma `IllegalArgumentException`. Sendo válido, aplica a máscara padrão de formatação e armazena o resultado no atributo `valor`.
-* **Parâmetros:** `valor` (`String`) — A string que representa o CPF, pode conter formatação prévia ou ser composta apenas por números.
-
-#### `getValor()`
-* **Descrição:** Recupera a string do CPF armazenada internamente, que já contém a máscara devidamente formatada.
-* **Retorno:** `String`
-
-#### `toString()`
-* **Descrição:** Sobrescreve o método `toString` padrão da classe `Object` para retornar diretamente o valor formatado do CPF.
-* **Retorno:** `String`
-
-#### `equals(o)`
-* **Descrição:** Sobrescreve o método de igualdade padrão para comparar duas instâncias de `CPF` com base em seu conteúdo (o valor textual do CPF). Inclui verificações de segurança para garantir a tipagem correta e checar nulidade antes de realizar a comparação das strings.
-* **Parâmetros:** `o` (`Object`) — A referência do objeto genérico a ser comparado com a instância atual.
-* **Retorno:** `boolean`
-
-## Classe: Placa
-* **Implementação:** André Murilo Pinz Gomes
-* **Descrição:** Classe utilitária de validação que encapsula e representa o tipo de dado de Placa de veículo. Implementa a interface `Serializable` para viabilizar sua persistência em arquivos. Sua responsabilidade é processar a string de entrada, padronizando os caracteres para letras maiúsculas, removendo símbolos indesejados e validando o formato por meio de expressões regulares. É compativel tanto com o padrão de placas brasileiro antigo (ex: ABC1234) quanto com o padrão Mercosul (ex: ABC1D23).
-
-### Métodos
-
-#### `Placa(valor)`
-* **Descrição:** Construtor da classe. Recebe o dado bruto, converte todos os caracteres para maiúsculo e aplica uma expressão regular para descartar o que não for letra ou número. Em seguida, testa a string limpa contra os padrões esperados. Lança uma `IllegalArgumentException` caso o formato seja inválido; caso contrário, atribui o valor higienizado ao atributo `valor`.
-* **Parâmetros:** `valor` (`String`) — A cadeia de caracteres da placa do veículo inserida pelo usuário ou carregada do sistema.
-
-#### `getValor()`
-* **Descrição:** Recupera a string da placa armazenada internamente após o processo de validação e formatação.
-* **Retorno:** `String`
-
-#### `toString()`
-* **Descrição:** Sobrescreve o método `toString` nativo para retornar diretamente o valor formatado da placa. Permite a exibição simplificada do objeto em interfaces de usuário ou terminais sem necessidade de invocar métodos de acesso adicionais.
-* **Retorno:** `String`
-
-#### `equals(o)`
-* **Descrição:** Sobrescreve o método de igualdade padrão da linguagem. Compara duas instâncias de `Placa` com base estritamente em seus conteúdos textuais. O método confere nulidade e correspondência exata de classe antes da conversão (cast).
-* **Parâmetros:** `o` (`Object`) — A referência do objeto genérico a ser verificado contra a instância atual de Placa.
-* **Retorno:** `boolean`
-
-## Classe: TrajetoController
-* **Implementação:** Eduardo Skoroboatei Gomes
-* **Descrição:** Classe controller responsável por gerenciar o fluxo de dados para a entidade `TrajetoModel`. Herdando de `CRUDController`, ela faz a ponte entre a interface gráfica `TrajetoView` e o repositório, implementando as regras de extração e injeção de dados dos campos do formulário para o modelo.
-
-### Métodos
-
-#### `TrajetoController()`
-* **Descrição:** Construtor da classe. Inicializa o controlador chamando o construtor da superclasse com uma nova instância de `TrajetoView` e referenciando a classe `TrajetoModel`.
-
-#### `camposParaModel()`
-* **Descrição:** Captura os dados inseridos pelo usuário nos campos de texto e no seletor de data/hora da interface gráfica, instanciando e retornando um novo objeto `TrajetoModel`.
-* **Retorno:** `TrajetoModel`
-
-#### `modelParaCampos(selecionado)`
-* **Descrição:** Recebe um modelo de trajeto selecionado e preenche os campos do formulário na interface gráfica com os dados correspondentes para visualização ou edição.
-* **Parâmetros:** `selecionado` (`TrajetoModel`) — O objeto modelo cujos dados serão exibidos nos campos visuais.
-* **Retorno:** `void`
-
-## Classe: TrajetoModel
-* **Implementação:** Eduardo Skoroboatei Gomes
-* **Descrição:** Classe de domínio que representa um trajeto na aplicação. Encapsula as informações fundamentais de uma rota, como o local de origem, o local de destino e o horário de saída previsto.
-
-### Métodos
-
-#### `TrajetoModel(origem, destino, horarioSaida)`
-* **Descrição:** Construtor da classe. Inicializa uma nova instância de um trajeto com as informações de rota e horário fornecidas.
-* **Parâmetros:** `origem` (`String`) — O local de partida do trajeto.
-* **Parâmetros:** `destino` (`String`) — O local de chegada do trajeto.
-* **Parâmetros:** `horarioSaida` (`LocalDateTime`) — A data e a hora programadas para o início do trajeto.
-
-#### `getOrigem()`
-* **Descrição:** Retorna o local de origem do trajeto.
-* **Retorno:** `String`
-
-#### `getDestino()`
-* **Descrição:** Retorna o local de destino do trajeto.
-* **Retorno:** `String`
-
-#### `getHorarioSaida()`
-* **Descrição:** Retorna a data e o horário programados para a saída do trajeto.
-* **Retorno:** `LocalDateTime`
-
-## Classe: TrajetoView
-
-* **Implementação:** Eduardo Skoroboatei Gomes
-* **Descrição:** Classe responsável pela interface gráfica do módulo de gerenciamento de trajetos. Herda as estruturas padrão de `CRUDView` e adiciona componentes específicos, como campos de texto para origem e destino, além de um seletor especializado de data e hora.
-
-### Interface Gráfica
-![](./docs/crud-trajetos.png)
-
-### Elementos da Interface e Uso
-* A interface exibe um formulário de entrada contendo dois campos de texto (`TextField`) para o preenchimento da "Origem do Trajeto" e "Destino do Trajeto", e um componente de calendário e relógio (`LocalDateTimeTextField`) para a "Data e hora de Saída". Abaixo do formulário, a tabela exibe os trajetos cadastrados.
-
-### Métodos
-
-#### `TrajetoView()`
-* **Descrição:** Construtor da classe. Instancia os campos de formulário (origem, destino, horário de saída), define seus textos de instrução e os adiciona ao formulário.
-
-#### `configurarColunas()`
-* **Descrição:** Método sobrescrito que cria e configura as colunas da tabela (Origem, Destino, Horario Saída), vinculando cada coluna às propriedades correspondentes das instâncias de `TrajetoModel`.
-* **Retorno:** `void`
-
-#### `getTitulo()`
-* **Descrição:** Retorna o título da tela, que será exibido na barra da janela principal.
-* **Retorno:** `String`
-
-#### `getOrigem()`
-* **Descrição:** Retorna o campo de texto destinado ao preenchimento do local de origem.
-* **Retorno:** `TextField`
-
-#### `getDestino()`
-* **Descrição:** Retorna o campo de texto destinado ao preenchimento do local de destino.
-* **Retorno:** `TextField`
-
-#### `getHorarioSaida()`
-* **Descrição:** Retorna o campo de seleção utilizado para capturar a data e a hora de saída.
-* **Retorno:** `LocalDateTimeTextField`
-
-## Classe: TransacaoController
-* **Implementação:** Eduardo Skoroboatei Gomes
-* **Descrição:** Controlador responsável por orquestrar o gerenciamento de transações. Além de implementar o fluxo básico do CRUD, a classe cuida do carregamento das listas de passageiros (usuários) nos seletores da interface e garante o tratamento de exceções na conversão do campo numérico de valor.
-
-### Métodos
-
-#### `TransacaoController()`
-* **Descrição:** Construtor da classe. Inicializa o controlador atrelando o `TransacaoView` ao `TransacaoModel`. Também acessa o repositório de `PassageiroModel` para popular os menus suspensos (*ComboBoxes*) de usuários de origem e destino na interface.
-
-#### `camposParaModel()`
-* **Descrição:** Extrai os IDs dos passageiros selecionados nos menus e o valor monetário inserido no campo de texto. Realiza a conversão do texto para um número decimal e retorna um novo objeto `TransacaoModel`.
-* **Retorno:** `TransacaoModel`
-
-#### `modelParaCampos(selecionado)`
-* **Descrição:** Preenche a interface gráfica a partir do modelo, selecionando as instâncias correspondentes de passageiro nos menus de origem e destino, e convertendo o valor numérico da transação de volta para texto.
-* **Parâmetros:** `selecionado` (`TransacaoModel`) — O objeto contendo os dados da transação a ser carregada.
-* **Retorno:** `void`
-
-## Classe: TransacaoModel
-* **Implementação:** Eduardo Skoroboatei Gomes
-* **Descrição:** Modelo de dados que representa uma transação realizada entre dois usuários do sistema. O modelo armazena os identificadores do usuário que envia (origem) e do que recebe (destino), a quantia transferida e registra o momento exato em que a transação foi instanciada.
-
-### Métodos
-
-#### `TransacaoModel(userOrigemID, userDestinoID, valor)`
-* **Descrição:** Construtor da classe. Atribui os identificadores de origem e destino, além do valor da transação. Define automaticamente a propriedade `timestamp` com a data e hora do momento da criação da instância.
-* **Parâmetros:** `userOrigemID` (`int`) — O id do usuário que origina a transação.
-* **Parâmetros:** `userDestinoID` (`int`) — O id do usuário que recebe a transação.
-* **Parâmetros:** `valor` (`double`) — O valor monetário atrelado à transação.
-
-#### `getUserOrigemID()`
-* **Descrição:** Recupera o ID do usuário de origem.
-* **Retorno:** `int`
-
-#### `getUserDestinoID()`
-* **Descrição:** Recupera o ID do usuário de destino.
-* **Retorno:** `int`
-
-#### `getValor()`
-* **Descrição:** Recupera o valor da transação.
-* **Retorno:** `double`
-
-#### `getTimestamp()`
-* **Descrição:** Recupera a marcação temporal (data e hora exata) de quando a transação foi criada.
-* **Retorno:** `LocalDateTime`
-
-#### `getUserOrigem()`
-* **Descrição:** Busca dinamicamente e retorna o objeto passageiro associado ao ID de origem, utilizando uma instância do repositório de `PassageiroModel`.
-* **Retorno:** `PassageiroModel`
-
-#### `getUserDestino()`
-* **Descrição:** Busca dinamicamente e retorna o objeto passageiro associado ao ID de destino, utilizando uma instância do repositório de `PassageiroModel`.
-* **Retorno:** `PassageiroModel`
-
-## Classe: TransacaoView
-* **Implementação:** Eduardo Skoroboatei Gomes
-* **Descrição:** Componente de interface gráfica voltado para a exibição e captação de dados sobre transações. Herda a estrutura de tela do `CRUDView` e introduz menus para a definição das partes envolvidas na transação, além de um campo para entrada do valor financeiro.
-
-### Interface Gráfica
-![](./docs/crud-transacoes.png)
-
-### Elementos da Interface e Uso
-
-* O formulário visual desta tela é composto por dois `ComboBox` que permitem selecionar a partir da lista de passageiros o "Usuário Origem" e o "Usuário Destino". Ao lado, um `TextField` capta o montante financeiro da operação ("Valor"). A tabela de dados exibe esses registros, adicionalmente com o `Timestamp` da transação.
-
-### Métodos
-
-#### `TransacaoView()`
-* **Descrição:** Construtor da tela. Instancia os seletores de usuários (origem e destino) e o campo de valor, define seus textos de instrução (*prompt text*) e insere todos eles no contêiner de formulário.
-
-#### `configurarColunas()`
-* **Descrição:** Implementação de método obrigatório do `CRUDView`. Fabrica e atrela as colunas da tabela de transações para exibir as representações textuais dos passageiros de origem e destino, o valor transferido (tratado como objeto *Double*) e o timestamp em que a operação ocorreu.
-* **Retorno:** `void`
-
-#### `getTitulo()`
-* **Descrição:** Fornece o título da janela a ser gerada para este módulo de interface.
-* **Retorno:** `String`
-
-#### `getUserOrigem()`
-* **Descrição:** Retorna a referência do menu de seleção atrelado ao usuário que inicia a transação.
-* **Retorno:** `ComboBox<PassageiroModel>`
-
-#### `getUserDestino()`
-* **Descrição:** Retorna a referência do menu de seleção atrelado ao usuário que recebe a transação.
-* **Retorno:** `ComboBox<PassageiroModel>`
-
-#### `getValor()`
-* **Descrição:** Retorna a referência do campo de texto usado para preencher ou visualizar o valor da transação.
-* **Retorno:** `TextField`
-
-## Classe: PassageiroController
-
-* **Implementação:** João Pedro Gadens Mosson
-* **Descrição:** Classe controladora responsável por intermediar a interface gráfica `PassageiroView` e a camada de dados `PassageiroModel`. Herda as funcionalidades padronizadas de `CRUDController` para gerenciar as operações de conversão e transferência de dados inseridos no formulário para a entidade de negócio e vice-versa.
-
-### Métodos
-
-#### `PassageiroController()`
-* **Descrição:** Construtor da classe. Invoca o construtor da superclasse passando uma nova instância da view de passageiros (`PassageiroView`) e a referência de classe do modelo correspondente (`PassageiroModel.class`).
-
-#### `camposParaModel()`
-* **Descrição:** Extrai os valores inseridos pelo usuário nos campos de texto (CPF e Nome) e no seletor de data (Data de Nascimento). A partir desses dados, instancia e retorna um novo objeto do tipo `PassageiroModel`.
-* **Retorno:** `PassageiroModel`
-
-#### `modelParaCampos(selecionado)`
-* **Descrição:** Processo inverso à criação: recebe uma instância de `PassageiroModel` e desmembra suas propriedades para preencher os respectivos campos do formulário.
-* **Parâmetros:** `selecionado` (`PassageiroModel`) — O objeto contendo as informações do passageiro.
-* **Retorno:** `void`
-
-## Classe: PassageiroModel
-* **Implementação:** João Pedro Gadens Mosson
-* **Descrição:** Entidade de domínio que representa um passageiro no sistema. Herda de `Model` e implementa a estrutura de dados necessária para o armazenamento das informações.
-
-### Métodos
-
-#### `PassageiroModel(cpf, nome, dataNascimento)`
-* **Descrição:** Construtor da classe. Instancia um novo passageiro. O parâmetro String `cpf` é convertido internamente em um objeto do tipo `CPF` que garante sua validação e formatação.
-* **Parâmetros:** `cpf` (`String`) — O documento de identificação do passageiro.
-* **Parâmetros:** `nome` (`String`) — O nome completo do passageiro.
-* **Parâmetros:** `dataNascimento` (`LocalDate`) — A data de nascimento do passageiro.
-
-#### `checarColisao(objeto)`
-* **Descrição:** Sobrescreve a regra de negócio de unicidade da classe base. Determina que dois passageiros entram em colisão (são considerados duplicados) caso possuam o mesmo valor de CPF registrado.
-* **Parâmetros:** `objeto` (`PassageiroModel`) — A entidade de passageiro a ser comparada com a instância atual.
-* **Retorno:** `boolean`
-
-#### `getCPF()`
-* **Descrição:** Retorna o objeto `CPF` contendo o documento do passageiro.
-* **Retorno:** `CPF`
-
-#### `getNome()`
-* **Descrição:** Retorna o nome do passageiro.
-* **Retorno:** `String`
-
-#### `getDataNascimento()`
-* **Descrição:** Retorna a data de nascimento do passageiro.
-* **Retorno:** `LocalDate`
-
-#### `toString()`
-* **Descrição:** Sobrescreve a representação textual padrão do objeto para retornar estritamente o atributo `nome` do passageiro. Facilita a exibição do passageiro em componentes visuais, como `ComboBox`.
-* **Retorno:** `String`
-
-## Classe: PassageiroView
-* **Implementação:** João Pedro Gadens Mosson
-* **Descrição:** Componente de interface para o gerenciamento de passageiros. Estende `CRUDView` configurando os elementos de formulário (CPF, Nome, Data de Nascimento) e preparando as colunas da tabela.
-
-### Interface Gráfica
-![](./docs/crud-passageiros.png)
-
-### Elementos da Interface e Uso
-* O formulário na barra superior é composto por dois campos de texto (`TextField`) e um componente de calendário (`DatePicker`). Os dados salvos no sistema são mostrados na tabela abaixo.
-
-### Métodos
-
-#### `PassageiroView()`
-* **Descrição:** Construtor da classe. Realiza a inicialização dos componentes de entrada de dados do usuário, insere os textos de instrução (placeholders) em cada um deles e os acopla ao contêiner de formulário disponibilizado pela superclasse.
-
-#### `configurarColunas()`
-* **Descrição:** Implementação de método obrigatório herdado. Constrói e vincula as colunas da tabela às propriedades dos objetos `PassageiroModel` extraindo os respectivos dados.
-* **Retorno:** `void`
-
-#### `getTitulo()`
-* **Descrição:** Retorna o título da janela a ser gerada para o módulo de gerenciamento de passageiros.
-* **Retorno:** `String`
-
-#### `getTxtCPF()`
-* **Descrição:** Recupera a referência do campo de texto de CPF.
-* **Retorno:** `TextField`
-
-#### `getTxtNome()`
-* **Descrição:** Recupera a referência do campo de texto de nome.
-* **Retorno:** `TextField`
-
-#### `getDpDataNascimento()`
-* **Descrição:** Recupera a referência do seletor utilizado para a data de nascimento.
-* **Retorno:** `DatePicker`
-
-## Classe: VeiculoController
-* **Implementação:** João Pedro Gadens Mosson
-* **Descrição:** Classe que atua como controlador para o CRUD de veículos. Subclasse de `CRUDController`, faz a tradução de dados entre os componentes da interface e a entidade de domínio, garantindo o correto tratamento de tipos, como conversão de texto numérico, antes da geração da entidade.
-
-### Métodos
-
-#### `VeiculoController()`
-* **Descrição:** Construtor da classe. Aciona o construtor da classe base, conectando instâncias de `VeiculoView` e apontando a referência do modelo de veículo.
-* **Retorno:** `void`
-
-#### `camposParaModel()`
-* **Descrição:** Captura as Strings dos campos da interface (Placa, Modelo e Ano). Realiza a conversão do texto do campo Ano para o tipo `int`. Caso a conversão falhe, captura a exceção `NumberFormatException` e lança uma `IllegalArgumentException` com uma mensagem clara sobre o erro de validação. Transforma todos os dados verificados em um novo `VeiculoModel`.
-* **Retorno:** `VeiculoModel`
-
-#### `modelParaCampos(selecionado)`
-* **Descrição:** Recebe um modelo de veículo e o converte para suas representações na interface.
-* **Parâmetros:** `selecionado` (`VeiculoModel`) — A entidade veicular para projeção na tela.
-* **Retorno:** `void`
-
-## Classe: VeiculoModel
-* **Implementação:** João Pedro Gadens Mosson
-* **Descrição:** Modelo de dados do domínio que armazena os atributos associados a um veículo (Placa, Modelo, Ano). Delega a formatação de placa à classe `Placa` e implementa a checagem e rejeição de itens duplicados.
-
-### Métodos
-
-#### `VeiculoModel(placa, modelo, ano)`
-* **Descrição:** Construtor principal. Transforma a String recebida em um objeto do tipo `Placa` e consolida os demais dados.
-* **Parâmetros:** `placa` (`String`) — Numeração da placa do veículo.
-* **Parâmetros:** `modelo` (`String`) — Descrição do modelo do carro.
-* **Parâmetros:** `ano` (`int`) — Ano de fabricação.
-
-#### `checarColisao(objeto)`
-* **Descrição:** Determina a existência de conflitos entre instâncias de veículos. Avalia como duplicado qualquer veículo que apresente exatamente o mesmo número de Placa.
-* **Parâmetros:** `objeto` (`VeiculoModel`) — O modelo sendo checado para colisão.
-* **Retorno:** `boolean`
-
-#### `getPlaca()`
-* **Descrição:** Retorna a referência do objeto `Placa`.
-* **Retorno:** `Placa`
-
-#### `getModelo()`
-* **Descrição:** Recupera o texto do modelo do veículo.
-* **Retorno:** `String`
-
-#### `getAno()`
-* **Descrição:** Recupera o ano do veículo.
-* **Retorno:** `int`
-
-## Classe: VeiculoView
-* **Implementação:** João Pedro Gadens Mosson
-* **Descrição:** Componente de apresentação do gerenciamento de veículos. Utiliza a infraestrutura de `CRUDView` adicionando campos necessários e configurando a tabela para mostrar os dados do model.
-
-### Interface Gráfica
-![](./docs/crud-veiculos.png)
-
-### Elementos da Interface e Uso
-O formulário possui três campos de entrada de texto, com dicas demonstrando o formato de entrada esperado. Os dados interagem com as ações padrão de CRUD e refletem seus resultados consolidados em uma tabela.
-
-### Métodos
-
-#### `VeiculoView()`
-* **Descrição:** Construtor que inicializa os campos necessários ao modelo (`txtPlaca`, `txtModelo` e `txtAno`) e insere estes no formulário.
-
-#### `configurarColunas()`
-* **Descrição:** Estabelece a ligação de dados na tabela com os atributos do model.
-* **Retorno:** `void`
-
-#### `getTitulo()`
-* **Descrição:** Fornece o título da tela, com a identificação do módulo ("Gerenciamento de Veículos").
-* **Retorno:** `String`
-
-#### `getTxtPlaca()`
-* **Descrição:** Entrega o componente `TextField` responsável pela Placa.
-* **Retorno:** `TextField`
-
-#### `getTxtModelo()`
-
-* **Descrição:** Entrega o componente `TextField` responsável pelo Modelo.
-* **Retorno:** `TextField`
-
-#### `getTxtAno()`
-
-* **Descrição:** Entrega o componente `TextField` responsável pelo Ano.
-* **Retorno:** `TextField`
-
-## Classe: EmpresaController
-* **Implementação:** João Pedro Magri Pozzan
-* **Descrição:** Controla o fluxo de dados do CRUD de empresas. Faz a ponte entre a interface gráfica (`EmpresaView`) e o armazenamento de dados (`EmpresaModel`), realizando a leitura, conversão e validação das entradas do usuário.
-
-### Métodos
-
-#### `EmpresaController()`
-* **Descrição:** Construtor. Inicializa o controlador conectando uma nova tela de empresas ao seu modelo de dados correspondente.
-
-#### `camposParaModel()`
-* **Descrição:** Lê os valores digitados na interface (CNPJ, nome e quantidade de funcionários). Converte a quantidade de funcionários para número inteiro, validando a entrada e lançando erros caso o valor seja inválido ou contenha um número bloqueado por regra de negócio. Retorna um novo `EmpresaModel`.
-* **Retorno:** `EmpresaModel`
-
-#### `modelParaCampos(selecionado)`
-* **Descrição:** Preenche automaticamente os campos de texto do formulário com os dados da empresa que foi selecionada na tabela.
-* **Parâmetros:** `selecionado` (`EmpresaModel`) — A empresa cujos dados serão exibidos na tela.
-* **Retorno:** `void`
-
-## Classe: EmpresaModel
-* **Implementação:** João Pedro Magri Pozzan
-* **Descrição:** Modelo de dados que representa uma empresa no sistema. Armazena e gerencia o CNPJ, o nome e a quantidade de funcionários da organização.
-
-### Métodos
-
-#### `EmpresaModel(cnpj, nomeEmpresa, qtaFuncionarios)`
-* **Descrição:** Construtor. Cria o registro de uma empresa. Instancia o texto do CNPJ diretamente como um objeto seguro da classe `CNPJ`.
-* **Parâmetros:** `cnpj` (`String`) — O texto representando o número do CNPJ.
-* **Parâmetros:** `nomeEmpresa` (`String`) — O nome da empresa.
-* **Parâmetros:** `qtaFuncionarios` (`int`) — O total de funcionários registrados.
-
-#### `checarColisao(objeto)`
-* **Descrição:** Define a regra de duplicidade. Considera que duas empresas entram em conflito se possuírem o mesmo número de CNPJ.
-* **Parâmetros:** `objeto` (`EmpresaModel`) — A empresa a ser comparada.
-* **Retorno:** `boolean`
-
-#### `getCNPJ()`
-* **Descrição:** Retorna o objeto CNPJ da empresa.
-* **Retorno:** `CNPJ`
-
-#### `getNomeEmpresa()`
-* **Descrição:** Retorna o nome da empresa.
-* **Retorno:** `String`
-
-#### `getQtaFuncionarios()`
-* **Descrição:** Retorna a quantidade de funcionários.
-* **Retorno:** `int`
-
-## Classe: EmpresaView
-* **Implementação:** João Pedro Magri Pozzan
-* **Descrição:** Interface gráfica para gerenciar as empresas. Estende a tela padrão de CRUD e adiciona campos de texto específicos para cadastrar o CNPJ, o nome e a quantidade de funcionários.
-
-### Interface Gráfica
-![](./docs/crud-empresas.png)
-
-### Elementos da Interface e Uso
-O formulário conta com três campos de texto simples (`TextField`) com dicas na tela: "CNPJ", "Nome da Empresa" e "Quantidade de Funcionários". Os dados cadastrados aparecem na tabela logo abaixo.
-
-### Métodos
-
-#### `EmpresaView()`
-* **Descrição:** Construtor. Cria os campos de texto, define as dicas de preenchimento de cada um e os adiciona à barra de formulário da tela.
-
-#### `configurarColunas()`
-* **Descrição:** Cria as colunas da tabela da interface e as conecta às propriedades do `EmpresaModel` (valor do CNPJ, nome da empresa e quantidade de funcionários) para exibição automática dos dados.
-* **Retorno:** `void`
-
-#### `getTitulo()`
-* **Descrição:** Define e retorna o título da janela para este módulo.
-* **Retorno:** `String`
-
-#### `getTxtCNPJ()`
-* **Descrição:** Retorna o campo de texto utilizado para digitar o CNPJ.
-* **Retorno:** `TextField`
-
-#### `getTxtNome()`
-* **Descrição:** Retorna o campo de texto utilizado para digitar o nome da empresa.
-* **Retorno:** `TextField`
-
-#### `getTxtQtaFuncionarios()`
-* **Descrição:** Retorna o campo de texto utilizado para digitar a quantidade de funcionários.
-* **Retorno:** `TextField`
-
-## Classe: BeneficioController
-* **Implementação:** André Murilo Pinz Gomes
-* **Descrição:** Classe controladora responsável por intermediar a comunicação entre `BeneficioView` e `BeneficioModel`, extraindo os dados da interface gráfica para instanciar modelos e preenchendo o formulário visual a partir de um modelo selecionado.
-
-### Métodos
-
-#### `BeneficioController()`
-* **Descrição:** Construtor que inicializa a controladora passando instâncias de `BeneficioView` e o tipo `BeneficioModel` para a classe pai.
-
-#### `camposParaModel()`
-* **Descrição:** Coleta os valores inseridos nos campos da interface gráfica e os converte para criar uma nova instância de `BeneficioModel`.
-* **Retorno:** `BeneficioModel`
-
-#### `modelParaCampos(selecionado)`
-* **Descrição:** Recebe um modelo de benefício selecionado e preenche os campos da interface gráfica com seus respectivos valores.
-* **Parâmetro:** `selecionado` (`BeneficioModel`) — O objeto modelo cujos dados serão exibidos na view.
-* **Retorno:** `void`
-
-## Classe: BeneficioModel
-
-* **Implementação:** André Murilo Pinz Gomes
-* **Descrição:** Entidade de modelo que representa um benefício. Armazena os dados principais como nome, tipo, valor financeiro e descrição, além de implementar a lógica para evitar duplicidade de registros (colisão).
-
-### Métodos
-
-#### `BeneficioModel(nome, tipo, valor, descricao)`
-* **Descrição:** Construtor que inicializa um novo benefício com todos os seus atributos básicos.
-* **Parâmetro:** `nome` (`String`) — O nome do benefício.
-* **Parâmetro:** `tipo` (`String`) — A categoria ou tipo do benefício.
-* **Parâmetro:** `valor` (`double`) — O valor monetário associado ao benefício.
-* **Parâmetro:** `descricao` (`String`) — Uma explicação detalhada do benefício.
-
-#### `checarColisao(objeto)`
-* **Descrição:** Verifica se já existe um benefício com o mesmo nome na base de dados para evitar cadastros duplicados.
-* **Parâmetro:** `objeto` (`BeneficioModel`) — Outra instância de modelo a ser comparada.
-* **Retorno:** `boolean`
-
-#### `getNome()`
-* **Descrição:** Recupera o nome do benefício.
-* **Retorno:** `String`
-
-#### `getTipo()`
-* **Descrição:** Recupera o tipo do benefício.
-* **Retorno:** `String`
-
-#### `getValor()`
-* **Descrição:** Recupera o valor do benefício.
-* **Retorno:** `double`
-
-#### `getDescricao()`
-* **Descrição:** Recupera a descrição detalhada do benefício.
-* **Retorno:** `String`
-
-## Classe: BeneficioView
-* **Implementação:** André Murilo Pinz Gomes
-* **Descrição:** Classe responsável pela interface gráfica do gerenciamento de benefícios. Define os campos de formulário para inserção de dados e a tabela para listagem dos registros.
-
-### Interface Gráfica
-![](./docs/crud-beneficios.png)
-
-### Elementos da Interface e Uso
-A tela herda comportamentos de `CRUDView` e é composta por um formulário no topo e uma tabela de exibição na parte inferior. O formulário contém quatro campos de texto (`TextField`) para entrada de dados: "Nome do Beneficio", "Tipo", "Valor" e "Descricao". A tabela de listagem exibe esses dados em quatro colunas correspondentes (Nome, Tipo, Valor e Descricao), mapeadas diretamente das propriedades do `BeneficioModel`.
-
-### Métodos
-
-#### `BeneficioView()`
-* **Descrição:** Construtor que inicializa os campos de texto do formulário, configura os placeholders (textos de dica) e adiciona os componentes ao painel principal.
-
-#### `configurarColunas()`
-* **Descrição:** Configura e vincula as colunas da tabela de exibição aos atributos correspondentes da classe `BeneficioModel`.
-* **Retorno:** `void`
-
-#### `getTitulo()`
-* **Descrição:** Retorna o título que deve ser exibido na janela da interface gráfica.
-* **Retorno:** `String`
-
-#### `getNome()`
-* **Descrição:** Retorna a referência do campo de texto referente ao nome.
-* **Retorno:** `TextField`
-
-#### `getTipo()`
-
-* **Descrição:** Retorna a referência do campo de texto referente ao tipo.
-* **Retorno:** `TextField`
-
-#### `getValor()`
-
-* **Descrição:** Retorna a referência do campo de texto referente ao valor.
-* **Retorno:** `TextField`
-
-#### `getDescricao()`
-
-* **Descrição:** Retorna a referência do campo de texto referente à descrição.
-* **Retorno:** `TextField`
-
-## Classe: CaronaController
-* **Implementação:** André Murilo Pinz Gomes
-* **Descrição:** Controladora responsável por gerenciar o ciclo de vida do cadastro de caronas, fazendo a ponte entre a interface `CaronaView` e a entidade `CaronaModel`. Trata validações simples e formatação de dados numéricos.
-
-### Métodos
-
-#### `CaronaController()`
-* **Descrição:** Construtor que inicializa a estrutura da controladora invocando a superclasse com a respectiva view e o tipo de classe do modelo de carona.
-
-#### `camposParaModel()`
-* **Descrição:** Extrai os dados do formulário da `CaronaView`, realiza as conversões necessárias para números inteiros (vagas), e instancia um novo `CaronaModel`.
-* **Retorno:** `CaronaModel`
-
-#### `modelParaCampos(selecionado)`
-* **Descrição:** Popula os campos da interface `CaronaView` utilizando as informações do objeto `CaronaModel` passado.
-* **Parâmetro:** `selecionado` (`CaronaModel`) — Objeto contendo os dados da carona a serem exibidos.
-* **Retorno:** `void`
-
-## Classe: CaronaModel
-* **Implementação:** André Murilo Pinz Gomes
-* **Descrição:** Classe de modelo que encapsula as informações pertinentes a uma oferta de carona, contendo dados como condutor, trajeto, número de vagas disponíveis e status atual.
-
-### Métodos
-
-#### `CaronaModel(motorista, origem, destino, vagas, status)`
-* **Descrição:** Construtor para inicialização completa do modelo de carona.
-* **Parâmetro:** `motorista` (`String`) — O nome do motorista oferecendo a carona.
-* **Parâmetro:** `origem` (`String`) — O local de partida.
-* **Parâmetro:** `destino` (`String`) — O local de chegada.
-* **Parâmetro:** `vagas` (`int`) — A quantidade de assentos disponíveis.
-* **Parâmetro:** `status` (`String`) — O estado atual da viagem (ex: Aberta, Confirmada).
-
-#### `checarColisao(objeto)`
-* **Descrição:** Verifica redundância de registros conferindo se o motorista, origem e destino coincidem simultaneamente com os dados de outro objeto.
-* **Parâmetro:** `objeto` (`CaronaModel`) — Instância a ser comparada com a atual.
-* **Retorno:** `boolean`
-
-#### `getMotorista()`
-* **Descrição:** Retorna o nome do motorista.
-* **Retorno:** `String`
-
-#### `getOrigem()`
-* **Descrição:** Retorna o local de origem.
-* **Retorno:** `String`
-
-#### `getDestino()`
-* **Descrição:** Retorna o local de destino da carona.
-* **Retorno:** `String`
-
-#### `getVagas()`
-* **Descrição:** Retorna o número atual de vagas.
-* **Retorno:** `int`
-
-#### `getStatus()`
-* **Descrição:** Retorna o status da carona.
-* **Retorno:** `String`
-
-## Classe: CaronaView
-
-* **Implementação:** André Murilo Pinz Gomes
-* **Descrição:** Representação visual do sistema para operações CRUD focadas em objetos `CaronaModel`. Oferece a interface para cadastro de trajetos e visualização tabular.
-
-### Interface Gráfica
-![](./docs/crud-caronas.png)
-
-### Elementos da Interface e Uso
-A interface, estendida de `CRUDView`, divide-se em um formulário superior e uma tabela inferior. O formulário é composto por campos `TextField` para "Motorista", "Origem", "Destino" e "Vagas", além de um `ComboBox` predefinido para o "Status" contendo as opções (Aberta, Confirmada, Concluida, Cancelada). O usuário insere as informações através destes controles, que são posteriormente espelhados nas colunas da tabela de registros na tela inferior.
-
-### Métodos
-
-#### `CaronaView()`
-* **Descrição:** Construtor que cria os elementos gráficos de entrada (Textos e ComboBox), define as dicas em tela (prompt text), e os injeta no painel de formulário herdado.
-
-#### `configurarColunas()`
-* **Descrição:** Configura e vincula as colunas de dados da tabela (Motorista, Origem, Destino, Vagas e Status) às respectivas funções e tipos provenientes do modelo de dados.
-* **Retorno:** `void`
-
-#### `getTitulo()`
-* **Descrição:** Retorna o título a ser fixado no cabeçalho ou janela da aplicação.
-* **Retorno:** `String`
-
-#### `getMotorista()`
-* **Descrição:** Retorna o campo de texto utilizado para obter o nome do motorista.
-* **Retorno:** `TextField`
-
-#### `getOrigem()`
-* **Descrição:** Retorna o campo de texto utilizado para obter a origem.
-* **Retorno:** `TextField`
-
-#### `getDestino()`
-* **Descrição:** Retorna o campo de texto utilizado para obter o destino.
-* **Retorno:** `TextField`
-
-#### `getVagas()`
-* **Descrição:** Retorna o campo de texto utilizado para obter as vagas disponíveis.
-* **Retorno:** `TextField`
-
-#### `getStatus()`
-* **Descrição:** Retorna a lista suspensa (combobox) contendo os status da viagem.
-* **Retorno:** `ComboBox<String>`
-
-## Classe: CarteiraController
-* **Implementação:** João Pedro Magri Pozzan
-* **Descrição:** Controlador responsável por intermediar a validação e o fluxo de dados entre a interface gráfica de carteiras e o modelo de negócio correspondente, tratando conversões de tipo e regras de preenchimento obrigatório.
-
-### Métodos
-
-#### `CarteiraController()`
-* **Descrição:** Construtor que inicializa as instâncias da view e do modelo vinculadas a este controlador.
-
-#### `camposParaModel()`
-* **Descrição:** Obtém os valores inseridos pelo usuário na interface, realiza as devidas validações (saldo numérico, cartão com 16 dígitos e titular não nulo) e retorna uma nova instância do modelo.
-* **Retorno:** `CarteiraModel`
-
-#### `modelParaCampos(selecionado)`
-* **Descrição:** Transfere as informações de um modelo preexistente para os respectivos campos de texto na interface gráfica.
-* **Parâmetro:** `selecionado` (`CarteiraModel`) — O objeto de carteira que contém os dados a serem exibidos.
-* **Retorno:** `void`
-
-## Classe: CarteiraModel
-
-* **Implementação:** João Pedro Magri Pozzan
-* **Descrição:** Entidade que representa os dados de uma carteira, englobando as informações financeiras e de identificação, bem como a definição da regra de unicidade do registro.
-
-### Métodos
-
-#### `CarteiraModel(saldo, numeroCartao, titularConta)`
-* **Descrição:** Construtor utilizado para criar uma nova carteira com todos os atributos preenchidos.
-* **Parâmetro:** `saldo` (`double`) — O valor disponível na carteira.
-* **Parâmetro:** `numeroCartao` (`String`) — A numeração de 16 dígitos do cartão.
-* **Parâmetro:** `titularConta` (`String`) — O nome do responsável pela conta.
-
-#### `checarColisao(objeto)`
-* **Descrição:** Verifica se já existe um cadastro de carteira no sistema contendo o mesmo número de cartão, para evitar duplicidade.
-* **Parâmetro:** `objeto` (`CarteiraModel`) — O objeto a ser comparado com a instância atual.
-* **Retorno:** `boolean`
-
-#### `getSaldo()`
-* **Descrição:** Recupera o saldo atual da carteira.
-* **Retorno:** `double`
-
-#### `getNumeroCartao()`
-* **Descrição:** Recupera o número do cartão vinculado.
-* **Retorno:** `String`
-
-#### `getTitularConta()`
-* **Descrição:** Recupera o nome do titular da conta.
-* **Retorno:** `String`
-
-## Classe: CarteiraView
-
-* **Implementação:** João Pedro Magri Pozzan
-* **Descrição:** Classe encarregada de desenhar a interface com o usuário para a manipulação de carteiras, fornecendo os componentes de formulário e a estrutura tabular para listagem.
-
-### Interface Gráfica
-![](./docs/crud-carteiras.png)
-
-### Elementos da Interface e Uso
-A interface visual estende funcionalidades padronizadas e apresenta um formulário interativo no topo junto com uma tabela de registros logo abaixo. O formulário disponibiliza três campos de entrada de texto (`TextField`) para digitação de dados: "Saldo da Conta", "Número do Cartão" e "Titular da Conta". Conforme os dados são submetidos e validados pelo controlador, eles passam a compor a tabela inferior, estruturada nas colunas de Saldo, Nº do Cartão e Titular.
-
-### Métodos
-
-#### `CarteiraView()`
-* **Descrição:** Construtor que cria os componentes do formulário, configura seus textos de ajuda (prompt text) e os anexa à tela principal.
-
-#### `configurarColunas()`
-* **Descrição:** Define as colunas da tabela de exibição e realiza a vinculação delas com as respectivas propriedades do objeto `CarteiraModel`.
-* **Retorno:** `void`
-
-#### `getTitulo()`
-* **Descrição:** Retorna o título que identifica a tela de carteiras.
-* **Retorno:** `String`
-
-#### `getTxtSaldo()`
-* **Descrição:** Fornece a referência para o campo de texto do saldo.
-* **Retorno:** `TextField`
-
-#### `getTxtNumeroCartao()`
-* **Descrição:** Fornece a referência para o campo de texto do número do cartão.
-* **Retorno:** `TextField`
-
-#### `getTxtTitularConta()`
-* **Descrição:** Fornece a referência para o campo de texto correspondente ao titular da conta.
-* **Retorno:** `TextField`
+- Campos obrigatórios não podem ficar vazios.
+- Números aceitam vírgula ou ponto (`10,50`) e rejeitam `NaN`, infinito e texto.
+- Saldo da Carteira não aceita valor negativo; o valor da Transação precisa ser maior que zero; vagas da Carona e funcionários da Empresa precisam ser pelo menos 1.
+- CPF, CNPJ e placa são validados pelo formato (`Types.CPF`, `Types.CNPJ`, `Types.Placa`).
+- Transação com origem igual ao destino é rejeitada. A hora da transação é definida na criação e não muda ao editar.
+- Se um passageiro de uma transação for excluído, a tela mostra "(passageiro removido)".
+- Ao dar duplo clique numa linha, ela vira o item em edição: o botão Atualizar altera aquele item, mesmo que outra linha seja selecionada depois.
+
+## Testes
+
+Não há testes automatizados no projeto. A última rodada foi manual, pela interface, com a pasta `data/` apagada antes, e cobriu 24 itens em 7 grupos, todos aprovados:
+
+1. Carona e State (criar, Confirmar, Concluir, transições inválidas, aviso sem seleção).
+2. Edição da Carona preservando o status.
+3. Atualizar alterando a linha certa.
+4. Transação (origem igual ao destino, hora preservada, passageiro removido).
+5. Valores (`NaN`, `-5`, `abc`, `10,50`, valor `0`).
+6. Casos antigos (empresa com 67 funcionários, ano 3000, CPF curto, placa inválida).
+7. Persistência ao fechar e reabrir o app.
+
+## Limitações conhecidas
+
+- O domínio é simples: a Transação não movimenta o saldo da Carteira, e os vínculos entre entidades (motorista da Carona, titular da Carteira) são texto livre, sem referência a Passageiro.
+- CPF e CNPJ são validados só pelo formato, sem dígitos verificadores.
+- O próximo ID é o maior existente mais um, então o ID do último registro excluído pode ser reutilizado.
+- A persistência usa serialização Java: se a estrutura de uma classe mudar, os arquivos `.dat` antigos deixam de ser lidos e devem ser apagados.
+
+## Estrutura do projeto
+
+```
+src/main/java/com/poo/javafx/
+├── App.java, MenuView.java, Router.java
+├── Model.java, Repository.java
+├── CRUDController.java, CRUDView.java
+├── Types/            CPF, CNPJ, Placa
+├── validacao/        Strategy das regras de validação
+└── Instanciacao/     Model, View e Controller de cada entidade
+    ├── Andre/        Benefício e Carona (com o pacote estado/)
+    ├── Eduardo/      Trajeto e Transação
+    ├── JoaoMosson/   Passageiro e Veículo
+    └── JoaoPozzan/   Carteira e Empresa
+docs/                 imagens das telas e o relatório antigo (RA3 de POO)
+```
+
+Tecnologias: Java 21, JavaFX 21.0.6, Maven (wrapper incluso) e jfxtras-controls 17-r1.
