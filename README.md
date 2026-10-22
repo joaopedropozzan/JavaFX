@@ -4,7 +4,7 @@ Aplicação desktop em JavaFX para gerenciar uma plataforma de caronas universit
 
 Projeto da disciplina de Design de Software (RA2), PUCPR, Engenharia de Software.
 
-**Autores:** André Murilo Pinz Gomes, Eduardo Skoroboatei Gomes, João Pedro Gadens Mosson e João Pedro Magri Pozzan.
+**Autores:** Eduardo Skoroboatei Gomes, João Pedro Gadens Mosson, João Pedro Magri Pozzan, Renan Cassou Rodrigues e Victor Oliveira Medeiros.
 
 > O relatório anterior (RA3 de Programação Orientada a Objetos) foi guardado em [`docs/README-RA3-POO.md`](docs/README-RA3-POO.md). Ele descreve uma versão anterior do código e não reflete os padrões de projeto desta entrega.
 
