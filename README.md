@@ -49,8 +49,8 @@ O esqueleto de um algoritmo fica numa classe base e os passos variáveis são de
 
 - **`Model.colideCom`** é `final`: confere o tipo do objeto e delega a decisão ao gancho `checarColisao`, que cada entidade sobrescreve. `herdarDe` é outro gancho, chamado por `Repository.atualizar` ao substituir um registro.
 - **`CRUDController.adicionar`, `atualizar` e `deletar`** são `final`: validam, montam o modelo, chamam o repositório e atualizam a tabela. Os passos `camposParaModel` e `modelParaCampos` são abstratos.
-- **`CRUDView`** monta a tela no construtor e deixa `configurarColunas` e `getTitulo` para a subclasse.
-- **`RegraValidacao.executar`** define a ordem da validação e delega a verificação a `valido()`.
+- **`CRUDView`**: o construtor monta o layout fixo da tela e chama `configurarColunas()`, o gancho abstrato que cada subclasse implementa. `getTitulo()` também é abstrato, mas não é chamado pelo construtor: quem o usa é o `Router`, ao navegar para a tela.
+- **`RegraValidacao.executar()`** é o método-template: chama `valido()` e monta o `ResultadoValidacao`. A exceção é `RegraTipoDominio`, que sobrescreve `executar()`: captura a `IllegalArgumentException` lançada pelo construtor do tipo (CPF, CNPJ ou Placa) e devolve a mensagem da exceção.
 
 **Por quê:** as oito telas de cadastro têm o mesmo fluxo e mudam apenas campos e colunas. O template evita repetir o fluxo oito vezes.
 
