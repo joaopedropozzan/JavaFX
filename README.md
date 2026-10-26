@@ -1,6 +1,6 @@
 # CoCar
 
-Aplicação desktop em JavaFX para gerenciar uma plataforma de caronas universitárias: passageiros, veículos, trajetos, caronas, empresas parceiras, benefícios, carteiras e transações.
+Aplicação desktop em JavaFX para gerenciar uma plataforma de caronas corporativas: passageiros, veículos, trajetos, caronas, empresas parceiras, benefícios, carteiras e transações.
 
 Projeto da disciplina de Design de Software (RA2), PUCPR, Engenharia de Software.
 
@@ -58,7 +58,7 @@ O esqueleto de um algoritmo fica numa classe base e os passos variáveis são de
 
 Cada forma de validar um campo é uma estratégia intercambiável.
 
-- **Interface:** `RegraValidacao`, com o resultado em `ResultadoValidacao`.
+- **Classe Abstrata:** `RegraValidacao`, com o resultado em `ResultadoValidacao`.
 - **Estratégias:** `RegraTextField`, `RegraNumeroInteiro`, `RegraNumeroDecimal`, `RegraComboBox`, `RegraDatePicker`, `RegraLocalDateTime`, `RegraCartaoCredito` e `RegraTipoDominio` (CPF, CNPJ e Placa).
 - **Contexto:** `CRUDController` mantém a lista `regrasValidacao`. Cada controller concreto registra as suas com `adicionarRegra`; para cada campo vale a primeira regra que o suporta.
 
@@ -90,7 +90,7 @@ Aberta ──confirmar──▶ Confirmada ──concluir──▶ Concluída
   └────────cancelar────────┴──────────────────▶ Cancelada
 ```
 
-Qualquer outra transição lança `IllegalStateException` ("Uma carona Concluída não pode ser Cancelada."), e a tela mostra a mensagem sem alterar o status. Na `CaronaView`, os botões **Confirmar**, **Concluir** e **Cancelar** substituíram o antigo ComboBox de status.
+Qualquer outra transição lança `IllegalStateException` ("Uma carona Concluída não pode ser cancelada."), e a tela mostra a mensagem sem alterar o status. Na `CaronaView`, os botões **Confirmar**, **Concluir** e **Cancelar** substituíram o antigo ComboBox de status.
 
 **Por quê:** o status da carona tem regras de transição reais. Com State, cada regra fica no estado correspondente e novos estados entram sem mexer nos existentes.
 
