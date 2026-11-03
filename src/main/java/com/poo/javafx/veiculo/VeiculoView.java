@@ -1,0 +1,61 @@
+package com.poo.javafx.veiculo;
+
+import com.poo.javafx.CRUDView;
+
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
+
+public class VeiculoView extends CRUDView<VeiculoModel> {
+
+    private TextField txtPlaca;
+    private TextField txtModelo;
+    private TextField txtAno;
+
+    public VeiculoView() {
+        super();
+
+        // Inicializa os campos do formulário
+        txtPlaca = new TextField();
+        txtPlaca.setPromptText("Placa (ex: ABC1D23)");
+
+        txtModelo = new TextField();
+        txtModelo.setPromptText("Modelo (ex: HB20)");
+
+        txtAno = new TextField();
+        txtAno.setPromptText("Ano (ex: 2026)");
+
+        this.formulario.getChildren().addAll(txtPlaca, txtModelo, txtAno);
+    }
+
+    @Override
+    protected void configurarColunas() {
+        TableColumn<VeiculoModel, String> colPlaca = new TableColumn<>("Placa");
+        colPlaca.setCellValueFactory(new PropertyValueFactory<>("placa"));
+
+        TableColumn<VeiculoModel, String> colModelo = new TableColumn<>("Modelo");
+        colModelo.setCellValueFactory(new PropertyValueFactory<>("modelo"));
+
+        TableColumn<VeiculoModel, Integer> colAno = new TableColumn<>("Ano");
+        colAno.setCellValueFactory(new PropertyValueFactory<>("ano"));
+
+        tabela.getColumns().addAll(colPlaca, colModelo, colAno);
+    }
+
+    public String getTitulo() {
+        return "Gerenciamento de Veiculos";
+    }
+
+    // Getters para o Controller
+    public TextField getTxtPlaca() {
+        return txtPlaca;
+    }
+
+    public TextField getTxtModelo() {
+        return txtModelo;
+    }
+
+    public TextField getTxtAno() {
+        return txtAno;
+    }
+}

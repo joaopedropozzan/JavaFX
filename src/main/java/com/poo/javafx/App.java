@@ -1,13 +1,13 @@
 package com.poo.javafx;
 
-import com.poo.javafx.Instanciacao.Andre.BeneficioController;
-import com.poo.javafx.Instanciacao.Andre.CaronaController;
-import com.poo.javafx.Instanciacao.Eduardo.TrajetoController;
-import com.poo.javafx.Instanciacao.Eduardo.TransacaoController;
-import com.poo.javafx.Instanciacao.JoaoMosson.PassageiroController;
-import com.poo.javafx.Instanciacao.JoaoMosson.VeiculoController;
-import com.poo.javafx.Instanciacao.JoaoPozzan.CarteiraController;
-import com.poo.javafx.Instanciacao.JoaoPozzan.EmpresaController;
+import com.poo.javafx.beneficio.BeneficioController;
+import com.poo.javafx.carona.CaronaController;
+import com.poo.javafx.carteira.CarteiraController;
+import com.poo.javafx.empresa.EmpresaController;
+import com.poo.javafx.passageiro.PassageiroController;
+import com.poo.javafx.trajeto.TrajetoController;
+import com.poo.javafx.transacao.TransacaoController;
+import com.poo.javafx.veiculo.VeiculoController;
 
 import javafx.application.Application;
 import javafx.scene.Scene;

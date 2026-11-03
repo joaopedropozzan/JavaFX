@@ -1,143 +1,85 @@
-# CoCar
+# Migração para EclipseLink
 
-Aplicação desktop em JavaFX para gerenciar uma plataforma de caronas corporativas: passageiros, veículos, trajetos, caronas, empresas parceiras, benefícios, carteiras e transações.
+## 1. Reorganização dos Pacotes (*Package by Feature*)
 
-Projeto da disciplina de Design de Software (RA2), PUCPR, Engenharia de Software.
+* **Alteração:** Remoção do pacote genérico `Instanciacao/` e das subpastas nomeadas por membros da equipe (`Andre`, `Eduardo`, `JoaoMosson`, `JoaoPozzan`). O código foi redistribuído em pacotes de funcionalidade: `beneficio`, `carona`, `carteira`, `empresa`, `passageiro`, `trajeto`, `transacao` e `veiculo`.
+* **Justificativa:**
+* Adoção das convenções idiomáticas do Java (pacotes estritamente em minúsculas e no singular).
+* Eliminação de silos por autor de código, agrupando `Model`, `View` e `Controller` de cada domínio em um mesmo local (*alta coesão*), o que facilita a manutenção e modularidade do sistema.
 
-**Autores:** Eduardo Skoroboatei Gomes, João Pedro Gadens Mosson, João Pedro Magri Pozzan, Renan Cassou Rodrigues e Victor Oliveira Medeiros.
 
-> O relatório anterior (RA3 de Programação Orientada a Objetos) foi guardado em [`docs/README-RA3-POO.md`](docs/README-RA3-POO.md). Ele descreve uma versão anterior do código e não reflete os padrões de projeto desta entrega.
 
-## Como executar
+---
 
-Requisitos: JDK 21 ou superior. O Maven vem junto, pelo wrapper `mvnw`.
+## 2. Manutenção e Adaptação da Camada de Repositório (`Repository<T>`)
 
-```
-./mvnw javafx:run
-```
+* **Alteração:** A classe genérica `Repository<T>` foi mantida com sua interface pública inalterada (`adicionar`, `atualizar`, `remover`, `comID`, `objetos`), mas seu motor interno foi reescrito. As operações de leitura/escrita em arquivos binários (`.dat`) via `ObjectInputStream`/`ObjectOutputStream` foram substituídas pela API do JPA (`EntityManager`, Criteria API e transações).
+* **Justificativa:**
+* **Desacoplamento e preservação de contrato:** Como todos os controllers JavaFX já dependiam dos métodos de `Repository<T>`, a manutenção da assinatura evitou retrabalho e quebras em cascata na interface gráfica.
+* **Arquitetura em três camadas:** O repositório encapsula o ciclo de vida do `EntityManager` e o controle transacional (`begin`, `commit`, `rollback`), impedindo o vazamento de detalhes de persistência para as camadas de apresentação e controle.
+* **Consultas com Criteria API:** O método `objetos()` passou a usar a Criteria API do JPA, tornando as listagens seguras contra erros de digitação em strings JPQL e compatíveis com qualquer anotação de tabela.
 
-No PowerShell, se `./mvnw` não funcionar, use `.\mvnw.cmd javafx:run`.
 
-Os dados são salvos na pasta `data/` (um arquivo `.dat` por entidade), criada na primeira execução e ignorada pelo Git. Para começar do zero, apague a pasta `data/`.
 
-## Visão geral da arquitetura
+---
 
-Cada entidade segue o mesmo trio **Model / View / Controller**, e as telas de cadastro (CRUD) compartilham uma estrutura única:
+## 3. Generalização dos Tipos de Domínio e Conversores JPA
 
-- `Model<T>`: classe base das entidades, com `ID` e as regras de colisão (duplicidade).
-- `CRUDView<T>`: tela padrão com formulário, tabela e botões Adicionar, Atualizar, Deletar e Voltar.
-- `CRUDController<T, V>`: lógica comum de adicionar, ler, atualizar e deletar, mais a validação dos campos.
-- `Repository<T>`: persistência por serialização Java em `data/<entidade>.dat`. A gravação é atômica (escreve em arquivo temporário e move) e, se o arquivo estiver ilegível, ele é preservado como `.corrompido-<data>.dat` em vez de ser sobrescrito.
-- `Router`: navegação entre o menu e as telas.
+* **Alteração:**
+* Criação da classe abstrata `Tipo` no pacote `com.poo.javafx.tipo`, centralizando o atributo `valor`, a interface `Serializable` e as implementações canônicas de `toString()`, `equals()` e `hashCode()`. As classes `CPF`, `CNPJ` e `Placa` passaram a herdar dela, contendo apenas suas regras específicas de validação/formatação.
+* Implementação de classes concretas de conversão com `@Converter(autoApply = true)`: `CPFConverter`, `CNPJConverter` e `PlacaConverter` (implementando `AttributeConverter<T, String>`).
 
-| Entidade | Pacote | Regra de duplicidade |
-|---|---|---|
-| Passageiro | `Instanciacao.JoaoMosson` | mesmo CPF |
-| Veículo | `Instanciacao.JoaoMosson` | mesma placa |
-| Empresa | `Instanciacao.JoaoPozzan` | mesmo CNPJ |
-| Carteira | `Instanciacao.JoaoPozzan` | mesmo número de cartão |
-| Benefício | `Instanciacao.Andre` | mesmo nome |
-| Carona | `Instanciacao.Andre` | mesmo motorista, origem e destino |
-| Trajeto | `Instanciacao.Eduardo` | sem regra de duplicidade |
-| Transação | `Instanciacao.Eduardo` | sem regra de duplicidade |
 
-## Padrões de projeto (GoF)
+* **Justificativa:**
+* **Eliminação de código duplicado:** `CPF`, `CNPJ` e `Placa` compartilhavam a mesma estrutura de validação e comparação por valor, que foi unificada na base `Tipo`.
+* **Compatibilidade com o EclipseLink:** Tipos de domínio personalizados não são mapeados nativamente pelo banco. O uso de `AttributeConverter` instrui o EclipseLink a persistir esses objetos diretamente como colunas relacionais do tipo `VARCHAR`, evitando falhas de serialização binária (`BLOB`) em tempo de inicialização.
 
-### 1. Template Method
 
-O esqueleto de um algoritmo fica numa classe base e os passos variáveis são delegados às subclasses.
 
-- **`Model.colideCom`** é `final`: confere o tipo do objeto e delega a decisão ao gancho `checarColisao`, que cada entidade sobrescreve. `herdarDe` é outro gancho, chamado por `Repository.atualizar` ao substituir um registro.
-- **`CRUDController.adicionar`, `atualizar` e `deletar`** são `final`: validam, montam o modelo, chamam o repositório e atualizam a tabela. Os passos `camposParaModel` e `modelParaCampos` são abstratos.
-- **`CRUDView`**: o construtor monta o layout fixo da tela e chama `configurarColunas()`, o gancho abstrato que cada subclasse implementa. `getTitulo()` também é abstrato, mas não é chamado pelo construtor: quem o usa é o `Router`, ao navegar para a tela.
-- **`RegraValidacao.executar()`** é o método-template: chama `valido()` e monta o `ResultadoValidacao`. A exceção é `RegraTipoDominio`, que sobrescreve `executar()`: captura a `IllegalArgumentException` lançada pelo construtor do tipo (CPF, CNPJ ou Placa) e devolve a mensagem da exceção.
+---
 
-**Por quê:** as oito telas de cadastro têm o mesmo fluxo e mudam apenas campos e colunas. O template evita repetir o fluxo oito vezes.
+## 4. Refatoração dos Modelos de Domínio
 
-### 2. Strategy (pacote `validacao`)
+### 4.1. Classe Base `Model<T>`
 
-Cada forma de validar um campo é uma estratégia intercambiável.
+* **Alteração:** Anotada com `@MappedSuperclass`, atribuindo `@Id` e `@GeneratedValue(strategy = GenerationType.IDENTITY)` ao campo `id`. Remoção dos métodos manuais `colideCom()`, `checarColisao()` e `herdarDe()`.
+* **Justificativa:** Transferência da geração de chaves primárias autoincrementais para o banco de dados e remoção de lógica que existia apenas para contornar limitações da persistência manual em arquivos.
 
-- **Classe Abstrata:** `RegraValidacao`, com o resultado em `ResultadoValidacao`.
-- **Estratégias:** `RegraTextField`, `RegraNumeroInteiro`, `RegraNumeroDecimal`, `RegraComboBox`, `RegraDatePicker`, `RegraLocalDateTime`, `RegraCartaoCredito` e `RegraTipoDominio` (CPF, CNPJ e Placa).
-- **Contexto:** `CRUDController` mantém a lista `regrasValidacao`. Cada controller concreto registra as suas com `adicionarRegra`; para cada campo vale a primeira regra que o suporta.
+### 4.2. Construtores Vazios Obrigatórios
 
-Exemplos: `CarteiraController` usa `RegraNumeroDecimal` (saldo mínimo 0) e `RegraCartaoCredito`; `VeiculoController` usa `RegraTipoDominio` para a placa e `RegraNumeroInteiro` para o ano (1900 até o ano seguinte).
+* **Alteração:** Inclusão de construtores `protected` sem argumentos em todas as 8 classes de modelo.
+* **Justificativa:** Exigência formal da especificação JPA para instanciação via *reflection* durante a materialização das entidades pelo provedor de persistência.
 
-**Por quê:** cada tela precisa de regras diferentes para tipos de campo diferentes, e novas regras entram sem alterar o `CRUDController`.
+### 4.3. Relacionamentos Reais: `TransacaoModel`
 
-### 3. Singleton (`Router`)
+* **Alteração:** Substituição dos campos primitivos `userOrigemID` e `userDestinoID` por relacionamentos diretos `@ManyToOne` com `PassageiroModel`, mapeados via `@JoinColumn`.
+* **Justificativa:** Eliminação de buscas manuais no repositório dentro da entidade. O EclipseLink passa a gerenciar as chaves estrangeiras e a integridade referencial automaticamente, realizando *joins* otimizados.
 
-Há um único `Stage` e um único menu principal, então toda a navegação passa por uma instância única: construtor privado e `Router.getInstance()`. O `App` chama `inicializar(stage, menu)` uma vez e as telas navegam com `Router.getInstance().navegarPara(controller)`.
+### 4.4. Preservação de Dados Imutáveis (`timestamp`)
 
-### 4. Factory Method (`CRUDController.criarView`)
+* **Alteração:** Anotação do campo `timestamp` com `@Column(name = "timestamp", updatable = false)`.
+* **Justificativa:** Substituição do gancho `herdarDe()`. Ao marcar a coluna como não atualizável, o ORM omite esse campo nos comandos `UPDATE`, preservando o momento exato de criação do registro sem exigir cópia manual de atributos.
 
-O `CRUDController` precisa de uma view, mas não sabe qual. Ele declara `protected abstract V criarView()`, chamado no construtor, e cada controller concreto devolve a sua (`CaronaController` cria `CaronaView`, `VeiculoController` cria `VeiculoView`, e assim por diante). São 8 criadores concretos e 8 produtos concretos.
+### 4.5. Persistência do Padrão State: `CaronaModel`
 
-### 5. State (status da Carona)
+* **Alteração:** Criação de `EstadoCaronaConverter` para transformar instâncias da interface `EstadoCarona` em strings descritivas (`"Aberta"`, `"Confirmada"`, etc.) e vice-versa.
+* **Justificativa:** O JPA não persiste interfaces polimórficas diretamente. O conversor permitiu manter o padrão comportamental *State* intacto na camada de negócio, enquanto o banco armazena uma coluna textual simples.
 
-A carona muda de comportamento conforme o estado. Em vez de um campo de texto com `if`s, cada estado é uma classe.
+### 4.6. Comparação de Entidades (`equals` e `hashCode`)
 
-- **Contexto:** `CaronaModel`, que guarda um `EstadoCarona` e expõe `confirmar()`, `concluir()` e `cancelar()`.
-- **Interface:** `EstadoCarona` (`nome`, `confirmar`, `concluir`, `cancelar`).
-- **Estados concretos** (pacote `estado`): `EstadoAberta`, `EstadoConfirmada`, `EstadoConcluida`, `EstadoCancelada`.
+* **Alteração:** Sobrescrita de `equals()` e `hashCode()` baseados no `id` (ou identificador único) nas entidades, como `PassageiroModel`.
+* **Justificativa:** Garantir o funcionamento correto dos componentes visuais do JavaFX (especialmente `ComboBox` e `TableView`), que dependem de `.equals()` para reconciliar seleções de instâncias carregadas em sessões distintas do `EntityManager`.
 
-Transições válidas:
+---
 
-```
-Aberta ──confirmar──▶ Confirmada ──concluir──▶ Concluída
-  │                        │
-  └────────cancelar────────┴──────────────────▶ Cancelada
-```
+## 5. Migração da Unicidade para o Banco de Dados
 
-Qualquer outra transição lança `IllegalStateException` ("Uma carona Concluída não pode ser cancelada."), e a tela mostra a mensagem sem alterar o status. Na `CaronaView`, os botões **Confirmar**, **Concluir** e **Cancelar** substituíram o antigo ComboBox de status.
+* **Alteração:** Remoção das checagens manuais em laço de repetição (`checarUnicidade`) e aplicação de restrições relacionais:
+* Restrições simples via `@Column(unique = true)` em `cpf`, `cnpj`, `placa`, `numero_cartao` e `nome` de benefício.
+* Restrição composta via `@UniqueConstraint` na tabela `caronas` para a combinação `(motorista, origem, destino)`.
+* Captura de `RollbackException` no `Repository<T>`, relançando como `IllegalArgumentException`.
 
-**Por quê:** o status da carona tem regras de transição reais. Com State, cada regra fica no estado correspondente e novos estados entram sem mexer nos existentes.
 
-## Validação e regras de negócio
-
-- Campos obrigatórios não podem ficar vazios.
-- Números aceitam vírgula ou ponto (`10,50`) e rejeitam `NaN`, infinito e texto.
-- Saldo da Carteira não aceita valor negativo; o valor da Transação precisa ser maior que zero; vagas da Carona e funcionários da Empresa precisam ser pelo menos 1.
-- CPF, CNPJ e placa são validados pelo formato (`Types.CPF`, `Types.CNPJ`, `Types.Placa`).
-- Transação com origem igual ao destino é rejeitada. A hora da transação é definida na criação e não muda ao editar.
-- Se um passageiro de uma transação for excluído, a tela mostra "(passageiro removido)".
-- Ao dar duplo clique numa linha, ela vira o item em edição: o botão Atualizar altera aquele item, mesmo que outra linha seja selecionada depois.
-
-## Testes
-
-Não há testes automatizados no projeto. A última rodada foi manual, pela interface, com a pasta `data/` apagada antes, e cobriu 24 itens em 7 grupos, todos aprovados:
-
-1. Carona e State (criar, Confirmar, Concluir, transições inválidas, aviso sem seleção).
-2. Edição da Carona preservando o status.
-3. Atualizar alterando a linha certa.
-4. Transação (origem igual ao destino, hora preservada, passageiro removido).
-5. Valores (`NaN`, `-5`, `abc`, `10,50`, valor `0`).
-6. Casos antigos (empresa com 67 funcionários, ano 3000, CPF curto, placa inválida).
-7. Persistência ao fechar e reabrir o app.
-
-## Limitações conhecidas
-
-- O domínio é simples: a Transação não movimenta o saldo da Carteira, e os vínculos entre entidades (motorista da Carona, titular da Carteira) são texto livre, sem referência a Passageiro.
-- CPF e CNPJ são validados só pelo formato, sem dígitos verificadores.
-- O próximo ID é o maior existente mais um, então o ID do último registro excluído pode ser reutilizado.
-- A persistência usa serialização Java: se a estrutura de uma classe mudar, os arquivos `.dat` antigos deixam de ser lidos e devem ser apagados.
-
-## Estrutura do projeto
-
-```
-src/main/java/com/poo/javafx/
-├── App.java, MenuView.java, Router.java
-├── Model.java, Repository.java
-├── CRUDController.java, CRUDView.java
-├── Types/            CPF, CNPJ, Placa
-├── validacao/        Strategy das regras de validação
-└── Instanciacao/     Model, View e Controller de cada entidade
-    ├── Andre/        Benefício e Carona (com o pacote estado/)
-    ├── Eduardo/      Trajeto e Transação
-    ├── JoaoMosson/   Passageiro e Veículo
-    └── JoaoPozzan/   Carteira e Empresa
-docs/                 imagens das telas e o relatório antigo (RA3 de POO)
-```
-
-Tecnologias: Java 21, JavaFX 21.0.6, Maven (wrapper incluso) e jfxtras-controls 17-r1.
+* **Justificativa:**
+* **Performance e atomicidade:** Validações de duplicidade em memória sofrem com condições de corrida e exigem carregar tabelas inteiras para verificar colisões. Delegar essa regra aos índices únicos do banco garante integridade transacional com custo $O(1)$.
+* **Transparência de interface:** Ao mapear a exceção de violação de *constraint* do banco para `IllegalArgumentException`, os alertas de erro visuais já implementados na camada de controle continuaram funcionando sem modificações.

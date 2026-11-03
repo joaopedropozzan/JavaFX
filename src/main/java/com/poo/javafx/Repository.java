@@ -1,133 +1,111 @@
 package com.poo.javafx;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.nio.file.AtomicMoveNotSupportedException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
+import jakarta.persistence.RollbackException;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
+
 public class Repository<T extends Model<T>> {
-    private static final String DATA_DIR = "data/";
-    private final String dataFilePath;
+    private static final EntityManagerFactory EMF = Persistence.createEntityManagerFactory("cocarPU");
+    private final Class<T> clazz;
 
     public Repository(Class<T> clazz) {
-        File directory = new File(DATA_DIR);
-        if (!directory.exists()) {
-            directory.mkdirs();
-        }
-
-        this.dataFilePath = DATA_DIR + clazz.getSimpleName().toLowerCase() + ".dat";
+        this.clazz = clazz;
     }
 
-    private void gravarArquivo(ArrayList<T> objetos) {
-        Path destino = Path.of(dataFilePath);
-        Path temporario = Path.of(dataFilePath + ".tmp");
-        try {
-            try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(temporario.toFile()))) {
-                out.writeObject(objetos);
-            }
-            try {
-                Files.move(temporario, destino, StandardCopyOption.REPLACE_EXISTING,
-                        StandardCopyOption.ATOMIC_MOVE);
-            } catch (AtomicMoveNotSupportedException e) {
-                Files.move(temporario, destino, StandardCopyOption.REPLACE_EXISTING);
-            }
-        } catch (IOException e) {
-            throw new IllegalStateException("Erro ao salvar os dados: " + e.getMessage(), e);
-        }
+    protected EntityManager getEntityManager() {
+        return EMF.createEntityManager();
     }
 
-    private void checarUnicidade(ArrayList<T> objetos, T objeto) {
-        boolean duplicado = objetos.stream()
-                .anyMatch(e -> e.getID() != objeto.getID() && objeto.colideCom(e));
-        if (duplicado) {
-            throw new IllegalArgumentException("Registro já cadastrado no sistema.");
-        }
-    }
-
-    @SuppressWarnings("unchecked")
     public ArrayList<T> objetos() {
-        File arquivo = new File(dataFilePath);
-        if (!arquivo.exists())
-            return new ArrayList<>();
-        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(arquivo))) {
-            return (ArrayList<T>) in.readObject();
-        } catch (Exception e) {
-            System.err.println("Erro ao ler arquivo " + dataFilePath + ": " + e);
-            guardarBackupCorrompido(arquivo);
-            return new ArrayList<>();
-        }
-    }
-
-    /** Move o arquivo ilegível para um backup, para que a próxima gravação não o apague. */
-    private void guardarBackupCorrompido(File arquivo) {
-        String carimbo = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss"));
-        Path backup = Path.of(dataFilePath + ".corrompido-" + carimbo + ".dat");
+        EntityManager em = getEntityManager();
         try {
-            Files.move(arquivo.toPath(), backup);
-            System.err.println("Backup do arquivo ilegível salvo em " + backup);
-        } catch (IOException ex) {
-            System.err.println("Não foi possível criar o backup de " + dataFilePath + ": " + ex);
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery<T> cq = cb.createQuery(this.clazz);
+            Root<T> root = cq.from(this.clazz);
+            cq.select(root);
+            return new ArrayList<>(em.createQuery(cq).getResultList());
+        } finally {
+            em.close();
         }
     }
 
     public T comID(int id) {
-        for (T objeto : objetos()) {
-            if (objeto.getID() == id) {
-                return objeto;
-            }
+        EntityManager em = getEntityManager();
+        try {
+            return em.find(clazz, id);
+        } finally {
+            em.close();
         }
-        return null;
     }
 
     public void adicionar(T objeto) {
-        ArrayList<T> objetosAtuais = objetos();
-        checarUnicidade(objetosAtuais, objeto);
-
-        int maiorID = objetosAtuais.stream().mapToInt(T::getID).max().orElse(0);
-
-        objeto.setID(maiorID + 1);
-        objetosAtuais.add(objeto);
-
-        gravarArquivo(objetosAtuais);
-    }
-
-    public void remover(T objetoRemover) {
-        ArrayList<T> objetosAtuais = objetos();
-        objetosAtuais.removeIf(e -> e.getID() == objetoRemover.getID());
-
-        gravarArquivo(objetosAtuais);
+        EntityManager em = getEntityManager();
+        try {
+            em.getTransaction().begin();
+            em.persist(objeto);
+            em.getTransaction().commit();
+        } catch (RollbackException e) {
+            if (em.getTransaction().isActive())
+                em.getTransaction().rollback();
+            throw new IllegalArgumentException("Registro já cadastrado no sistema.", e);
+        } catch (Exception e) {
+            if (em.getTransaction().isActive())
+                em.getTransaction().rollback();
+            throw new IllegalArgumentException("Erro ao salvar: " + e.getMessage(), e);
+        } finally {
+            em.close();
+        }
     }
 
     public boolean atualizar(int id, T objetoAtualizado) {
-        objetoAtualizado.setID(id);
-        ArrayList<T> objetosAtuais = objetos();
-        checarUnicidade(objetosAtuais, objetoAtualizado);
-
-        boolean objetoEncontrado = false;
-        for (int i = 0; i < objetosAtuais.size(); i++) {
-            if (objetosAtuais.get(i).getID() == id) {
-                objetoAtualizado.setID(id);
-                objetoAtualizado.herdarDe(objetosAtuais.get(i));
-                objetosAtuais.set(i, objetoAtualizado);
-                objetoEncontrado = true;
-                break;
+        EntityManager em = getEntityManager();
+        try {
+            em.getTransaction().begin();
+            T existente = em.find(clazz, id);
+            if (existente == null) {
+                em.getTransaction().rollback();
+                return false;
             }
-        }
 
-        if (!objetoEncontrado) {
-            return false;
+            objetoAtualizado.setID(id);
+            em.merge(objetoAtualizado);
+            em.getTransaction().commit();
+            return true;
+        } catch (RollbackException e) {
+            if (em.getTransaction().isActive())
+                em.getTransaction().rollback();
+            throw new IllegalArgumentException("Registro já cadastrado no sistema.", e);
+        } catch (Exception e) {
+            if (em.getTransaction().isActive())
+                em.getTransaction().rollback();
+            throw new IllegalArgumentException("Erro ao atualizar: " + e.getMessage(), e);
+        } finally {
+            em.close();
         }
+    }
 
-        gravarArquivo(objetosAtuais);
-        return true;
+    public void remover(T objetoRemover) {
+        EntityManager em = getEntityManager();
+        try {
+            em.getTransaction().begin();
+            T existente = em.find(clazz, objetoRemover.getID());
+            if (existente != null) {
+                em.remove(existente);
+            }
+
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            if (em.getTransaction().isActive())
+                em.getTransaction().rollback();
+            throw new IllegalArgumentException("Erro ao remover: " + e.getMessage(), e);
+        } finally {
+            em.close();
+        }
     }
 }
