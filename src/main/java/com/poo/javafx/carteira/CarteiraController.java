@@ -1,6 +1,8 @@
 package com.poo.javafx.carteira;
 
 import com.poo.javafx.CRUDController;
+import com.poo.javafx.Repository;
+import com.poo.javafx.passageiro.PassageiroModel;
 import com.poo.javafx.validacao.RegraCartaoCredito;
 import com.poo.javafx.validacao.RegraNumeroDecimal;
 
@@ -10,6 +12,7 @@ public class CarteiraController extends CRUDController<CarteiraModel, CarteiraVi
         super(CarteiraModel.class);
         adicionarRegra(new RegraNumeroDecimal(view.getTxtSaldo(), "Saldo", 0.0));
         adicionarRegra(new RegraCartaoCredito(view.getTxtNumeroCartao()));
+        view.getCbTitular().getItems().addAll(new Repository<>(PassageiroModel.class).objetos());
     }
 
     @Override
@@ -17,14 +20,14 @@ public class CarteiraController extends CRUDController<CarteiraModel, CarteiraVi
         return new CarteiraModel(
                 Double.parseDouble(view.getTxtSaldo().getText().trim().replace(",", ".")),
                 view.getTxtNumeroCartao().getText().replaceAll("\\s+", ""),
-                view.getTxtTitularConta().getText().trim());
+                view.getCbTitular().getValue());
     }
 
     @Override
     public void modelParaCampos(CarteiraModel selecionado) {
         view.getTxtSaldo().setText(String.valueOf(selecionado.getSaldo()));
         view.getTxtNumeroCartao().setText(selecionado.getNumeroCartao());
-        view.getTxtTitularConta().setText(selecionado.getTitularConta());
+        view.getCbTitular().setValue(selecionado.getTitular());
     }
 
     @Override

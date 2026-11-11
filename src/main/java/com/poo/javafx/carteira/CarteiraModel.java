@@ -1,9 +1,12 @@
 package com.poo.javafx.carteira;
 
 import com.poo.javafx.Model;
+import com.poo.javafx.passageiro.PassageiroModel;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -15,16 +18,17 @@ public class CarteiraModel extends Model<CarteiraModel> {
     @Column(nullable = false, unique = true)
     private String numeroCartao;
 
-    @Column(nullable = false)
-    private String titularConta;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "titular_id", nullable = false)
+    private PassageiroModel titular;
 
     protected CarteiraModel() {
     }
 
-    public CarteiraModel(double saldo, String numeroCartao, String titularConta) {
+    public CarteiraModel(double saldo, String numeroCartao, PassageiroModel titular) {
         this.saldo = saldo;
         this.numeroCartao = numeroCartao;
-        this.titularConta = titularConta;
+        this.titular = titular;
     }
 
     public double getSaldo() {
@@ -35,7 +39,7 @@ public class CarteiraModel extends Model<CarteiraModel> {
         return numeroCartao;
     }
 
-    public String getTitularConta() {
-        return titularConta;
+    public PassageiroModel getTitular() {
+        return titular;
     }
 }

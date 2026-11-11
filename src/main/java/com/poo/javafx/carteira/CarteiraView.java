@@ -1,9 +1,11 @@
 package com.poo.javafx.carteira;
 
 import com.poo.javafx.CRUDView;
+import com.poo.javafx.passageiro.PassageiroModel;
 
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TextField;
 
@@ -11,7 +13,7 @@ public class CarteiraView extends CRUDView<CarteiraModel> {
     // Campos que o usuário vai digitar
     private TextField txtSaldo;
     private TextField txtNumeroCartao;
-    private TextField txtTitularConta;
+    private ComboBox<PassageiroModel> cbTitular;
 
     public CarteiraView() {
         super(); // Herda a tabela e os botões
@@ -23,10 +25,11 @@ public class CarteiraView extends CRUDView<CarteiraModel> {
         txtNumeroCartao = new TextField();
         txtNumeroCartao.setPromptText("Número do Cartão");
 
-        txtTitularConta = new TextField();
-        txtTitularConta.setPromptText("Titular da Conta");
+        cbTitular = new ComboBox<>();
+        cbTitular.setPromptText("Titular");
+        mostrarPromptQuandoVazio(cbTitular);
 
-        this.formulario.getChildren().addAll(txtSaldo, txtNumeroCartao, txtTitularConta);
+        this.formulario.getChildren().addAll(txtSaldo, txtNumeroCartao, cbTitular);
     }
 
     @Override
@@ -39,7 +42,8 @@ public class CarteiraView extends CRUDView<CarteiraModel> {
         colNumero.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNumeroCartao()));
 
         TableColumn<CarteiraModel, String> colTitular = new TableColumn<>("Titular");
-        colTitular.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getTitularConta()));
+        colTitular.setCellValueFactory(
+                data -> new SimpleStringProperty(String.valueOf(data.getValue().getTitular())));
 
         tabela.getColumns().addAll(colSaldo, colNumero, colTitular);
     }
@@ -57,7 +61,7 @@ public class CarteiraView extends CRUDView<CarteiraModel> {
         return txtNumeroCartao;
     }
 
-    public TextField getTxtTitularConta() {
-        return txtTitularConta;
+    public ComboBox<PassageiroModel> getCbTitular() {
+        return cbTitular;
     }
 }

@@ -23,9 +23,11 @@ public class TransacaoView extends CRUDView<TransacaoModel> {
 
         userOrigem = new ComboBox<>();
         userOrigem.setPromptText("Usuário Origem");
+        mostrarPromptQuandoVazio(userOrigem);
 
         userDestino = new ComboBox<>();
         userDestino.setPromptText("Usuário Destino");
+        mostrarPromptQuandoVazio(userDestino);
 
         valor = new TextField();
         valor.setPromptText("Valor");

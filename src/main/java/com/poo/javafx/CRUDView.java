@@ -1,6 +1,10 @@
 package com.poo.javafx;
 
+import javafx.collections.ListChangeListener;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -54,6 +58,17 @@ public abstract class CRUDView<T extends Model<T>> extends BorderPane {
         HBox actions = new HBox();
         this.acoes = actions;
         actions.getStyleClass().add("crud-toolbar__actions");
+        // Nenhum botão de ação encolhe abaixo do próprio texto, inclusive os que as subclasses
+        // acrescentam depois via getAcoes().
+        actions.getChildren().addListener((ListChangeListener<Node>) mudanca -> {
+            while (mudanca.next()) {
+                for (Node filho : mudanca.getAddedSubList()) {
+                    if (filho instanceof Region regiao) {
+                        regiao.setMinWidth(Region.USE_PREF_SIZE);
+                    }
+                }
+            }
+        });
         actions.getChildren().addAll(btnAdicionar, btnAtualizar, btnDeletar);
 
         Region spacer = new Region();
@@ -82,6 +97,23 @@ public abstract class CRUDView<T extends Model<T>> extends BorderPane {
 
     // Método abstrato para definr titulo do stage.
     public abstract String getTitulo();
+
+    /**
+     * Faz o ComboBox mostrar o promptText quando o valor for null. Sem isso, o JavaFX
+     * deixa o combo em branco depois de um setValue(null) (ex.: RegraComboBox.limpar).
+     */
+    protected static <E> void mostrarPromptQuandoVazio(ComboBox<E> combo) {
+        combo.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(E item, boolean empty) {
+                super.updateItem(item, empty);
+                boolean vazio = empty || item == null;
+                setText(vazio ? combo.getPromptText() : item.toString());
+                // mesma cor de prompt que o JavaFX (modena) usa nos TextFields
+                setStyle(vazio ? "-fx-text-fill: derive(-fx-control-inner-background, -30%);" : "");
+            }
+        });
+    }
 
     // Getters para que o Controller possa capturar os cliques nos botões depois
     public Button getBtnVoltar() {

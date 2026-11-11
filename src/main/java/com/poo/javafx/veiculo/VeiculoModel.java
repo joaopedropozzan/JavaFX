@@ -1,5 +1,7 @@
 package com.poo.javafx.veiculo;
 
+import java.util.Objects;
+
 import com.poo.javafx.Model;
 import com.poo.javafx.tipo.Placa;
 
@@ -38,6 +40,29 @@ public class VeiculoModel extends Model<VeiculoModel> {
 
     public int getAno() {
         return ano;
+    }
+
+    @Override
+    public String toString() {
+        return this.placa + " - " + this.modelo;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        VeiculoModel that = (VeiculoModel) o;
+        if (this.getID() != 0 && that.getID() != 0) {
+            return this.getID() == that.getID();
+        }
+        return Objects.equals(this.placa, that.placa);
+    }
+
+    @Override
+    public int hashCode() {
+        return getID() != 0 ? Objects.hash(getID()) : Objects.hash(placa);
     }
 
 }

@@ -1,15 +1,19 @@
 package com.poo.javafx.carona;
 
 import com.poo.javafx.CRUDView;
+import com.poo.javafx.passageiro.PassageiroModel;
+import com.poo.javafx.veiculo.VeiculoModel;
 
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TextField;
 
 public class CaronaView extends CRUDView<CaronaModel> {
-    private TextField motorista;
+    private ComboBox<PassageiroModel> motorista;
+    private ComboBox<VeiculoModel> veiculo;
     private TextField origem;
     private TextField destino;
     private TextField vagas;
@@ -20,8 +24,13 @@ public class CaronaView extends CRUDView<CaronaModel> {
     public CaronaView() {
         super();
 
-        motorista = new TextField();
+        motorista = new ComboBox<>();
         motorista.setPromptText("Motorista");
+        mostrarPromptQuandoVazio(motorista);
+
+        veiculo = new ComboBox<>();
+        veiculo.setPromptText("Veículo");
+        mostrarPromptQuandoVazio(veiculo);
 
         origem = new TextField();
         origem.setPromptText("Origem");
@@ -33,7 +42,7 @@ public class CaronaView extends CRUDView<CaronaModel> {
         vagas.setPromptText("Vagas");
 
 
-        this.formulario.getChildren().addAll(motorista, origem, destino, vagas);
+        this.formulario.getChildren().addAll(motorista, veiculo, origem, destino, vagas);
 
         btnConfirmar = new Button("Confirmar");
         btnConcluir = new Button("Concluir");
@@ -44,7 +53,12 @@ public class CaronaView extends CRUDView<CaronaModel> {
     @Override
     protected void configurarColunas() {
         TableColumn<CaronaModel, String> colMotorista = new TableColumn<>("Motorista");
-        colMotorista.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getMotorista()));
+        colMotorista.setCellValueFactory(
+                data -> new SimpleStringProperty(String.valueOf(data.getValue().getMotorista())));
+
+        TableColumn<CaronaModel, String> colVeiculo = new TableColumn<>("Veículo");
+        colVeiculo.setCellValueFactory(
+                data -> new SimpleStringProperty(String.valueOf(data.getValue().getVeiculo())));
 
         TableColumn<CaronaModel, String> colOrigem = new TableColumn<>("Origem");
         colOrigem.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getOrigem()));
@@ -58,7 +72,7 @@ public class CaronaView extends CRUDView<CaronaModel> {
         TableColumn<CaronaModel, String> colStatus = new TableColumn<>("Status");
         colStatus.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getStatus()));
 
-        tabela.getColumns().addAll(colMotorista, colOrigem, colDestino, colVagas, colStatus);
+        tabela.getColumns().addAll(colMotorista, colVeiculo, colOrigem, colDestino, colVagas, colStatus);
     }
 
     @Override
@@ -66,8 +80,12 @@ public class CaronaView extends CRUDView<CaronaModel> {
         return "Gerenciamento de Caronas";
     }
 
-    public TextField getMotorista() {
+    public ComboBox<PassageiroModel> getMotorista() {
         return motorista;
+    }
+
+    public ComboBox<VeiculoModel> getVeiculo() {
+        return veiculo;
     }
 
     public TextField getOrigem() {

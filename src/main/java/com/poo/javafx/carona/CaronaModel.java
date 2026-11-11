@@ -3,21 +3,30 @@ package com.poo.javafx.carona;
 import com.poo.javafx.Model;
 import com.poo.javafx.carona.estado.EstadoAberta;
 import com.poo.javafx.carona.estado.EstadoCarona;
+import com.poo.javafx.passageiro.PassageiroModel;
+import com.poo.javafx.veiculo.VeiculoModel;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
 @Entity
 @Table(name = "caronas", uniqueConstraints = {
-        @UniqueConstraint(name = "uk_carona_motorista_origem_destino", columnNames = { "motorista", "origem",
+        @UniqueConstraint(name = "uk_carona_motorista_origem_destino", columnNames = { "motorista_id", "origem",
                 "destino" })
 })
 
 public class CaronaModel extends Model<CaronaModel> {
-    @Column(nullable = false)
-    private String motorista;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "motorista_id", nullable = false)
+    private PassageiroModel motorista;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "veiculo_id", nullable = false)
+    private VeiculoModel veiculo;
 
     @Column(nullable = false)
     private String origem;
@@ -34,8 +43,9 @@ public class CaronaModel extends Model<CaronaModel> {
     protected CaronaModel() {
     }
 
-    public CaronaModel(String motorista, String origem, String destino, int vagas) {
+    public CaronaModel(PassageiroModel motorista, VeiculoModel veiculo, String origem, String destino, int vagas) {
         this.motorista = motorista;
+        this.veiculo = veiculo;
         this.origem = origem;
         this.destino = destino;
         this.vagas = vagas;
@@ -60,8 +70,12 @@ public class CaronaModel extends Model<CaronaModel> {
         estado = estado.cancelar();
     }
 
-    public String getMotorista() {
+    public PassageiroModel getMotorista() {
         return motorista;
+    }
+
+    public VeiculoModel getVeiculo() {
+        return veiculo;
     }
 
     public String getOrigem() {

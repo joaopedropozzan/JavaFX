@@ -101,6 +101,10 @@ public class Repository<T extends Model<T>> {
             }
 
             em.getTransaction().commit();
+        } catch (RollbackException e) {
+            if (em.getTransaction().isActive())
+                em.getTransaction().rollback();
+            throw new IllegalArgumentException("Não é possível excluir: este registro está em uso em outro cadastro.", e);
         } catch (Exception e) {
             if (em.getTransaction().isActive())
                 em.getTransaction().rollback();
