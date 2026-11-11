@@ -73,6 +73,7 @@ public class Repository<T extends Model<T>> {
                 return false;
             }
 
+            objetoAtualizado.herdarDe(existente);
             objetoAtualizado.setID(id);
             em.merge(objetoAtualizado);
             em.getTransaction().commit();

@@ -41,6 +41,13 @@ public class CaronaModel extends Model<CaronaModel> {
         this.vagas = vagas;
     }
 
+    @Override
+    protected void herdarDe(CaronaModel original) {
+        if (this.estado instanceof EstadoAberta) {
+            this.estado = original.estado;
+        }
+    }
+
     public void confirmar() {
         estado = estado.confirmar();
     }

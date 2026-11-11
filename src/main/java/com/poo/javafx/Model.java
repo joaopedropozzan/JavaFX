@@ -18,4 +18,8 @@ public abstract class Model<T extends Model<T>> {
     public void setID(int id) {
         this.id = id;
     }
+
+    // gancho chamado pelo Repository.atualizar antes do merge
+    protected void herdarDe(T original) {
+    }
 }
